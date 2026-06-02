@@ -18,6 +18,18 @@ export class App implements AfterViewInit {
   protected selectedPlan = signal<'flash' | 'pro'>('flash');
   protected isPlanMenuOpen = signal(false);
   protected activeTool = signal('Course Content');
+  protected loadingText = signal('Thinking...');
+
+  private fakeLoadingInterval: any;
+  private fakeLoadingMessages = [
+    'Thinking...',
+    'Analyzing context...',
+    'Querying AI agent cluster...',
+    'Synthesizing learning vectors...',
+    'Drafting educational content...',
+    'Rendering interactive modules...',
+    'Finalizing layout...'
+  ];
 
   // Suggestions
   protected suggestions = computed(() => {
@@ -96,7 +108,7 @@ export class App implements AfterViewInit {
 
   private startPlaceholderTypewriter() {
     const currentPhrase = this.phPhrases[this.phIndex];
-    
+
     if (this.phIsDeleting) {
       this.typedPlaceholder.set(currentPhrase.substring(0, this.phCharIndex - 1));
       this.phCharIndex--;
@@ -106,7 +118,7 @@ export class App implements AfterViewInit {
     }
 
     let speed = this.phIsDeleting ? 30 : 60;
-    
+
     if (!this.phIsDeleting && this.phCharIndex === currentPhrase.length) {
       speed = 2500;
       this.phIsDeleting = true;
@@ -121,7 +133,7 @@ export class App implements AfterViewInit {
 
   private startTypewriter() {
     const currentPhrase = this.phrases[this.phraseIndex];
-    
+
     if (this.isDeleting) {
       this.typedHeadline.set(currentPhrase.substring(0, this.charIndex - 1));
       this.charIndex--;
@@ -178,10 +190,24 @@ export class App implements AfterViewInit {
     if (!this.promptText.trim()) return;
     this.submittedPrompt = this.promptText;
     this.isGenerating.set(true);
-    // Simulate generation process
+    
+    // Cycle through fake loading messages
+    let msgIndex = 0;
+    this.loadingText.set(this.fakeLoadingMessages[0]);
+    this.fakeLoadingInterval = setInterval(() => {
+      msgIndex++;
+      if (msgIndex < this.fakeLoadingMessages.length) {
+        this.loadingText.set(this.fakeLoadingMessages[msgIndex]);
+      } else {
+        clearInterval(this.fakeLoadingInterval);
+      }
+    }, 1500); // Change message every 1.5 seconds
+
+    // Simulate generation process end
     setTimeout(() => {
+      clearInterval(this.fakeLoadingInterval);
       // In a real app, this would update with actual results
-    }, 3000);
+    }, 12000); // Extend to let messages cycle
   }
 
   togglePlanMenu(event: Event) {
