@@ -3,12 +3,16 @@
 <!-- ============================================ -->
 
 <!-- Particle Background Canvas -->
-<canvas #particleCanvas class="particle-canvas"></canvas>
+<div class="bg-gradient-overlay" [class.show-bg]="isGenerating() || isAnimatingOut()"></div>
+<canvas #particleCanvas class="particle-canvas" [class.show-bg]="isGenerating() || isAnimatingOut()"></canvas>
 
 <!-- Ambient Glow Orbs -->
-<div class="ambient-orb orb-1"></div>
-<div class="ambient-orb orb-2"></div>
-<div class="ambient-orb orb-3"></div>
+<div class="ambient-orb orb-1" [class.show-bg]="isGenerating() || isAnimatingOut()"></div>
+<div class="ambient-orb orb-2" [class.show-bg]="isGenerating() || isAnimatingOut()"></div>
+<div class="ambient-orb orb-3" [class.show-bg]="isGenerating() || isAnimatingOut()"></div>
+
+<!-- Blurred Logo Background (Home Only) -->
+<div class="bg-logo-blur" [class.fade-out]="isGenerating() || isAnimatingOut()"></div>
 
 <!-- ==================== AGENTIC SIDEBAR ==================== -->
 <aside class="agentic-sidebar" id="main-sidebar">
@@ -111,23 +115,25 @@
   </div>
 </aside>
 
-<!-- ==================== HERO SECTION ==================== -->
-@if (!isGenerating()) {
-<section class="hero" id="hero-section" (click)="closeMenus()">
-  <div class="hero-content">
+<!-- ==================== MAIN LAYOUT ==================== -->
+<section class="main-layout" [class.results-mode]="isGenerating() || isAnimatingOut()" (click)="closeMenus()">
+  <div class="content-wrapper">
 
-    <!-- Main Headline -->
-    <h1 class="hero-title" id="hero-title">
-      <span class="title-line">Create Learning</span>
-      <span class="title-line gradient-text">
-        {{ typedHeadline() }}<span class="typewriter-cursor">|</span>
-      </span>
-      <span class="title-line">with AI Agents</span>
-    </h1>
+    <!-- Elements that disappear -->
+    <div class="home-only-elements" [class.fade-out]="isAnimatingOut() || isGenerating()">
+      <!-- Main Headline -->
+      <h1 class="hero-title" id="hero-title">
+        <span class="title-line">Create Learning</span>
+        <span class="title-line gradient-text">
+          {{ typedHeadline() }}<span class="typewriter-cursor">|</span>
+        </span>
+        <span class="title-line">with AI Agents</span>
+      </h1>
+      <br>
+    </div>
 
-    <br>
     <!-- ==================== PROMPT FIELD ==================== -->
-    <div class="prompt-wrapper" id="prompt-wrapper">
+    <div class="prompt-wrapper" id="prompt-wrapper" [class.compact-mode]="isGenerating() || isAnimatingOut()">
       <div class="prompt-container" [class.focused]="isPromptFocused()" id="prompt-container">
         <div class="prompt-glow"></div>
         <div class="prompt-inner">
@@ -190,7 +196,10 @@
           </div>
         </div>
       </div>
-
+    </div>
+    
+    <!-- Bottom Elements that disappear -->
+    <div class="home-only-elements" [class.fade-out]="isAnimatingOut() || isGenerating()">
       <!-- Agent Selector Icons -->
       <div class="agent-icons">
         <!-- Video Agent -->
@@ -220,7 +229,7 @@
         >
           <div class="agent-icon-wrap">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2-2h12a2 2 0 0 0 2-2V8z"/>
               <polyline points="14 2 14 8 20 8"/>
               <line x1="16" y1="13" x2="8" y2="13"/>
               <line x1="16" y1="17" x2="8" y2="17"/>
@@ -230,30 +239,25 @@
           <span class="agent-label">Text Agent</span>
         </button>
       </div>
+
+      <!-- Quick Suggestions -->
+      <div class="quick-suggestions" id="quick-suggestions">
+        @for (suggestion of suggestions(); track suggestion.id) {
+          <button class="suggestion-chip" [id]="suggestion.id" (click)="useSuggestion(suggestion.text)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path [attr.d]="suggestion.icon" />
+            </svg>
+            {{ suggestion.text }}
+          </button>
+        }
+      </div>
     </div>
 
-    <!-- Quick Suggestions -->
-    <div class="quick-suggestions" id="quick-suggestions">
-      @for (suggestion of suggestions(); track suggestion.id) {
-        <button class="suggestion-chip" [id]="suggestion.id" (click)="useSuggestion(suggestion.text)">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path [attr.d]="suggestion.icon" />
-          </svg>
-          {{ suggestion.text }}
-        </button>
-      }
-    </div>
-  </div>
-</section>
-
-
-} @else {
-<!-- ==================== RESULTS VIEW ==================== -->
-<section class="results-view" id="results-view">
-  <div class="results-container">
-    <div class="results-header">
-      <h2 class="results-query">{{ submittedPrompt }}</h2>
-      <div class="tools-toolbar-wrapper" style="max-width: 100%;">
+    @if (isGenerating()) {
+    <!-- ==================== RESULTS VIEW ==================== -->
+    <div class="results-container fade-in-up">
+      <div class="results-header">
+        <div class="tools-toolbar-wrapper" style="max-width: 100%;">
         <div class="tools-pills-container">
           <button class="tool-pill" [class.active]="activeTool() === 'Course Content'" (click)="activeTool.set('Course Content')">Course Content</button>
           <button class="tool-pill" [class.active]="activeTool() === 'Script'" (click)="activeTool.set('Script')">Script</button>
@@ -300,17 +304,18 @@
         <div class="skeleton-img"></div>
       </div>
     </div>
-  </div>
-  
-  <div class="sticky-prompt-wrapper">
-    <div class="sticky-prompt">
-      <input type="text" placeholder="Ask a follow-up question..." />
-      <button class="sticky-submit">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-      </button>
+    
+    <div class="sticky-prompt-wrapper">
+      <div class="sticky-prompt">
+        <input type="text" placeholder="Ask a follow-up question..." />
+        <button class="sticky-submit">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
     </div>
+    </div>
+    }
   </div>
 </section>
-}
 
 <router-outlet />

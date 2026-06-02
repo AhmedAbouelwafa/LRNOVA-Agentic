@@ -15,6 +15,7 @@ export class App implements AfterViewInit {
   protected activeAgent = signal<'video' | 'text' | null>(null);
   protected isPromptFocused = signal(false);
   protected isGenerating = signal(false);
+  protected isAnimatingOut = signal(false);
   protected selectedPlan = signal<'flash' | 'pro'>('flash');
   protected isPlanMenuOpen = signal(false);
   protected activeTool = signal('Course Content');
@@ -189,25 +190,30 @@ export class App implements AfterViewInit {
   onSubmitPrompt() {
     if (!this.promptText.trim()) return;
     this.submittedPrompt = this.promptText;
-    this.isGenerating.set(true);
+    this.isAnimatingOut.set(true);
     
-    // Cycle through fake loading messages
-    let msgIndex = 0;
-    this.loadingText.set(this.fakeLoadingMessages[0]);
-    this.fakeLoadingInterval = setInterval(() => {
-      msgIndex++;
-      if (msgIndex < this.fakeLoadingMessages.length) {
-        this.loadingText.set(this.fakeLoadingMessages[msgIndex]);
-      } else {
-        clearInterval(this.fakeLoadingInterval);
-      }
-    }, 1500); // Change message every 1.5 seconds
-
-    // Simulate generation process end
+    // Wait for fly-up animation
     setTimeout(() => {
-      clearInterval(this.fakeLoadingInterval);
-      // In a real app, this would update with actual results
-    }, 12000); // Extend to let messages cycle
+      this.isGenerating.set(true);
+      
+      // Cycle through fake loading messages
+      let msgIndex = 0;
+      this.loadingText.set(this.fakeLoadingMessages[0]);
+      this.fakeLoadingInterval = setInterval(() => {
+        msgIndex++;
+        if (msgIndex < this.fakeLoadingMessages.length) {
+          this.loadingText.set(this.fakeLoadingMessages[msgIndex]);
+        } else {
+          clearInterval(this.fakeLoadingInterval);
+        }
+      }, 1500); // Change message every 1.5 seconds
+
+      // Simulate generation process end
+      setTimeout(() => {
+        clearInterval(this.fakeLoadingInterval);
+        // In a real app, this would update with actual results
+      }, 12000); // Extend to let messages cycle
+    }, 600); // Wait 600ms for CSS animation
   }
 
   togglePlanMenu(event: Event) {
@@ -241,14 +247,14 @@ export class App implements AfterViewInit {
     window.addEventListener('resize', resize);
 
     // Create particles
-    for (let i = 0; i < 80; i++) {
+    for (let i = 0; i < 120; i++) {
       this.particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         vx: (Math.random() - 0.5) * 0.4,
         vy: (Math.random() - 0.5) * 0.4,
-        size: Math.random() * 2 + 0.5,
-        opacity: Math.random() * 0.5 + 0.1,
+        size: Math.random() * 2.5 + 1.0,
+        opacity: Math.random() * 0.2 ,
         hue: Math.random() > 0.5 ? 270 : 200, // purple or cyan
       });
     }
@@ -278,19 +284,19 @@ export class App implements AfterViewInit {
         // Draw particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${p.hue}, 80%, 50%, ${p.opacity})`;
+        ctx.fillStyle = `hsla(${p.hue}, 80%, 55%, ${p.opacity})`;
         ctx.fill();
 
         // Draw connections
         for (let j = i + 1; j < this.particles.length; j++) {
           const p2 = this.particles[j];
           const d = Math.sqrt((p.x - p2.x) ** 2 + (p.y - p2.y) ** 2);
-          if (d < 120) {
+          if (d < 150) {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `hsla(260, 70%, 55%, ${0.18 * (1 - d / 120)})`;
-            ctx.lineWidth = 0.5;
+            ctx.strokeStyle = `hsla(260, 70%, 50%, ${0.4 * (1 - d / 150)})`;
+            ctx.lineWidth = 0.8;
             ctx.stroke();
           }
         }
