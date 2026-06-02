@@ -1,0 +1,12 @@
+<div class="home-hero" style="order: 1; width: 100%">
+  <div class="home-only-elements" [class.fade-out]="state.isAnimatingOut()">
+    <app-hero-section />
+  </div>
+</div>
+
+<div class="home-agents" style="order: 3; width: 100%">
+  <div class="home-only-elements" [class.fade-out]="state.isAnimatingOut()">
+    <app-agent-selector />
+    <app-suggestions />
+  </div>
+</div>

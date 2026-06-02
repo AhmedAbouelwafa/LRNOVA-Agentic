@@ -1,0 +1,12 @@
+:host { display: contents; }
+
+.results-container {
+  width: 100%; max-width: 900px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: 24px;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in-up { animation: fadeInUp 0.5s ease-out; }

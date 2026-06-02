@@ -1,0 +1,16 @@
+:host { display: block; }
+.quick-suggestions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 680px; }
+
+.suggestion-chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px;
+  border-radius: 100px; background: transparent;
+  border: 1px dashed rgba(139, 92, 246, 0.3); color: #64748B;
+  font-size: 0.8rem; font-weight: 500; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap; cursor: pointer;
+}
+.suggestion-chip:hover {
+  background: rgba(139, 92, 246, 0.04); border-style: solid;
+  border-color: rgba(139, 92, 246, 0.5); color: #8B5CF6;
+}
+.suggestion-chip svg { opacity: 0.6; flex-shrink: 0; }
+.suggestion-chip:hover svg { opacity: 1; }

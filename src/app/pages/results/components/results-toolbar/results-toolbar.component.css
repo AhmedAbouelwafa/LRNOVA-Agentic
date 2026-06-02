@@ -1,0 +1,32 @@
+:host { display: block; }
+.results-header { display: flex; flex-direction: column; gap: 20px; }
+.tools-toolbar-wrapper { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+.tools-pills-container {
+  display: flex; align-items: center; background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.7); border-radius: 100px; padding: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04); gap: 2px; backdrop-filter: blur(20px);
+}
+.tool-pill {
+  padding: 6px 16px; border-radius: 100px; background: transparent;
+  color: #64748B; font-size: 0.85rem; font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; border: none;
+}
+.tool-pill:hover { color: #475569; }
+.tool-pill.active {
+  background: rgba(255, 255, 255, 0.7); color: #1E293B;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+.tools-actions-container { display: flex; align-items: center; gap: 8px; }
+.tool-action-pill {
+  display: flex; align-items: center; gap: 6px; padding: 6px 14px;
+  border-radius: 100px; background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.7); color: #475569;
+  font-size: 0.85rem; font-weight: 600; cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04); backdrop-filter: blur(20px);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.tool-action-pill:hover { background: rgba(255, 255, 255, 0.7); color: #1E293B; }
+.tool-badge {
+  background: #1a1a2e; color: white; padding: 2px 6px;
+  border-radius: 12px; font-size: 0.65rem; font-weight: 700;
+}

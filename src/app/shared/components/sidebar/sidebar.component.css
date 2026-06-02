@@ -1,0 +1,125 @@
+/* Sidebar styles extracted from app.css */
+:host {
+  display: block;
+}
+
+.agentic-sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 76px;
+  background: white;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 0;
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.03);
+  border-top-right-radius: 24px;
+  border-bottom-right-radius: 24px;
+}
+
+.sidebar-top, .sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.sidebar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #475569;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+}
+
+.sidebar-item:hover {
+  color: #1E293B;
+}
+
+.sidebar-icon {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.sidebar-item:hover .sidebar-icon {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.home-icon {
+  background: linear-gradient(135deg, #E0C3FC 0%, #8EC5FC 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(142, 197, 252, 0.4);
+}
+.sidebar-item.active .home-icon {
+  background: linear-gradient(135deg, #a855f7 0%, #06b6d4 100%);
+}
+.sidebar-item.active .sidebar-text {
+  color: #06b6d4;
+  font-weight: 600;
+}
+
+.sidebar-text {
+  font-size: 0.65rem;
+  font-weight: 500;
+}
+
+.sidebar-divider {
+  width: 32px;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.08);
+  margin: 0.25rem 0;
+}
+
+.circle-icon {
+  border-radius: 50%;
+  border: 1.5px solid rgba(0, 0, 0, 0.1);
+}
+
+.circle-icon.diamond {
+  border-color: #06b6d4;
+  border-width: 2px;
+  color: #f59e0b;
+}
+
+.circle-icon.user-l {
+  background: #e0f2fe;
+  color: #0ea5e9;
+  border-color: transparent;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.notification-icon {
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  background: #ef4444;
+  color: white;
+  font-size: 0.55rem;
+  font-weight: bold;
+  padding: 1px 4px;
+  border-radius: 10px;
+  border: 2px solid white;
+}
