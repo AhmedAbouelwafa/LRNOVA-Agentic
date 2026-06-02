@@ -252,7 +252,7 @@ export class App implements AfterViewInit {
         // Draw particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${p.hue}, 80%, 45%, ${p.opacity})`;
+        ctx.fillStyle = `hsla(${p.hue}, 80%, 50%, ${p.opacity})`;
         ctx.fill();
 
         // Draw connections
@@ -263,7 +263,7 @@ export class App implements AfterViewInit {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `hsla(260, 70%, 50%, ${0.15 * (1 - d / 120)})`;
+            ctx.strokeStyle = `hsla(260, 70%, 55%, ${0.18 * (1 - d / 120)})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
