@@ -4,7 +4,7 @@
 
 <!-- Particle Background Canvas -->
 <div class="bg-gradient-overlay" [class.show-bg]="isGenerating() || isAnimatingOut()"></div>
-<canvas #particleCanvas class="particle-canvas" [class.show-bg]="isGenerating() || isAnimatingOut()"></canvas>
+<canvas #particleCanvas class="particle-canvas" [class.fade-out]="isGenerating() || isAnimatingOut()"></canvas>
 
 <!-- Ambient Glow Orbs -->
 <div class="ambient-orb orb-1" [class.show-bg]="isGenerating() || isAnimatingOut()"></div>
@@ -20,7 +20,8 @@
     <!-- Home -->
     <a href="/" class="sidebar-item active">
       <div class="sidebar-icon home-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
           <polyline points="9 22 9 12 15 12 15 22"></polyline>
         </svg>
@@ -31,9 +32,10 @@
     <!-- Avatar -->
     <a href="#" class="sidebar-item">
       <div class="sidebar-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
         </svg>
       </div>
       <span class="sidebar-text">Avatar</span>
@@ -42,8 +44,9 @@
     <!-- Brand -->
     <a href="#" class="sidebar-item">
       <div class="sidebar-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
         </svg>
       </div>
       <span class="sidebar-text">Brand</span>
@@ -52,9 +55,11 @@
     <!-- Apps -->
     <a href="#" class="sidebar-item">
       <div class="sidebar-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21.17 3.22c.98.98.98 2.56 0 3.54l-11.3 11.3-4.95 1.41 1.41-4.95 11.3-11.3c.98-.98 2.56-.98 3.54 0z"/>
-          <path d="M15 5l4 4"/>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path
+            d="M21.17 3.22c.98.98.98 2.56 0 3.54l-11.3 11.3-4.95 1.41 1.41-4.95 11.3-11.3c.98-.98 2.56-.98 3.54 0z" />
+          <path d="M15 5l4 4" />
         </svg>
       </div>
       <span class="sidebar-text">Apps</span>
@@ -65,8 +70,9 @@
     <!-- Projects -->
     <a href="#" class="sidebar-item">
       <div class="sidebar-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
         </svg>
       </div>
       <span class="sidebar-text">Projects</span>
@@ -77,9 +83,10 @@
     <!-- Notifications -->
     <button class="sidebar-item">
       <div class="sidebar-icon notification-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
         </svg>
         <span class="badge">2</span>
       </div>
@@ -88,7 +95,8 @@
     <!-- Diamond -->
     <button class="sidebar-item">
       <div class="sidebar-icon circle-icon diamond">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
           <polygon points="12 2 2 7 12 22 22 7 12 2"></polygon>
           <polyline points="2 7 12 12 22 7"></polyline>
           <polyline points="12 22 12 12"></polyline>
@@ -99,9 +107,10 @@
     <!-- Code -->
     <button class="sidebar-item">
       <div class="sidebar-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="16 18 22 12 16 6"/>
-          <polyline points="8 6 2 12 8 18"/>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 18 22 12 16 6" />
+          <polyline points="8 6 2 12 8 18" />
         </svg>
       </div>
     </button>
@@ -138,58 +147,58 @@
         <div class="prompt-glow"></div>
         <div class="prompt-inner">
           <div class="prompt-input-row">
-            <input
-              type="text"
-              class="prompt-input"
-              [placeholder]="typedPlaceholder()"
-              [(ngModel)]="promptText"
-              (focus)="isPromptFocused.set(true)"
-              (blur)="isPromptFocused.set(false)"
-              (keydown.enter)="onSubmitPrompt()"
-              id="prompt-input"
-            />
+            <input type="text" class="prompt-input" [placeholder]="typedPlaceholder()" [(ngModel)]="promptText"
+              (focus)="isPromptFocused.set(true)" (blur)="isPromptFocused.set(false)" (keydown.enter)="onSubmitPrompt()"
+              id="prompt-input" />
           </div>
           <div class="prompt-actions-row">
             <button class="attach-btn" title="Add File">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"/>
-                <line x1="5" y1="12" x2="19" y2="12"/>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
               </svg>
             </button>
             <div class="prompt-actions-right">
               <div class="custom-plan-selector" (click)="togglePlanMenu($event)">
                 <span class="plan-label">Plan</span>
                 <span class="plan-value">{{ selectedPlan() === 'flash' ? 'LRNOVA FLASH' : 'LRNOVA PRO' }}</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" class="chevron">
                   <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
 
                 @if (isPlanMenuOpen()) {
-                  <div class="plan-dropdown-menu">
-                    <div class="plan-option" [class.active]="selectedPlan() === 'flash'" (click)="selectPlan('flash', $event)">
-                      <span class="plan-name">LRNOVA FLASH</span>
-                      @if (selectedPlan() === 'flash') {
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-purple)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                      }
-                    </div>
-                    <div class="plan-option" [class.active]="selectedPlan() === 'pro'" (click)="selectPlan('pro', $event)">
-                      <span class="plan-name">LRNOVA PRO</span>
-                      @if (selectedPlan() === 'pro') {
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-purple)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                      }
-                    </div>
+                <div class="plan-dropdown-menu">
+                  <div class="plan-option" [class.active]="selectedPlan() === 'flash'"
+                    (click)="selectPlan('flash', $event)">
+                    <span class="plan-name">LRNOVA FLASH</span>
+                    @if (selectedPlan() === 'flash') {
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-purple)"
+                      stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    }
                   </div>
+                  <div class="plan-option" [class.active]="selectedPlan() === 'pro'"
+                    (click)="selectPlan('pro', $event)">
+                    <span class="plan-name">LRNOVA PRO</span>
+                    @if (selectedPlan() === 'pro') {
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-purple)"
+                      stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    }
+                  </div>
+                </div>
                 }
               </div>
-              <button
-                class="prompt-submit"
-                [class.has-text]="promptText.trim().length > 0"
-                (click)="onSubmitPrompt()"
-                id="btn-submit-prompt"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="22" y1="2" x2="11" y2="13"/>
-                  <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              <button class="prompt-submit" [class.has-text]="promptText.trim().length > 0" (click)="onSubmitPrompt()"
+                id="btn-submit-prompt">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13" />
+                  <polygon points="22 2 15 22 11 13 2 9 22 2" />
                 </svg>
               </button>
             </div>
@@ -197,43 +206,35 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Bottom Elements that disappear -->
     <div class="home-only-elements" [class.fade-out]="isAnimatingOut() || isGenerating()">
       <!-- Agent Selector Icons -->
       <div class="agent-icons">
         <!-- Video Agent -->
-        <button
-          class="agent-btn"
-          [class.active]="activeAgent() === 'video'"
-          (click)="selectAgent('video')"
-          id="btn-video-agent"
-          title="Video Agent"
-        >
+        <button class="agent-btn" [class.active]="activeAgent() === 'video'" (click)="selectAgent('video')"
+          id="btn-video-agent" title="Video Agent">
           <div class="agent-icon-wrap">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="23 7 16 12 23 17 23 7"/>
-              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="23 7 16 12 23 17 23 7" />
+              <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
             </svg>
           </div>
           <span class="agent-label">Video Agent</span>
         </button>
 
         <!-- Text Agent -->
-        <button
-          class="agent-btn"
-          [class.active]="activeAgent() === 'text'"
-          (click)="selectAgent('text')"
-          id="btn-text-agent"
-          title="Text Agent"
-        >
+        <button class="agent-btn" [class.active]="activeAgent() === 'text'" (click)="selectAgent('text')"
+          id="btn-text-agent" title="Text Agent">
           <div class="agent-icon-wrap">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2-2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/>
-              <line x1="16" y1="17" x2="8" y2="17"/>
-              <polyline points="10 9 9 9 8 9"/>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2-2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+              <polyline points="10 9 9 9 8 9" />
             </svg>
           </div>
           <span class="agent-label">Text Agent</span>
@@ -243,12 +244,12 @@
       <!-- Quick Suggestions -->
       <div class="quick-suggestions" id="quick-suggestions">
         @for (suggestion of suggestions(); track suggestion.id) {
-          <button class="suggestion-chip" [id]="suggestion.id" (click)="useSuggestion(suggestion.text)">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path [attr.d]="suggestion.icon" />
-            </svg>
-            {{ suggestion.text }}
-          </button>
+        <button class="suggestion-chip" [id]="suggestion.id" (click)="useSuggestion(suggestion.text)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path [attr.d]="suggestion.icon" />
+          </svg>
+          {{ suggestion.text }}
+        </button>
         }
       </div>
     </div>
@@ -258,61 +259,89 @@
     <div class="results-container fade-in-up">
       <div class="results-header">
         <div class="tools-toolbar-wrapper" style="max-width: 100%;">
-        <div class="tools-pills-container">
-          <button class="tool-pill" [class.active]="activeTool() === 'Course Content'" (click)="activeTool.set('Course Content')">Course Content</button>
-          <button class="tool-pill" [class.active]="activeTool() === 'Script'" (click)="activeTool.set('Script')">Script</button>
-          <button class="tool-pill" [class.active]="activeTool() === 'Assessment'" (click)="activeTool.set('Assessment')">Assessment</button>
-          <button class="tool-pill" [class.active]="activeTool() === 'Topic'" (click)="activeTool.set('Topic')">Topic</button>
-          <button class="tool-pill" [class.active]="activeTool() === 'Activity'" (click)="activeTool.set('Activity')">Activity</button>
-        </div>
-        <div class="tools-actions-container">
-          <button class="tool-action-pill">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
-            Filter
-          </button>
-          <button class="tool-action-pill">
-            Sources
-            <span class="tool-badge">12</span>
-          </button>
+          <div class="tools-pills-container">
+            @if (activeAgent() === 'video') {
+            <button class="tool-pill" [class.active]="activeTool() === 'Video Avatar'"
+              (click)="activeTool.set('Video Avatar')">Video Avatar</button>
+            <button class="tool-pill" [class.active]="activeTool() === 'Scorm Video'"
+              (click)="activeTool.set('Scorm Video')">Scorm Video</button>
+            } @else {
+            <button class="tool-pill" [class.active]="activeTool() === 'Course Content'"
+              (click)="activeTool.set('Course Content')">Course Content</button>
+            <button class="tool-pill" [class.active]="activeTool() === 'Script'"
+              (click)="activeTool.set('Script')">Script</button>
+            <button class="tool-pill" [class.active]="activeTool() === 'Assessment'"
+              (click)="activeTool.set('Assessment')">Assessment</button>
+            <button class="tool-pill" [class.active]="activeTool() === 'Topic'"
+              (click)="activeTool.set('Topic')">Topic</button>
+            <button class="tool-pill" [class.active]="activeTool() === 'Activity'"
+              (click)="activeTool.set('Activity')">Activity</button>
+            }
+          </div>
+          <div class="tools-actions-container">
+            <button class="tool-action-pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="4" y1="21" x2="4" y2="14" />
+                <line x1="4" y1="10" x2="4" y2="3" />
+                <line x1="12" y1="21" x2="12" y2="12" />
+                <line x1="12" y1="8" x2="12" y2="3" />
+                <line x1="20" y1="21" x2="20" y2="16" />
+                <line x1="20" y1="12" x2="20" y2="3" />
+                <line x1="1" y1="14" x2="7" y2="14" />
+                <line x1="9" y1="8" x2="15" y2="8" />
+                <line x1="17" y1="16" x2="23" y2="16" />
+              </svg>
+              Filter
+            </button>
+            <button class="tool-action-pill">
+              Sources
+              <span class="tool-badge">12</span>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-    
-    <div class="thinking-indicator">
-      <svg class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" />
-      </svg>
-      <span class="thinking-text gradient-text">{{ loadingText() }}</span>
-    </div>
 
-    <div class="result-card-skeleton glass-card">
-      <div class="skeleton-header">
-        <div class="skeleton-avatar"></div>
-        <div class="skeleton-title-lines">
-          <div class="skeleton-line w-40"></div>
-          <div class="skeleton-line w-60"></div>
+      <div class="thinking-indicator">
+        <svg class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2">
+          <path
+            d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" />
+        </svg>
+        <span class="thinking-text gradient-text">{{ loadingText() }}</span>
+      </div>
+
+      <div class="result-card-skeleton glass-card">
+        <div class="skeleton-header">
+          <div class="skeleton-avatar"></div>
+          <div class="skeleton-title-lines">
+            <div class="skeleton-line w-40"></div>
+            <div class="skeleton-line w-60"></div>
+          </div>
+        </div>
+        <div class="skeleton-content">
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line w-80"></div>
+        </div>
+        <div class="skeleton-gallery">
+          <div class="skeleton-img"></div>
+          <div class="skeleton-img"></div>
+          <div class="skeleton-img"></div>
         </div>
       </div>
-      <div class="skeleton-content">
-        <div class="skeleton-line"></div>
-        <div class="skeleton-line"></div>
-        <div class="skeleton-line w-80"></div>
+
+      <div class="sticky-prompt-wrapper">
+        <div class="sticky-prompt">
+          <input type="text" placeholder="Ask a follow-up question..." />
+          <button class="sticky-submit">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13" />
+              <polygon points="22 2 15 22 11 13 2 9 22 2" />
+            </svg>
+          </button>
+        </div>
       </div>
-      <div class="skeleton-gallery">
-        <div class="skeleton-img"></div>
-        <div class="skeleton-img"></div>
-        <div class="skeleton-img"></div>
-      </div>
-    </div>
-    
-    <div class="sticky-prompt-wrapper">
-      <div class="sticky-prompt">
-        <input type="text" placeholder="Ask a follow-up question..." />
-        <button class="sticky-submit">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        </button>
-      </div>
-    </div>
     </div>
     }
   </div>
