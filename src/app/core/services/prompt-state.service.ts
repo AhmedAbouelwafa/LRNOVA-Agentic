@@ -22,6 +22,7 @@ export class PromptStateService {
   readonly selectedPlan = signal<PlanType>('flash');
   readonly activeTool = signal('Course Content');
   readonly loadingText = signal('Thinking...');
+  readonly attachedFiles = signal<File[]>([]);
 
   private fakeLoadingInterval: any;
   private readonly fakeLoadingMessages = [
@@ -78,9 +79,24 @@ export class PromptStateService {
     this.selectedPlan.update(p => p === 'flash' ? 'pro' : 'flash');
   }
 
+  addFiles(files: FileList | null) {
+    if (!files) return;
+    const current = this.attachedFiles();
+    const newFiles = Array.from(files);
+    this.attachedFiles.set([...current, ...newFiles]);
+  }
+
+  removeFile(index: number) {
+    const current = this.attachedFiles();
+    const updated = [...current];
+    updated.splice(index, 1);
+    this.attachedFiles.set(updated);
+  }
+
   submitPrompt() {
     const text = this.promptText();
-    if (!text.trim()) return;
+    // Allow submission if text OR files exist
+    if (!text.trim() && this.attachedFiles().length === 0) return;
 
     this.submittedPrompt.set(text);
     this.isAnimatingOut.set(true);
@@ -121,6 +137,7 @@ export class PromptStateService {
     this.isAnimatingOut.set(false);
     this.promptText.set('');
     this.submittedPrompt.set('');
+    this.attachedFiles.set([]);
     this.router.navigate(['/']);
   }
 }

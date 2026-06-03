@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, effect } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, effect, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PromptStateService } from '../../../../core/services/prompt-state.service';
 import { TypewriterService } from '../../../../core/services/typewriter.service';
@@ -16,6 +16,8 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
   protected i18n = inject(LocalizationService);
   private tw = inject(TypewriterService);
   private placeholderWriter!: ReturnType<TypewriterService['create']>;
+
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   protected typedPlaceholder!: ReturnType<TypewriterService['create']>;
 
@@ -83,6 +85,25 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     this.state.submitPrompt();
+  }
+
+  triggerFileInput() {
+    if (this.fileInput) {
+      this.fileInput.nativeElement.click();
+    }
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.state.addFiles(input.files);
+      // Reset input so the same file can be selected again if removed
+      input.value = '';
+    }
+  }
+
+  removeFile(index: number) {
+    this.state.removeFile(index);
   }
 
   onTogglePlan(event: Event) {
