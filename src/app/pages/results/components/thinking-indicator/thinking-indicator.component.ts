@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { PromptStateService } from '../../../../core/services/prompt-state.service';
+import { LocalizationService } from '../../../../core/services/localization.service';
 
 @Component({
   selector: 'app-thinking-indicator',
@@ -9,7 +10,7 @@ import { PromptStateService } from '../../../../core/services/prompt-state.servi
       <svg class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" />
       </svg>
-      <span class="thinking-text gradient-text">{{ state.loadingText() }}</span>
+      <span class="thinking-text gradient-text">{{ translateLoading(state.loadingText()) }}</span>
     </div>
   `,
   styles: [`
@@ -30,4 +31,20 @@ import { PromptStateService } from '../../../../core/services/prompt-state.servi
 })
 export class ThinkingIndicatorComponent {
   protected state = inject(PromptStateService);
+  protected i18n = inject(LocalizationService);
+
+  private loadingMap: Record<string, string> = {
+    'Thinking...': 'loading.thinking',
+    'Analyzing context...': 'loading.analyzing',
+    'Querying AI agent cluster...': 'loading.querying',
+    'Synthesizing learning vectors...': 'loading.synthesizing',
+    'Drafting educational content...': 'loading.drafting',
+    'Rendering interactive modules...': 'loading.rendering',
+    'Finalizing layout...': 'loading.finalizing',
+  };
+
+  translateLoading(text: string): string {
+    const key = this.loadingMap[text];
+    return key ? this.i18n.t(key) : text;
+  }
 }

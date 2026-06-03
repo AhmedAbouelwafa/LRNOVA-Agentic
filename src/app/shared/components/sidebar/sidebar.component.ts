@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { PromptStateService } from '../../../core/services/prompt-state.service';
+import { LocalizationService } from '../../../core/services/localization.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -11,4 +12,5 @@ import { PromptStateService } from '../../../core/services/prompt-state.service'
 })
 export class SidebarComponent {
   protected state = inject(PromptStateService);
+  protected i18n = inject(LocalizationService);
 }

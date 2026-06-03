@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { LocalizationService } from '../../../../core/services/localization.service';
 
 @Component({
   selector: 'app-sticky-prompt',
@@ -6,7 +7,7 @@ import { Component } from '@angular/core';
   template: `
     <div class="sticky-prompt-wrapper">
       <div class="sticky-prompt">
-        <input type="text" placeholder="Ask a follow-up question..." />
+        <input type="text" [placeholder]="i18n.t('sticky.placeholder')" />
         <button class="sticky-submit">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="22" y1="2" x2="11" y2="13" />
@@ -46,4 +47,6 @@ import { Component } from '@angular/core';
     }
   `]
 })
-export class StickyPromptComponent {}
+export class StickyPromptComponent {
+  protected i18n = inject(LocalizationService);
+}

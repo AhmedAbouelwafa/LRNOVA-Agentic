@@ -8,7 +8,7 @@
           <polyline points="9 22 9 12 15 12 15 22"></polyline>
         </svg>
       </div>
-      <span class="sidebar-text">Home</span>
+      <span class="sidebar-text">{{ i18n.t('sidebar.home') }}</span>
     </a>
 
     <!-- Avatar -->
@@ -19,7 +19,7 @@
           <circle cx="12" cy="7" r="4" />
         </svg>
       </div>
-      <span class="sidebar-text">Avatar</span>
+      <span class="sidebar-text">{{ i18n.t('sidebar.avatar') }}</span>
     </a>
 
     <!-- Brand -->
@@ -29,7 +29,7 @@
           <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
         </svg>
       </div>
-      <span class="sidebar-text">Brand</span>
+      <span class="sidebar-text">{{ i18n.t('sidebar.brand') }}</span>
     </a>
 
     <!-- Apps -->
@@ -40,7 +40,7 @@
           <path d="M15 5l4 4" />
         </svg>
       </div>
-      <span class="sidebar-text">Apps</span>
+      <span class="sidebar-text">{{ i18n.t('sidebar.apps') }}</span>
     </a>
 
     <div class="sidebar-divider"></div>
@@ -52,11 +52,18 @@
           <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
         </svg>
       </div>
-      <span class="sidebar-text">Projects</span>
+      <span class="sidebar-text">{{ i18n.t('sidebar.projects') }}</span>
     </a>
   </div>
 
   <div class="sidebar-bottom">
+    <!-- Language Toggle -->
+    <button class="sidebar-item" (click)="i18n.toggleLang()" id="lang-toggle">
+      <div class="sidebar-icon lang-icon">
+        <span class="lang-label">{{ i18n.currentLang() === 'en' ? 'AR' : 'EN' }}</span>
+      </div>
+    </button>
+
     <!-- Notifications -->
     <button class="sidebar-item">
       <div class="sidebar-icon notification-icon">
@@ -69,7 +76,7 @@
     </button>
 
     <!-- Diamond -->
-    <button class="sidebar-item">
+    <button class="sidebar-item" routerLink="/pricing" routerLinkActive="active">
       <div class="sidebar-icon circle-icon diamond">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="12 2 2 7 12 22 22 7 12 2"></polygon>

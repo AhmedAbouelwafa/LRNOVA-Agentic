@@ -125,3 +125,8 @@
     cursor: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 3L19 12L12 14L9 22L5 3Z' fill='%231E1E2F' stroke='%23ffffff' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E") 2 2, default !important;
   }
 }
+
+/* RTL Support */
+:host-context(html[dir="rtl"]) .main-layout {
+  padding: 0 108px 60px 2rem;
+}

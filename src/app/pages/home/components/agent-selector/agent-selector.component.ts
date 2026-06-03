@@ -1,5 +1,6 @@
 import { Component, inject, output } from '@angular/core';
 import { PromptStateService } from '../../../../core/services/prompt-state.service';
+import { LocalizationService } from '../../../../core/services/localization.service';
 
 @Component({
   selector: 'app-agent-selector',
@@ -9,6 +10,7 @@ import { PromptStateService } from '../../../../core/services/prompt-state.servi
 })
 export class AgentSelectorComponent {
   protected state = inject(PromptStateService);
+  protected i18n = inject(LocalizationService);
   agentChanged = output<void>();
 
   selectAgent(agent: 'video' | 'text') {

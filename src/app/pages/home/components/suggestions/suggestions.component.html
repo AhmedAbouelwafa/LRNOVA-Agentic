@@ -1,10 +1,10 @@
 <div class="quick-suggestions" id="quick-suggestions">
   @for (suggestion of state.suggestions(); track suggestion.id) {
-    <button class="suggestion-chip" [id]="suggestion.id" (click)="useSuggestion(suggestion.text)">
+    <button class="suggestion-chip" [id]="suggestion.id" (click)="useSuggestion(getTranslatedText(suggestion.id, suggestion.text))">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path [attr.d]="suggestion.icon" />
       </svg>
-      {{ suggestion.text }}
+      {{ getTranslatedText(suggestion.id, suggestion.text) }}
     </button>
   }
 </div>

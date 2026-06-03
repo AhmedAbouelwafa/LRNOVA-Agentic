@@ -2,7 +2,7 @@
   <div class="tools-toolbar-wrapper">
     <div class="tools-pills-container">
       @for (tool of state.activeTools(); track tool) {
-        <button class="tool-pill" [class.active]="state.activeTool() === tool" (click)="state.activeTool.set(tool)">{{ tool }}</button>
+        <button class="tool-pill" [class.active]="state.activeTool() === tool" (click)="state.activeTool.set(tool)">{{ translateTool(tool) }}</button>
       }
     </div>
     <div class="tools-actions-container">
@@ -14,10 +14,10 @@
           <line x1="1" y1="14" x2="7" y2="14" /><line x1="9" y1="8" x2="15" y2="8" />
           <line x1="17" y1="16" x2="23" y2="16" />
         </svg>
-        Filter
+        {{ i18n.t('results.filter') }}
       </button>
       <button class="tool-action-pill">
-        Sources
+        {{ i18n.t('results.sources') }}
         <span class="tool-badge">12</span>
       </button>
     </div>

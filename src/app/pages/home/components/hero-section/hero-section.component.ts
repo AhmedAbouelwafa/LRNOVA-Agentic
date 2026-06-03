@@ -1,5 +1,6 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, effect } from '@angular/core';
 import { TypewriterService } from '../../../../core/services/typewriter.service';
+import { LocalizationService } from '../../../../core/services/localization.service';
 
 @Component({
   selector: 'app-hero-section',
@@ -9,6 +10,7 @@ import { TypewriterService } from '../../../../core/services/typewriter.service'
 })
 export class HeroSectionComponent implements OnInit, OnDestroy {
   private tw = inject(TypewriterService);
+  protected i18n = inject(LocalizationService);
   private headlineWriter!: ReturnType<TypewriterService['create']>;
 
   protected typedHeadline = this.tw.create({
@@ -20,6 +22,23 @@ export class HeroSectionComponent implements OnInit, OnDestroy {
     initialCharIndex: 11,
     startDeleting: true
   });
+
+  constructor() {
+    // React to language changes - update typewriter phrases
+    effect(() => {
+      const lang = this.i18n.currentLang();
+      const phrases = [
+        this.i18n.t('hero.phrase.experiences'),
+        this.i18n.t('hero.phrase.courses'),
+        this.i18n.t('hero.phrase.3d'),
+        this.i18n.t('hero.phrase.videos'),
+        this.i18n.t('hero.phrase.assessments'),
+      ];
+      if (this.headlineWriter) {
+        this.headlineWriter.updatePhrases(phrases);
+      }
+    });
+  }
 
   ngOnInit() {
     this.headlineWriter = this.typedHeadline;

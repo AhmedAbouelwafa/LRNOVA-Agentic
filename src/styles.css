@@ -75,3 +75,16 @@ img {
   background: rgba(100, 20, 255, 0.4);
   color: #fff;
 }
+
+/* === RTL Support === */
+html[dir="rtl"] body {
+  font-family: 'Almarai', 'Cairo', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  direction: rtl;
+  text-align: right;
+}
+
+html[dir="rtl"] input,
+html[dir="rtl"] textarea {
+  direction: rtl;
+  text-align: right;
+}

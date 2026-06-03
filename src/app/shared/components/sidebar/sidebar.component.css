@@ -123,3 +123,28 @@
   border-radius: 10px;
   border: 2px solid white;
 }
+
+.lang-icon {
+  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+  border-radius: 10px;
+  color: white;
+}
+
+.lang-label {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+/* RTL Support */
+:host-context(html[dir="rtl"]) .agentic-sidebar {
+  left: auto;
+  right: 0;
+  border-right: none;
+  border-left: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.03);
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 24px;
+  border-bottom-left-radius: 24px;
+}

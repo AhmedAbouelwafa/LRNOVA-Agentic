@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { PromptStateService } from '../../../../core/services/prompt-state.service';
+import { LocalizationService } from '../../../../core/services/localization.service';
 
 @Component({
   selector: 'app-suggestions',
@@ -9,9 +10,16 @@ import { PromptStateService } from '../../../../core/services/prompt-state.servi
 })
 export class SuggestionsComponent {
   protected state = inject(PromptStateService);
+  protected i18n = inject(LocalizationService);
 
   useSuggestion(text: string) {
     this.state.promptText.set(text);
     this.state.isPromptFocused.set(true);
+  }
+
+  getTranslatedText(id: string, fallback: string): string {
+    const key = 'suggestion.' + id;
+    const translated = this.i18n.t(key);
+    return translated !== key ? translated : fallback;
   }
 }
