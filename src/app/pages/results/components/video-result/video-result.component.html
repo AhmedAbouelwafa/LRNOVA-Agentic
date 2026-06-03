@@ -1,0 +1,161 @@
+<div class="video-result-layout">
+  <!-- Video Player Card -->
+  <div class="video-player-card glass-card">
+    <div class="video-wrapper">
+      <video
+        src="generated_video_1.mp4"
+        controls
+        autoplay
+        playsinline
+        class="video-element"
+        id="generated-video-player">
+      </video>
+
+      <!-- Floating Toolbar (Bullets) -->
+      <div class="floating-toolbar">
+        <button class="tool-bullet" [class.active]="activePanel() === 'avatar'" (click)="togglePanel('avatar')" title="Avatar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+        <button class="tool-bullet" [class.active]="activePanel() === 'audio'" (click)="togglePanel('audio')" title="Audio">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        </button>
+        <button class="tool-bullet" [class.active]="activePanel() === 'settings'" (click)="togglePanel('settings')" title="Settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+      </div>
+
+      <!-- Floating Panel -->
+      @if (activePanel()) {
+        <div class="floating-panel glass-card fade-in">
+          <div class="panel-header">
+            <h3 class="panel-title">
+              @if (activePanel() === 'avatar') { Avatar Selection }
+              @if (activePanel() === 'audio') { Audio & Voice }
+              @if (activePanel() === 'settings') { Video Settings }
+            </h3>
+            <button class="close-btn" (click)="activePanel.set(null)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          
+          <div class="panel-content">
+            <!-- Avatar Panel -->
+            @if (activePanel() === 'avatar') {
+              <p class="panel-hint">Choose an AI avatar to present your video.</p>
+              <div class="avatar-grid">
+                @for (avatar of avatars; track avatar.id) {
+                  <button
+                    class="avatar-card"
+                    [class.selected]="selectedAvatar() === avatar.id"
+                    (click)="selectAvatar(avatar.id)"
+                    [id]="'avatar-' + avatar.id">
+                    <img [src]="avatar.img" [alt]="avatar.name" class="avatar-img" />
+                    <span class="avatar-name">{{ avatar.name }}</span>
+                    @if (selectedAvatar() === avatar.id) {
+                      <div class="avatar-check">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                      </div>
+                    }
+                  </button>
+                }
+              </div>
+              <button class="upload-avatar-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Upload Custom Avatar
+              </button>
+            }
+
+            <!-- Audio Panel -->
+            @if (activePanel() === 'audio') {
+              <p class="panel-hint">Select a voice for your video narration.</p>
+              <div class="voice-list">
+                @for (voice of voices; track voice.id) {
+                  <button
+                    class="voice-card"
+                    [class.selected]="selectedVoice() === voice.id"
+                    (click)="selectVoice(voice.id)"
+                    [id]="'voice-' + voice.id">
+                    <div class="voice-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                        <line x1="12" y1="19" x2="12" y2="23"/>
+                        <line x1="8" y1="23" x2="16" y2="23"/>
+                      </svg>
+                    </div>
+                    <div class="voice-info">
+                      <span class="voice-name">{{ voice.label }}</span>
+                      <span class="voice-lang">{{ voice.lang }}</span>
+                    </div>
+                    <div class="voice-preview">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                    @if (selectedVoice() === voice.id) {
+                      <div class="voice-check">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                      </div>
+                    }
+                  </button>
+                }
+              </div>
+            }
+
+            <!-- Settings Panel -->
+            @if (activePanel() === 'settings') {
+              <p class="panel-hint">Fine-tune video output settings.</p>
+              <div class="setting-group">
+                <label class="setting-label">Resolution</label>
+                <div class="setting-options">
+                  @for (res of resolutions; track res) {
+                    <button class="setting-chip" [class.active]="selectedResolution() === res" (click)="selectedResolution.set(res)">{{ res }}</button>
+                  }
+                </div>
+              </div>
+              <div class="setting-group">
+                <label class="setting-label">Duration</label>
+                <div class="setting-options">
+                  @for (dur of durations; track dur) {
+                    <button class="setting-chip" [class.active]="selectedDuration() === dur" (click)="selectedDuration.set(dur)">{{ dur }}</button>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+          
+          <div class="panel-footer">
+            <button class="action-btn primary full-width" (click)="regenerate()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              Apply & Regenerate
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Video Info and Actions -->
+    <div class="video-info-section">
+      <div class="video-info">
+        <div class="video-meta">
+          <span class="video-badge generated">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            AI Generated
+          </span>
+          <span class="video-badge duration">{{ selectedDuration() }}</span>
+          <span class="video-badge resolution">{{ selectedResolution() }}</span>
+        </div>
+        <h3 class="video-title">{{ state.submittedPrompt() }}</h3>
+      </div>
+      
+      <div class="video-actions">
+        <button class="action-btn outline">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </button>
+        <button class="action-btn outline">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+          Export SCORM
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

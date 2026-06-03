@@ -4,6 +4,7 @@ import { ResultsToolbarComponent } from './components/results-toolbar/results-to
 import { ThinkingIndicatorComponent } from './components/thinking-indicator/thinking-indicator.component';
 import { SkeletonCardComponent } from './components/skeleton-card/skeleton-card.component';
 import { StickyPromptComponent } from './components/sticky-prompt/sticky-prompt.component';
+import { VideoResultComponent } from './components/video-result/video-result.component';
 
 @Component({
   selector: 'app-results',
@@ -12,7 +13,8 @@ import { StickyPromptComponent } from './components/sticky-prompt/sticky-prompt.
     ResultsToolbarComponent,
     ThinkingIndicatorComponent,
     SkeletonCardComponent,
-    StickyPromptComponent
+    StickyPromptComponent,
+    VideoResultComponent
   ],
   templateUrl: './results.component.html',
   styleUrl: './results.component.css'

@@ -17,6 +17,7 @@ export class PromptStateService {
   readonly activeAgent = signal<AgentType>(null);
   readonly isPromptFocused = signal(false);
   readonly isGenerating = signal(false);
+  readonly isGenerationComplete = signal(false);
   readonly isAnimatingOut = signal(false);
   readonly selectedPlan = signal<PlanType>('flash');
   readonly activeTool = signal('Course Content');
@@ -109,12 +110,14 @@ export class PromptStateService {
 
       setTimeout(() => {
         clearInterval(this.fakeLoadingInterval);
+        this.isGenerationComplete.set(true);
       }, 12000);
     }, 600);
   }
 
   goHome() {
     this.isGenerating.set(false);
+    this.isGenerationComplete.set(false);
     this.isAnimatingOut.set(false);
     this.promptText.set('');
     this.submittedPrompt.set('');

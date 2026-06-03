@@ -1,6 +1,17 @@
-<div class="results-container fade-in-up" style="order: 3; width: 100%">
+<div class="results-container fade-in-up" [class.full-width]="state.isGenerationComplete() && state.activeAgent() === 'video'" style="order: 3; width: 100%">
   <app-results-toolbar />
-  <app-thinking-indicator />
-  <app-skeleton-card />
+  
+  @if (!state.isGenerationComplete()) {
+    <app-thinking-indicator />
+    <app-skeleton-card />
+  } @else {
+    @if (state.activeAgent() === 'video') {
+      <app-video-result />
+    } @else {
+      <!-- Placeholder for text result -->
+      <app-skeleton-card />
+    }
+  }
+
   <app-sticky-prompt />
 </div>

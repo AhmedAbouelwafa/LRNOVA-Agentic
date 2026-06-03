@@ -3,6 +3,11 @@
 .results-container {
   width: 100%; max-width: 900px; margin: 0 auto;
   display: flex; flex-direction: column; gap: 24px;
+  transition: max-width 0.5s ease;
+}
+
+.results-container.full-width {
+  max-width: 1200px;
 }
 
 @keyframes fadeInUp {
