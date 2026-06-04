@@ -97,8 +97,10 @@
     <app-results-toolbar />
     
     @if (!state.isGenerationComplete()) {
-      <app-thinking-indicator />
-      <app-skeleton-card />
+      @if (state.isGenerating()) {
+        <app-thinking-indicator />
+        <app-skeleton-card />
+      }
     } @else {
       @if (state.activeAgent() === 'video') {
         <app-video-result />
