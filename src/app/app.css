@@ -95,20 +95,44 @@
 
 /* Shell Layout */
 .main-layout {
-  position: relative; z-index: 1;
+  position: relative;
   display: flex; flex-direction: column; min-height: 100dvh;
-  padding: 0 2rem 60px 108px; text-align: center;
+  padding: 0 2rem 80px 108px; text-align: center;
 }
 
 .content-wrapper {
   max-width: 900px; width: 100%; margin: 0 auto;
   padding-top: max(25vh, 40px);
   display: flex; flex-direction: column; align-items: center;
-  transition: padding-top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: padding-top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+              max-width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .content-wrapper.animating-out {
-  padding-top: 40px;
+  padding-top: 24px;
+  max-width: 100%;
+}
+.content-wrapper.animating-out app-prompt-field {
+  display: none !important;
+}
+
+/* ===== Responsive Layout ===== */
+@media (max-width: 900px) {
+  .main-layout {
+    padding: 0 1rem 80px 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .main-layout {
+    padding: 0 0.75rem 80px 0.75rem;
+  }
+  .content-wrapper {
+    padding-top: max(15vh, 30px);
+  }
+  .content-wrapper.animating-out {
+    padding-top: 24px;
+  }
 }
 
 /* ==================== CUSTOM CURSOR ==================== */
@@ -128,5 +152,19 @@
 
 /* RTL Support */
 :host-context(html[dir="rtl"]) .main-layout {
-  padding: 0 108px 60px 2rem;
+  padding: 0 108px 80px 2rem;
 }
+
+@media (max-width: 900px) {
+  :host-context(html[dir="rtl"]) .main-layout {
+    padding: 0 1rem 80px 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  :host-context(html[dir="rtl"]) .main-layout {
+    padding: 0 0.75rem 80px 0.75rem;
+  }
+}
+
+

@@ -43,11 +43,30 @@ export class VideoResultComponent {
   // Panel state
   readonly activePanel = signal<'avatar' | 'audio' | 'settings' | null>(null);
 
+  // Edit mode toggle (no editor UI, just state)
+  readonly isEditMode = signal(false);
+
+  // Toolbar expansion state
+  readonly isToolbarExpanded = signal(false);
+
   togglePanel(panel: 'avatar' | 'audio' | 'settings') {
     if (this.activePanel() === panel) {
       this.activePanel.set(null);
     } else {
       this.activePanel.set(panel);
+    }
+  }
+
+  toggleEditMode() {
+    this.isEditMode.update(v => !v);
+  }
+
+  toggleToolbar() {
+    if (this.isToolbarExpanded()) {
+      this.isToolbarExpanded.set(false);
+      this.activePanel.set(null);
+    } else {
+      this.isToolbarExpanded.set(true);
     }
   }
 

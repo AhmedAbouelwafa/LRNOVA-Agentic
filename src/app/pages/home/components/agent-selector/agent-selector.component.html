@@ -1,5 +1,17 @@
 <div class="agent-icons">
-  <button class="agent-btn" [class.active]="state.activeAgent() === 'video'" (click)="selectAgent('video')" id="btn-video-agent" title="Video Agent">
+  <button class="agent-btn" [class.active]="state.activeAgent() === 'video'" (click)="selectAgent('video')" id="btn-video-agent" title="Video Agent" style="position: relative; overflow: visible;">
+    @if (state.tourStep() === 5) {
+      <div class="tour-card arrow-top" style="top: calc(100% + 20px); left: 50%; transform: translateX(-50%); cursor: default; position: absolute;" (click)="$event.stopPropagation()">
+        <div class="tour-content">
+          <h3>{{ i18n.currentLang() === 'ar' ? 'وكيل الفيديو' : 'Video Agent' }}</h3>
+          <p>{{ i18n.currentLang() === 'ar' ? 'اختر هذا الوكيل لإنشاء فيديوهات تعليمية تفاعلية مع صورة رمزية (Avatar) متحركة بالذكاء الاصطناعي.' : 'Select this agent to generate interactive educational videos featuring an AI-animated avatar.' }}</p>
+        </div>
+        <div class="tour-actions">
+          <button class="skip-btn" (click)="state.tourStep.set(0)">{{ i18n.currentLang() === 'ar' ? 'تخطي الجولة' : 'Skip Tour' }}</button>
+          <button class="next-btn" (click)="state.tourStep.set(6)">{{ i18n.currentLang() === 'ar' ? 'التالي' : 'Next' }}</button>
+        </div>
+      </div>
+    }
     <div class="agent-icon-wrap">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <polygon points="23 7 16 12 23 17 23 7" />
@@ -9,7 +21,19 @@
     <span class="agent-label">{{ i18n.t('agent.video') }}</span>
   </button>
 
-  <button class="agent-btn" [class.active]="state.activeAgent() === 'text'" (click)="selectAgent('text')" id="btn-text-agent" title="Text Agent">
+  <button class="agent-btn" [class.active]="state.activeAgent() === 'text'" (click)="selectAgent('text')" id="btn-text-agent" title="Text Agent" style="position: relative; overflow: visible;">
+    @if (state.tourStep() === 6) {
+      <div class="tour-card arrow-top" style="top: calc(100% + 20px); left: 50%; transform: translateX(-50%); cursor: default; position: absolute;" (click)="$event.stopPropagation()">
+        <div class="tour-content">
+          <h3>{{ i18n.currentLang() === 'ar' ? 'الوكيل النصي' : 'Text Agent' }}</h3>
+          <p>{{ i18n.currentLang() === 'ar' ? 'استخدم هذا الوكيل للحصول على شروحات نصية مفصلة، خطط دروس، أو ملخصات منظمة بشكل احترافي.' : 'Use this agent to get detailed text explanations, lesson plans, or professionally structured summaries.' }}</p>
+        </div>
+        <div class="tour-actions">
+          <button class="skip-btn" (click)="state.tourStep.set(0)">{{ i18n.currentLang() === 'ar' ? 'تخطي الجولة' : 'Skip Tour' }}</button>
+          <button class="next-btn" (click)="state.tourStep.set(7)">{{ i18n.currentLang() === 'ar' ? 'التالي' : 'Next' }}</button>
+        </div>
+      </div>
+    }
     <div class="agent-icon-wrap">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2-2h12a2 2 0 0 0 2-2V8z" />
@@ -20,5 +44,28 @@
       </svg>
     </div>
     <span class="agent-label">{{ i18n.t('agent.text') }}</span>
+  </button>
+
+  <button class="agent-btn" [class.active]="state.activeAgent() === 'slides'" (click)="selectAgent('slides')" id="btn-slides-agent" title="Slides Generator" style="position: relative; overflow: visible;">
+    @if (state.tourStep() === 7) {
+      <div class="tour-card arrow-top" style="top: calc(100% + 20px); left: 50%; transform: translateX(-50%); cursor: default; position: absolute;" (click)="$event.stopPropagation()">
+        <div class="tour-content">
+          <h3>{{ i18n.currentLang() === 'ar' ? 'مولد العروض' : 'Slides Generator' }}</h3>
+          <p>{{ i18n.currentLang() === 'ar' ? 'مثالي لتحويل الأفكار إلى عروض تقديمية (Slides) جذابة وجاهزة للعرض في ثوانٍ معدودة.' : 'Perfect for converting ideas into engaging, ready-to-present Slides in a matter of seconds.' }}</p>
+        </div>
+        <div class="tour-actions">
+          <button class="skip-btn" (click)="state.tourStep.set(0)">{{ i18n.currentLang() === 'ar' ? 'تخطي الجولة' : 'Skip Tour' }}</button>
+          <button class="next-btn" (click)="state.tourStep.set(8)">{{ i18n.currentLang() === 'ar' ? 'التالي' : 'Next' }}</button>
+        </div>
+      </div>
+    }
+    <div class="agent-icon-wrap">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+        <line x1="8" y1="21" x2="16" y2="21" />
+        <line x1="12" y1="17" x2="12" y2="21" />
+      </svg>
+    </div>
+    <span class="agent-label">{{ i18n.t('agent.slides') }}</span>
   </button>
 </div>

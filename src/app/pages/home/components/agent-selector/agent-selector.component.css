@@ -1,5 +1,5 @@
 :host { display: block; }
-.agent-icons { display: flex; align-items: center; justify-content: center; gap: 12px; flex-shrink: 0; }
+.agent-icons { display: flex; align-items: center; justify-content: center; gap: 12px; flex-shrink: 0; flex-wrap: wrap; }
 
 .agent-btn {
   display: flex; align-items: center; gap: 8px; padding: 12px 22px;
@@ -28,3 +28,12 @@
 .agent-btn.active .agent-icon-wrap { color: #8B5CF6; filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.35)); }
 .agent-icon-wrap { display: flex; align-items: center; justify-content: center; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
 .agent-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.01em; white-space: nowrap; }
+
+/* ===== Responsive ===== */
+@media (max-width: 600px) {
+  .agent-icons { gap: 8px; }
+  .agent-btn { padding: 10px 16px; gap: 6px; }
+  .agent-label { font-size: 0.68rem; }
+  .agent-icon-wrap svg { width: 16px; height: 16px; }
+}
+

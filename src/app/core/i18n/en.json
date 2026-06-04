@@ -15,9 +15,10 @@
 
   "agent.video": "Video Agent",
   "agent.text": "Text Agent",
+  "agent.slides": "Slides Generator",
 
   "prompt.addFile": "Add File",
-  "prompt.flash": "⚡ Flash",
+  "prompt.flash": "⚡ Rapid",
   "prompt.pro": "✨ Pro",
   "prompt.default.1": "Describe what you want to create...",
   "prompt.default.2": "Try: \"A 5-minute video on DNA\"",

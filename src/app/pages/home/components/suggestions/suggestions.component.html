@@ -1,4 +1,16 @@
 <div class="quick-suggestions" id="quick-suggestions">
+  @if (state.tourStep() === 8) {
+    <div class="tour-card arrow-bottom" style="bottom: calc(100% + 20px); left: 50%; transform: translateX(-50%); cursor: default; position: absolute;" (click)="$event.stopPropagation()">
+      <div class="tour-content">
+        <h3>{{ i18n.currentLang() === 'ar' ? 'ابدأ باقتراح سريع' : 'Start with a Suggestion' }}</h3>
+        <p>{{ i18n.currentLang() === 'ar' ? 'إذا كنت لا تعرف من أين تبدأ، اختر أحد هذه الاقتراحات السريعة لتجربة قدرات النظام فوراً بضغطة زر واحدة.' : 'If you don\'t know where to start, choose one of these quick suggestions to experience the system\'s capabilities instantly with one click.' }}</p>
+      </div>
+      <div class="tour-actions">
+        <button class="skip-btn" (click)="state.tourStep.set(0)">{{ i18n.currentLang() === 'ar' ? 'تخطي الجولة' : 'Skip Tour' }}</button>
+        <button class="next-btn" (click)="state.tourStep.set(0)">{{ i18n.currentLang() === 'ar' ? 'ابدأ الآن' : 'Start Now' }}</button>
+      </div>
+    </div>
+  }
   @for (suggestion of state.suggestions(); track suggestion.id) {
     <button class="suggestion-chip" [id]="suggestion.id" (click)="useSuggestion(getTranslatedText(suggestion.id, suggestion.text))">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

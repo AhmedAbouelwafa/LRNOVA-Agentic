@@ -1,4 +1,3 @@
-<app-sidebar />
 
 <!-- Background Effects -->
 <div class="bg-gradient-overlay" [class.show-bg]="state.isAnimatingOut()"></div>
@@ -11,10 +10,21 @@
 <!-- Blurred Logo Background -->
 <div class="bg-logo-blur" [class.fade-out]="state.isAnimatingOut()"></div>
 
+<!-- Tour Overlay -->
+@if (state.tourStep() > 0) {
+  <div class="tour-backdrop"></div>
+}
+
 <!-- Main Layout Shell -->
-<section class="main-layout">
+<section class="main-layout" [class.tour-mode]="state.tourStep() > 0">
+  <app-sidebar [class.tour-glow]="state.tourStep() === 1" style="z-index: 101" />
+
   <div class="content-wrapper" [class.animating-out]="state.isAnimatingOut()">
-    <app-prompt-field style="order: 2; width: 100%; display: flex; justify-content: center; z-index: 10;" />
+    <app-prompt-field 
+      [class.tour-glow]="state.tourStep() === 2" 
+      [style.z-index]="state.tourStep() >= 2 && state.tourStep() <= 4 ? 99998 : 10"
+      [style.position]="state.tourStep() >= 2 && state.tourStep() <= 4 ? 'relative' : 'static'"
+      style="order: 2; width: 100%; display: flex; justify-content: center;" />
     
     <!-- Routed Pages (Home / Results) -->
     <div style="display: contents;">

@@ -1,15 +1,30 @@
-<aside class="agentic-sidebar" id="main-sidebar">
+<aside class="agentic-sidebar" id="main-sidebar" [class.tour-glow]="state.tourStep() === 1">
   <div class="sidebar-top">
-    <!-- Home -->
-    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="sidebar-item" (click)="state.goHome()">
-      <div class="sidebar-icon home-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-          <polyline points="9 22 9 12 15 12 15 22"></polyline>
-        </svg>
-      </div>
-      <span class="sidebar-text">{{ i18n.t('sidebar.home') }}</span>
-    </a>
+    <!-- Home Wrapper to avoid routerLink click hijacking -->
+    <div style="position: relative; width: 100%; display: flex; flex-direction: column; align-items: center;">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="sidebar-item" (click)="state.goHome()">
+        <div class="sidebar-icon home-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+        </div>
+        <span class="sidebar-text">{{ i18n.t('sidebar.home') }}</span>
+      </a>
+
+      @if (state.tourStep() === 1) {
+        <div class="tour-card arrow-start arrow-start-top-align" style="top: -10px; left: calc(100% + 28px); cursor: default;" (click)="$event.stopPropagation()">
+          <div class="tour-content">
+            <h3>Main Menu</h3>
+            <p>From here you can navigate between the home page, browse plans and pricing, and easily manage your account settings.</p>
+          </div>
+          <div class="tour-actions">
+            <button class="skip-btn" (click)="state.tourStep.set(0)">Skip Tour</button>
+            <button class="next-btn" (click)="state.tourStep.set(2)">Next</button>
+          </div>
+        </div>
+      }
+    </div>
 
     <!-- Avatar -->
     <a href="#" class="sidebar-item">

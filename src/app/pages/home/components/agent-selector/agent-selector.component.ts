@@ -13,7 +13,7 @@ export class AgentSelectorComponent {
   protected i18n = inject(LocalizationService);
   agentChanged = output<void>();
 
-  selectAgent(agent: 'video' | 'text') {
+  selectAgent(agent: 'video' | 'text' | 'slides') {
     this.state.selectAgent(agent);
     this.agentChanged.emit();
   }

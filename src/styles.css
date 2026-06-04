@@ -88,3 +88,97 @@ html[dir="rtl"] textarea {
   direction: rtl;
   text-align: right;
 }
+
+/* ==================== ONBOARDING TOUR ==================== */
+.tour-backdrop {
+  position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  z-index: 99990; pointer-events: auto; animation: fadeIn 0.3s ease;
+}
+
+/* Flexible relative positioning */
+.tour-card {
+  position: absolute; z-index: 99999; background: white;
+  width: 340px; border-radius: 16px; padding: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(139, 92, 246, 0.2);
+  display: flex; flex-direction: column; gap: 16px;
+  animation: tourCardPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Reset offsets */
+  top: auto; left: auto; right: auto; bottom: auto; margin: 0; transform: none;
+  pointer-events: auto; /* ensure card elements are clickable */
+}
+
+/* Pointer Arrows */
+.tour-card::after {
+  content: ''; position: absolute; border: 12px solid transparent;
+}
+html[dir="rtl"] .tour-card.arrow-start::after { border-left-color: white; left: 100%; top: 50%; transform: translateY(-50%); }
+html[dir="ltr"] .tour-card.arrow-start::after { border-right-color: white; right: 100%; top: 50%; transform: translateY(-50%); }
+
+.tour-card.arrow-top::after { border-bottom-color: white; bottom: 100%; left: 50%; transform: translateX(-50%); }
+.tour-card.arrow-bottom::after { border-top-color: white; top: 100%; left: 50%; transform: translateX(-50%); }
+.tour-card.arrow-bottom-left::after { border-top-color: white; top: 100%; left: 40px; }
+.tour-card.arrow-bottom-right::after { border-top-color: white; top: 100%; right: 40px; }
+
+/* Custom top-aligned arrow offset to prevent top viewport clipping */
+.tour-card.arrow-start-top-align::after {
+  top: 19px !important;
+  transform: none !important;
+}
+
+@keyframes tourCardPop {
+  0% { opacity: 0; margin-top: -10px; }
+  100% { opacity: 1; margin-top: 0; }
+}
+
+.tour-content h3 {
+  margin: 0 0 8px 0; font-size: 1.1rem; color: #1E293B; font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+}
+.tour-content h3::before {
+  content: ''; width: 8px; height: 8px; border-radius: 50%;
+  background: #8B5CF6; display: inline-block;
+}
+.tour-content p {
+  margin: 0; font-size: 0.9rem; color: #475569; line-height: 1.5;
+}
+
+.tour-actions {
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid rgba(0, 0, 0, 0.05); padding-top: 16px;
+}
+.skip-btn {
+  background: transparent; border: none; color: #94A3B8;
+  font-size: 0.85rem; font-weight: 600; cursor: pointer;
+  pointer-events: auto;
+}
+.skip-btn:hover { color: #64748B; }
+.next-btn {
+  background: #8B5CF6; color: white; border: none;
+  padding: 8px 20px; border-radius: 100px; font-weight: 600; font-size: 0.9rem;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+  pointer-events: auto;
+}
+.next-btn:hover { background: #7C3AED; transform: translateY(-1px); }
+
+.tour-mode { pointer-events: none; }
+.tour-backdrop, .tour-card, .tour-glow { pointer-events: auto !important; }
+
+.tour-glow {
+  position: relative; z-index: 99998 !important;
+  pointer-events: auto !important;
+  animation: tourGlowPulse 2s infinite !important;
+}
+
+/* Prevent layout breaking for fixed elements */
+aside.tour-glow { position: fixed !important; z-index: 99998 !important; }
+
+/* Ensure app-sidebar itself pushes its content above the backdrop without breaking fixed positioning */
+app-sidebar.tour-glow { z-index: 99998 !important; animation: none !important; }
+
+@keyframes tourGlowPulse {
+  0% { filter: drop-shadow(0 0 0px rgba(139, 92, 246, 0.8)); }
+  70% { filter: drop-shadow(0 0 25px rgba(139, 92, 246, 0)); }
+  100% { filter: drop-shadow(0 0 0px rgba(139, 92, 246, 0)); }
+}

@@ -109,4 +109,55 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
   onTogglePlan(event: Event) {
     this.state.togglePlan(event);
   }
+
+  isRecording = false;
+  private mediaRecorder: MediaRecorder | null = null;
+  private audioChunks: Blob[] = [];
+
+  async toggleRecording() {
+    if (this.isRecording) {
+      this.stopRecording();
+    } else {
+      await this.startRecording();
+    }
+  }
+
+  private async startRecording() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      this.mediaRecorder = new MediaRecorder(stream);
+      this.audioChunks = [];
+
+      this.mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          this.audioChunks.push(event.data);
+        }
+      };
+
+      this.mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
+        // Create a File object so it integrates with existing attachedFiles
+        const audioFile = new File([audioBlob], `Voice_Record_${new Date().toLocaleTimeString().replace(/:/g, '-')}.webm`, { type: 'audio/webm' });
+        
+        // Add to attached files
+        this.state.addFiles([audioFile]);
+        
+        // Stop all tracks to release mic
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      this.mediaRecorder.start();
+      this.isRecording = true;
+    } catch (err) {
+      console.error('Error accessing microphone:', err);
+      alert('Please allow microphone access to record audio.');
+    }
+  }
+
+  private stopRecording() {
+    if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
+      this.mediaRecorder.stop();
+      this.isRecording = false;
+    }
+  }
 }

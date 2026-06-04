@@ -3,9 +3,9 @@
 .home-only-elements {
   display: flex; flex-direction: column; align-items: center; width: 100%;
   gap: 20px; transition: opacity 0.4s ease-out, transform 0.4s ease-out, max-height 0.4s ease, margin 0.4s ease;
-  max-height: 500px; overflow: hidden;
+  max-height: 500px; overflow: visible;
 }
 .home-only-elements.fade-out {
   opacity: 0; transform: translateY(-20px) scale(0.95);
-  pointer-events: none; max-height: 0; margin: 0; gap: 0;
+  pointer-events: none; max-height: 0; margin: 0; gap: 0; overflow: hidden;
 }

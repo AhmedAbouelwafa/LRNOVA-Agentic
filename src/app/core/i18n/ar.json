@@ -15,9 +15,10 @@
 
   "agent.video": "وكيل الفيديو",
   "agent.text": "وكيل النصوص",
+  "agent.slides": "مولد الشرائح",
 
   "prompt.addFile": "إضافة ملف",
-  "prompt.flash": "⚡ فلاش",
+  "prompt.flash": "⚡ سريع",
   "prompt.pro": "✨ برو",
   "prompt.default.1": "صف ما تريد إنشاءه...",
   "prompt.default.2": "جرب: \"فيديو 5 دقائق عن الحمض النووي\"",

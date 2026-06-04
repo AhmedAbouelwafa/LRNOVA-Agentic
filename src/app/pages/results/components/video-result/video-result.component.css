@@ -43,6 +43,41 @@
   border-radius: 24px 24px 0 0;
 }
 
+/* ===== Edit Mode Badge ===== */
+.edit-mode-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 25;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.edit-mode-badge:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: scale(1.03);
+}
+
+.edit-mode-badge.active {
+  background: linear-gradient(135deg, #F59E0B, #D97706);
+  border-color: rgba(245, 158, 11, 0.6);
+  color: white;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.25), 0 4px 16px rgba(245, 158, 11, 0.35);
+}
+
 /* ===== Floating Toolbar (Bullets) ===== */
 .floating-toolbar {
   position: absolute;
@@ -81,6 +116,33 @@
   border-color: #8B5CF6;
   color: white;
   box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.3);
+}
+
+/* Main expandable toolbar button */
+.main-tool-btn {
+  width: 48px;
+  height: 48px;
+  background: rgba(139, 92, 246, 0.35);
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+.main-tool-btn:hover {
+  background: rgba(139, 92, 246, 0.55);
+}
+
+.main-tool-btn.expanded {
+  background: rgba(239, 68, 68, 0.35);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.main-tool-btn.expanded:hover {
+  background: rgba(239, 68, 68, 0.55);
+}
+
+.tool-sub-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 /* ===== Floating Panel ===== */
@@ -508,6 +570,11 @@
   left: 76px;
 }
 
+:host-context(html[dir="rtl"]) .edit-mode-badge {
+  left: auto;
+  right: 16px;
+}
+
 :host-context(html[dir="rtl"]) .video-info-section,
 :host-context(html[dir="rtl"]) .video-meta,
 :host-context(html[dir="rtl"]) .video-actions,
@@ -531,5 +598,112 @@
   
   :host-context(html[dir="rtl"]) .video-info-section {
     flex-direction: column;
+  }
+
+  .floating-panel {
+    position: absolute;
+    right: 8px;
+    left: 8px;
+    width: auto;
+    top: auto;
+    bottom: 8px;
+    max-height: 60%;
+    border-radius: 16px;
+  }
+
+  :host-context(html[dir="rtl"]) .floating-panel {
+    left: 8px;
+    right: 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .video-result-layout {
+    max-width: 100%;
+  }
+
+  .glass-card {
+    border-radius: 16px;
+  }
+
+  .video-wrapper {
+    border-radius: 16px 16px 0 0;
+    aspect-ratio: 16 / 10;
+  }
+
+  .video-element {
+    border-radius: 16px 16px 0 0;
+  }
+
+  .edit-mode-badge {
+    top: 10px;
+    left: 10px;
+    padding: 6px 12px;
+    font-size: 0.72rem;
+  }
+
+  .floating-toolbar {
+    right: 10px;
+    gap: 8px;
+  }
+
+  .tool-bullet {
+    width: 38px;
+    height: 38px;
+  }
+
+  .main-tool-btn {
+    width: 42px;
+    height: 42px;
+  }
+
+  .video-info-section {
+    padding: 14px 16px;
+    gap: 16px;
+  }
+
+  .video-title {
+    font-size: 1rem;
+  }
+
+  .video-actions {
+    width: 100%;
+  }
+
+  .action-btn {
+    flex: 1;
+    justify-content: center;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+  }
+
+  .action-btn.primary {
+    padding: 10px 14px;
+  }
+
+  .floating-panel {
+    right: 4px;
+    left: 4px;
+    bottom: 4px;
+  }
+
+  .avatar-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .avatar-img {
+    width: 42px;
+    height: 42px;
+  }
+
+  :host-context(html[dir="rtl"]) .edit-mode-badge {
+    left: auto;
+    right: 10px;
+  }
+
+  :host-context(html[dir="rtl"]) .floating-toolbar {
+    right: auto;
+    left: 10px;
   }
 }

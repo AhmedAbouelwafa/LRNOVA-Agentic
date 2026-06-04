@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewChild, ElementRef, effect, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { PromptStateService } from '../../core/services/prompt-state.service';
 import { ResultsToolbarComponent } from './components/results-toolbar/results-toolbar.component';
 import { ThinkingIndicatorComponent } from './components/thinking-indicator/thinking-indicator.component';
@@ -10,6 +11,7 @@ import { VideoResultComponent } from './components/video-result/video-result.com
   selector: 'app-results',
   standalone: true,
   imports: [
+    DatePipe,
     ResultsToolbarComponent,
     ThinkingIndicatorComponent,
     SkeletonCardComponent,
@@ -21,4 +23,24 @@ import { VideoResultComponent } from './components/video-result/video-result.com
 })
 export class ResultsComponent {
   protected state = inject(PromptStateService);
+  isChatCollapsed = signal(false);
+  
+  @ViewChild('chatScroll') private chatScrollContainer!: ElementRef;
+
+  constructor() {
+    effect(() => {
+      // Re-evaluate whenever chatHistory or generation state changes
+      this.state.chatHistory();
+      this.state.isGenerationComplete();
+      setTimeout(() => this.scrollToBottom(), 100);
+    });
+  }
+
+  private scrollToBottom(): void {
+    try {
+      if (this.chatScrollContainer) {
+        this.chatScrollContainer.nativeElement.scrollTop = this.chatScrollContainer.nativeElement.scrollHeight;
+      }
+    } catch(err) { }
+  }
 }

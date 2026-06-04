@@ -2,6 +2,7 @@
 
 .prompt-wrapper {
   width: 100%; max-width: 680px; display: flex; flex-direction: column; gap: 12px; margin-bottom: 2rem;
+  padding: 0 16px;
 }
 .prompt-container { width: 100%; position: relative; }
 .prompt-inner {
@@ -36,8 +37,9 @@
 .prompt-input::placeholder { color: #64748B; }
 
 .prompt-wrapper.compact-mode .prompt-input {
-  font-size: 2.2rem; font-weight: 700; color: #1E293B;
+  font-size: clamp(1rem, 3vw, 1.5rem); font-weight: 700; color: #1E293B;
   text-align: left; letter-spacing: -0.02em; cursor: default; pointer-events: none;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
 /* Attached Files */
@@ -64,10 +66,10 @@
 
 .prompt-actions-row {
   display: flex; align-items: center; justify-content: space-between;
-  width: 100%; transition: all 0.4s ease; overflow: hidden;
+  width: 100%; transition: all 0.4s ease; overflow: visible;
 }
 .prompt-wrapper.compact-mode .prompt-actions-row {
-  opacity: 0; height: 0; margin-top: 0; pointer-events: none;
+  opacity: 0; height: 0; margin-top: 0; pointer-events: none; overflow: hidden;
 }
 
 .prompt-actions-right { display: flex; align-items: center; gap: 12px; }
@@ -112,4 +114,30 @@
 }
 .prompt-submit.has-text:hover {
   background: #7C3AED; transform: scale(1.05); box-shadow: 0 4px 16px rgba(139, 92, 246, 0.35);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 600px) {
+  .prompt-wrapper {
+    max-width: 100%; padding: 0 8px;
+  }
+  .prompt-inner {
+    padding: 12px 12px 8px 12px; border-radius: 14px;
+  }
+  .prompt-input { font-size: 0.95rem; }
+  .toggle-label { padding: 5px 10px; font-size: 0.7rem; }
+  .prompt-submit { width: 36px; height: 36px; }
+}
+
+/* Voice Recording State */
+@keyframes pulseRed {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+.action-btn.voice.is-recording {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  animation: pulseRed 1.5s infinite;
 }
