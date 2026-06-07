@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild, ElementRef, effect, signal } from '@angular/core';
+import { Component, inject, ViewChild, ElementRef, effect, signal, HostListener } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { PromptStateService } from '../../core/services/prompt-state.service';
 import { ResultsToolbarComponent } from './components/results-toolbar/results-toolbar.component';
@@ -23,6 +23,7 @@ import { VideoResultComponent } from './components/video-result/video-result.com
 })
 export class ResultsComponent {
   protected state = inject(PromptStateService);
+  private eRef = inject(ElementRef);
   isChatCollapsed = signal(false);
   
   @ViewChild('chatScroll') private chatScrollContainer!: ElementRef;
@@ -34,6 +35,17 @@ export class ResultsComponent {
       this.state.isGenerationComplete();
       setTimeout(() => this.scrollToBottom(), 100);
     });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (this.isChatCollapsed()) return;
+
+    const chatPanel = this.eRef.nativeElement.querySelector('.chat-panel');
+    // If the click is outside the chat panel, collapse it
+    if (chatPanel && !chatPanel.contains(event.target as Node)) {
+      this.isChatCollapsed.set(true);
+    }
   }
 
   private scrollToBottom(): void {

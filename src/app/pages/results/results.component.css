@@ -1,39 +1,48 @@
 :host { display: contents; }
 
 .results-layout-wrapper {
-  width: 100%; max-width: 1600px; margin: 0 auto;
-  display: grid; grid-template-columns: 340px minmax(0, 1000px);
-  justify-content: center; /* Keeps panels together on ultrawide screens */
-  gap: 24px; align-items: stretch;
+  width: 100%; max-width: 1200px; margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  position: relative;
   min-height: calc(100vh - 180px);
-  transition: grid-template-columns 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .results-layout-wrapper.chat-collapsed {
-  grid-template-columns: 60px minmax(0, 1100px);
+  /* Layout is now handled by floating chat panel */
 }
 
 /* ===== Chat Panel ===== */
 .chat-panel {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 360px;
+  height: 600px;
+  max-height: calc(100vh - 120px);
+  z-index: 1000;
   display: flex; flex-direction: column;
-  min-height: 0;
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.9);
   border-radius: 24px; overflow: hidden;
   backdrop-filter: blur(35px) saturate(1.7);
   -webkit-backdrop-filter: blur(35px) saturate(1.7);
-  box-shadow: 0 10px 40px rgba(139, 92, 246, 0.06),
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15),
+              0 0 0 1px rgba(139, 92, 246, 0.05),
               inset 0 1px 1px rgba(255, 255, 255, 0.5);
-  position: sticky; top: 24px;
-  max-height: calc(100vh - 140px);
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: bottom right;
 }
 
 .chat-panel.collapsed {
+  width: 64px;
+  height: 64px;
+  border-radius: 32px;
   cursor: pointer;
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
 }
 .chat-panel.collapsed:hover {
-  background: rgba(255, 255, 255, 0.7);
+  transform: scale(1.05);
 }
 
 .chat-header {
@@ -45,7 +54,8 @@
 }
 
 .chat-panel.collapsed .chat-header {
-  padding: 16px 0; justify-content: center; border-bottom: none;
+  padding: 0; justify-content: center; border-bottom: none;
+  height: 100%; align-items: center;
 }
 
 .chat-title {
@@ -55,10 +65,7 @@
 }
 .chat-title svg { color: #8B5CF6; flex-shrink: 0; }
 
-.chat-panel.collapsed .chat-title .title-text {
-  display: none;
-}
-.chat-panel.collapsed .chat-title svg {
+.chat-panel.collapsed .chat-title {
   display: none;
 }
 
@@ -72,10 +79,15 @@
   background: rgba(0, 0, 0, 0.04); color: #8B5CF6;
 }
 .chat-panel.collapsed .toggle-chat-btn {
-  color: #8B5CF6; width: 40px; height: 40px; margin: 0;
+  color: white; width: 64px; height: 64px; margin: 0;
+  background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+  border-radius: 32px;
+}
+.chat-panel.collapsed .toggle-chat-btn svg {
+  width: 24px; height: 24px;
 }
 .chat-panel.collapsed .toggle-chat-btn:hover {
-  background: rgba(139, 92, 246, 0.1);
+  background: linear-gradient(135deg, #7C3AED, #6D28D9);
 }
 
 .chat-messages {
@@ -210,6 +222,9 @@
 .artifact-panel {
   display: flex; flex-direction: column; gap: 20px;
   min-height: 0;
+  width: 100%;
+  max-width: 1000px;
+  padding: 0 24px;
 }
 
 /* ===== Animations ===== */
@@ -238,32 +253,35 @@
 :host-context(html[dir="rtl"]) .message-time {
   text-align: left;
 }
-
-/* ===== Responsive ===== */
-@media (max-width: 1100px) {
-  .results-layout-wrapper {
-    grid-template-columns: 280px 1fr;
-    gap: 16px;
-  }
+:host-context(html[dir="rtl"]) .chat-panel {
+  right: auto;
+  left: 24px;
+  transform-origin: bottom left;
 }
 
+/* ===== Responsive ===== */
 @media (max-width: 900px) {
-  .results-layout-wrapper {
-    display: flex; flex-direction: column; gap: 16px;
-    min-height: auto;
-  }
-  .chat-panel {
-    position: static; max-height: none;
-    height: auto; min-height: 300px; max-height: 420px;
-    order: 2;
-  }
   .artifact-panel {
-    order: 1;
+    padding: 0 16px;
   }
 }
 
 @media (max-width: 600px) {
-  .results-layout-wrapper { gap: 12px; }
+  .chat-panel {
+    width: calc(100% - 32px);
+    right: 16px;
+    bottom: 16px;
+    height: 500px;
+  }
+  .chat-panel.collapsed {
+    width: 60px;
+    height: 60px;
+    right: 16px;
+    bottom: 16px;
+  }
+  :host-context(html[dir="rtl"]) .chat-panel {
+    left: 16px;
+  }
   .chat-header { padding: 12px 16px; }
   .chat-title { font-size: 0.85rem; }
   .chat-messages { padding: 12px; gap: 10px; }
