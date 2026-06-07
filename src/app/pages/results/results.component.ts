@@ -44,8 +44,14 @@ export class ResultsComponent {
       // Re-evaluate whenever chatHistory or generation state changes
       this.state.chatHistory();
       this.state.isGenerationComplete();
+      
+      // Auto-collapse chat when generation finishes so the user can see the result
+      if (this.state.isGenerationComplete()) {
+        this.isChatCollapsed.set(true);
+      }
+
       setTimeout(() => this.scrollToBottom(), 100);
-    });
+    }, { allowSignalWrites: true });
   }
 
   @HostListener('document:click', ['$event'])
