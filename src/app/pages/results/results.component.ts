@@ -1,4 +1,5 @@
 import { Component, inject, ViewChild, ElementRef, effect, signal, HostListener } from '@angular/core';
+import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { PromptStateService } from '../../core/services/prompt-state.service';
 import { ResultsToolbarComponent } from './components/results-toolbar/results-toolbar.component';
@@ -24,11 +25,21 @@ import { VideoResultComponent } from './components/video-result/video-result.com
 export class ResultsComponent {
   protected state = inject(PromptStateService);
   private eRef = inject(ElementRef);
+  private router = inject(Router);
   isChatCollapsed = signal(false);
   
   @ViewChild('chatScroll') private chatScrollContainer!: ElementRef;
 
   constructor() {
+    // Redirect to home if accessed directly without a prompt
+    if (!this.state.submittedPrompt() && this.state.chatHistory().length === 0) {
+      this.router.navigate(['/']);
+      return;
+    }
+    
+    // Ensure the home prompt field is hidden if user refreshed
+    this.state.isAnimatingOut.set(true);
+
     effect(() => {
       // Re-evaluate whenever chatHistory or generation state changes
       this.state.chatHistory();
