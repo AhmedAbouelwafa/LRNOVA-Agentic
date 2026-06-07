@@ -163,11 +163,11 @@ html[dir="ltr"] .tour-card.arrow-start::after { border-right-color: white; right
 .next-btn:hover { background: #7C3AED; transform: translateY(-1px); }
 
 .tour-mode { pointer-events: none; }
-.tour-backdrop, .tour-card, .tour-glow { pointer-events: auto !important; }
+.tour-backdrop, .tour-card { pointer-events: auto !important; }
 
 .tour-glow {
   position: relative; z-index: 99998 !important;
-  pointer-events: auto !important;
+  pointer-events: none !important;
   animation: tourGlowPulse 2s infinite !important;
 }
 
