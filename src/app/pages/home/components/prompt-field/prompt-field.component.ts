@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, effect, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, effect, ViewChild, ElementRef, Input, HostBinding } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PromptStateService } from '../../../../core/services/prompt-state.service';
 import { TypewriterService } from '../../../../core/services/typewriter.service';
@@ -12,6 +12,9 @@ import { LocalizationService } from '../../../../core/services/localization.serv
   styleUrl: './prompt-field.component.css'
 })
 export class PromptFieldComponent implements OnInit, OnDestroy {
+  @Input() mode: 'home' | 'chat' = 'home';
+  @HostBinding('class.chat-mode') get isChatMode() { return this.mode === 'chat'; }
+
   protected state = inject(PromptStateService);
   protected i18n = inject(LocalizationService);
   private tw = inject(TypewriterService);
@@ -84,7 +87,42 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    this.state.submitPrompt();
+    if (this.mode === 'chat') {
+      this.submitFollowUp();
+    } else {
+      this.state.submitPrompt();
+    }
+  }
+
+  private submitFollowUp() {
+    const text = this.state.promptText().trim();
+    if (!text && this.state.attachedFiles().length === 0) return;
+
+    // Add user message to chat
+    this.state.addFollowUpMessage(text || 'Attached files', 'user');
+    this.state.promptText.set('');
+    this.state.attachedFiles.set([]);
+
+    // Simulate agent response
+    this.state.isGenerationComplete.set(false);
+    this.state.loadingText.set('Processing follow-up...');
+
+    let msgIndex = 0;
+    const msgs = ['Analyzing your request...', 'Applying changes...', 'Finalizing...'];
+    const interval = setInterval(() => {
+      if (msgIndex < msgs.length) {
+        this.state.loadingText.set(msgs[msgIndex]);
+        msgIndex++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 1500);
+
+    setTimeout(() => {
+      clearInterval(interval);
+      this.state.isGenerationComplete.set(true);
+      this.state.addFollowUpMessage('I have updated the result based on your instructions.', 'agent');
+    }, 5000);
   }
 
   triggerFileInput() {

@@ -1,4 +1,4 @@
-<div class="prompt-wrapper" id="prompt-wrapper" [class.compact-mode]="state.isAnimatingOut()">
+<div class="prompt-wrapper" id="prompt-wrapper" [class.compact-mode]="state.isAnimatingOut() && mode !== 'chat'">
   <div class="prompt-container" [class.focused]="state.isPromptFocused()" id="prompt-container">
     <div class="prompt-inner" style="position: relative; overflow: visible;">
       @if (state.tourStep() === 2) {
@@ -46,7 +46,8 @@
         <!-- Hidden file input -->
         <input type="file" #fileInput (change)="onFileSelected($event)" multiple style="display: none;" />
         
-        <!-- Attach File Button -->
+        <div class="prompt-actions-left">
+          <!-- Attach File Button -->
         <button class="action-btn attach" [class.tour-glow]="state.tourStep() === 3" [title]="i18n.t('prompt.addFile')" (click)="triggerFileInput()" style="position: relative; overflow: visible;">
           @if (state.tourStep() === 3) {
             <div class="tour-card arrow-bottom" style="bottom: calc(100% + 20px); left: 50%; transform: translateX(-50%); cursor: default;" (click)="$event.stopPropagation()">
@@ -64,11 +65,11 @@
             <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
           </svg>
         </button>
-        <div class="prompt-actions-right">
-          <!-- Voice Input Button (Moved to right) -->
+
+          <!-- Voice Input Button (beside attach) -->
           <button class="action-btn voice" [class.tour-glow]="state.tourStep() === 4" [class.is-recording]="isRecording" (click)="toggleRecording()" style="position: relative; overflow: visible;">
             @if (state.tourStep() === 4) {
-              <div class="tour-card arrow-bottom-right" style="bottom: calc(100% + 20px); right: -10px; cursor: default;" (click)="$event.stopPropagation()">
+              <div class="tour-card arrow-bottom" style="bottom: calc(100% + 20px); left: 50%; transform: translateX(-50%); cursor: default;" (click)="$event.stopPropagation()">
                 <div class="tour-content">
                   <h3>{{ i18n.currentLang() === 'ar' ? 'الإدخال الصوتي' : 'Voice Input' }}</h3>
                   <p>{{ i18n.currentLang() === 'ar' ? 'لا وقت للكتابة؟ استخدم الميكروفون لتسجيل فكرتك أو سؤالك صوتياً وسنقوم نحن بالباقي.' : 'No time to type? Use the microphone to record your idea or question verbally and we will handle the rest.' }}</p>
@@ -92,12 +93,15 @@
               </svg>
             }
           </button>
+        </div>
 
-          <div class="plan-toggle" (click)="onTogglePlan($event)">
+        <div class="prompt-actions-right">
+
+          <!-- <div class="plan-toggle" (click)="onTogglePlan($event)">
             <div class="toggle-slider" [class.is-pro]="state.selectedPlan() === 'pro'"></div>
             <span class="toggle-label" [class.active]="state.selectedPlan() === 'flash'">{{ i18n.t('prompt.flash') }}</span>
             <span class="toggle-label" [class.active]="state.selectedPlan() === 'pro'">{{ i18n.t('prompt.pro') }}</span>
-          </div>
+          </div> -->
           <button class="prompt-submit"
             [class.has-text]="state.promptText().trim().length > 0 || state.attachedFiles().length > 0"
             (click)="onSubmit()"

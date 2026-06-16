@@ -41,6 +41,18 @@ export class PromptStateService {
   readonly attachedFiles = signal<File[]>([]);
   readonly chatHistory = signal<ChatMessage[]>([]);
 
+  /** The currently active (unanswered) questionnaire message, or null */
+  readonly activeQuestion = computed(() => {
+    const history = this.chatHistory();
+    for (let i = history.length - 1; i >= 0; i--) {
+      const msg = history[i];
+      if (msg.type === 'questionnaire' && msg.questionnaire && !msg.questionnaire.answered) {
+        return msg;
+      }
+    }
+    return null;
+  });
+
   private fakeLoadingInterval: any;
   private readonly fakeLoadingMessages = [
     'Thinking...',

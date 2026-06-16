@@ -1,12 +1,13 @@
-import { Component, inject, ViewChild, ElementRef, effect, signal, HostListener } from '@angular/core';
+import { Component, inject, ViewChild, ElementRef, effect, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { PromptStateService } from '../../core/services/prompt-state.service';
 import { ResultsToolbarComponent } from './components/results-toolbar/results-toolbar.component';
 import { ThinkingIndicatorComponent } from './components/thinking-indicator/thinking-indicator.component';
 import { SkeletonCardComponent } from './components/skeleton-card/skeleton-card.component';
-import { StickyPromptComponent } from './components/sticky-prompt/sticky-prompt.component';
+import { PromptFieldComponent } from '../home/components/prompt-field/prompt-field.component';
 import { VideoResultComponent } from './components/video-result/video-result.component';
+import { QuestionnairePanelComponent } from './components/questionnaire-panel/questionnaire-panel.component';
 
 @Component({
   selector: 'app-results',
@@ -16,15 +17,15 @@ import { VideoResultComponent } from './components/video-result/video-result.com
     ResultsToolbarComponent,
     ThinkingIndicatorComponent,
     SkeletonCardComponent,
-    StickyPromptComponent,
-    VideoResultComponent
+    PromptFieldComponent,
+    VideoResultComponent,
+    QuestionnairePanelComponent
   ],
   templateUrl: './results.component.html',
   styleUrl: './results.component.css'
 })
 export class ResultsComponent {
   protected state = inject(PromptStateService);
-  private eRef = inject(ElementRef);
   private router = inject(Router);
   isChatCollapsed = signal(false);
   
@@ -44,25 +45,9 @@ export class ResultsComponent {
       // Re-evaluate whenever chatHistory or generation state changes
       this.state.chatHistory();
       this.state.isGenerationComplete();
-      
-      // Auto-collapse chat when generation finishes so the user can see the result
-      if (this.state.isGenerationComplete()) {
-        this.isChatCollapsed.set(true);
-      }
 
       setTimeout(() => this.scrollToBottom(), 100);
-    }, { allowSignalWrites: true });
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    if (this.isChatCollapsed()) return;
-
-    const chatPanel = this.eRef.nativeElement.querySelector('.chat-panel');
-    // If the click is outside the chat panel, collapse it
-    if (chatPanel && !chatPanel.contains(event.target as Node)) {
-      this.isChatCollapsed.set(true);
-    }
+    });
   }
 
   private scrollToBottom(): void {

@@ -73,6 +73,16 @@
 }
 
 .prompt-actions-right { display: flex; align-items: center; gap: 12px; }
+.prompt-actions-left { display: flex; align-items: center; gap: 8px; }
+
+/* Action Buttons (attach + voice) */
+.action-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 100px;
+  color: #64748B; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background: transparent; border: none; padding: 0; cursor: pointer;
+}
+.action-btn:hover { background: rgba(0, 0, 0, 0.04); color: #475569; }
 
 .attach-btn {
   display: flex; align-items: center; justify-content: center;
@@ -141,3 +151,29 @@
   background: rgba(239, 68, 68, 0.1);
   animation: pulseRed 1.5s infinite;
 }
+
+/* ===== Chat Mode Overrides ===== */
+:host.chat-mode {
+  width: 100% !important;
+  justify-content: stretch !important;
+}
+:host.chat-mode .prompt-wrapper {
+  max-width: 100%; margin-bottom: 0; padding: 0;
+}
+:host.chat-mode .prompt-container { width: 100%; }
+:host.chat-mode .prompt-inner {
+  padding: 10px 12px 8px 12px; border-radius: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  box-shadow: 0 2px 12px rgba(139, 92, 246, 0.06), inset 0 1px 1px rgba(255, 255, 255, 1);
+}
+:host.chat-mode .prompt-input {
+  font-size: 0.9rem; padding: 2px 0;
+}
+:host.chat-mode .prompt-input::placeholder { font-size: 0.85rem; }
+:host.chat-mode .prompt-submit { width: 34px; height: 34px; }
+:host.chat-mode .action-btn { width: 32px; height: 32px; }
+:host.chat-mode .action-btn svg { width: 17px; height: 17px; }
+:host.chat-mode .attached-files-container { margin-bottom: 4px; }
+:host.chat-mode .attached-file-pill { font-size: 0.72rem; padding: 3px 8px; }
+:host.chat-mode .tour-card { display: none; }

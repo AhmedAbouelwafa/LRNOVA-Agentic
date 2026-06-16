@@ -111,8 +111,10 @@
 .content-wrapper.animating-out {
   padding-top: 24px;
   max-width: 100%;
+  margin: 0;
+  padding-bottom: 0;
 }
-.content-wrapper.animating-out app-prompt-field {
+.content-wrapper.animating-out > app-prompt-field {
   display: none !important;
 }
 

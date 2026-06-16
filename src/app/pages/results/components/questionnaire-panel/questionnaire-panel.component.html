@@ -1,0 +1,42 @@
+@if (state.activeQuestion(); as q) {
+  <div class="q-panel">
+    <!-- Header: Label + Close -->
+    <div class="q-panel-header">
+      <span class="q-panel-label">Question {{ q.questionnaire!.step }}/{{ q.questionnaire!.totalSteps }}</span>
+      <button class="q-panel-close" (click)="skipQuestion()" title="Skip">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Question -->
+    <h4 class="q-panel-question">{{ q.questionnaire!.title }}</h4>
+
+    <!-- Options (radio select) -->
+    <div class="q-panel-options">
+      @for (opt of q.questionnaire!.options; track opt.id) {
+        <button class="q-panel-option" 
+                [class.selected]="selectedOption() === opt.label"
+                (click)="selectOption(opt.label)">
+          <span class="q-radio" [class.checked]="selectedOption() === opt.label"></span>
+          <span class="q-option-text">{{ opt.label }}</span>
+        </button>
+      }
+    </div>
+
+    <!-- Footer: Submit -->
+    <div class="q-panel-footer">
+      <button class="q-submit-btn" 
+              [class.active]="selectedOption()"
+              [disabled]="!selectedOption()"
+              (click)="submitAnswer()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+        Submit answer
+      </button>
+      <span class="q-panel-esc" (click)="skipQuestion()">Esc to skip</span>
+    </div>
+  </div>
+}
