@@ -78,25 +78,28 @@ export class StickyPromptComponent {
 
     // Trigger a brief regeneration cycle
     this.state.isGenerationComplete.set(false);
-    this.state.loadingText.set('Processing follow-up...');
+    this.state.loadingText.set('Acknowledging dashboard visibility...');
 
     let msgIndex = 0;
-    const msgs = ['Analyzing your request...', 'Applying changes...', 'Finalizing...'];
+    const msgs = [
+      'Analyzing requirements...',
+      'Executing actions...',
+      'Finalizing outputs...'
+    ];
+
     const interval = setInterval(() => {
       if (msgIndex < msgs.length) {
         this.state.loadingText.set(msgs[msgIndex]);
         msgIndex++;
       } else {
         clearInterval(interval);
+        this.state.isGenerationComplete.set(true);
+        // Push the thought process accordion
+        this.state.addFollowUpMessage('[ThoughtProcess] Acknowledging dashboard visibility | Analyzed your request and executed the necessary changes to the dashboard components.', 'agent');
+        // Push the actual response
+        this.state.addFollowUpMessage('I have updated the result based on your instructions. Let me know if there is anything else you need!', 'agent');
       }
-    }, 1500);
-
-    setTimeout(() => {
-      clearInterval(interval);
-      this.state.isGenerationComplete.set(true);
-      // Simulate agent response
-      this.state.addFollowUpMessage('I have updated the result based on your instructions.', 'agent');
-    }, 5000);
+    }, 1200);
   }
 }
 

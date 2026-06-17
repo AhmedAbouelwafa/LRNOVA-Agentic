@@ -7,7 +7,7 @@ import { ThinkingIndicatorComponent } from './components/thinking-indicator/thin
 import { SkeletonCardComponent } from './components/skeleton-card/skeleton-card.component';
 import { PromptFieldComponent } from '../home/components/prompt-field/prompt-field.component';
 import { VideoResultComponent } from './components/video-result/video-result.component';
-import { QuestionnairePanelComponent } from './components/questionnaire-panel/questionnaire-panel.component';
+import { AgenticChatComponent } from './components/agentic-chat/agentic-chat.component';
 
 @Component({
   selector: 'app-results',
@@ -19,7 +19,7 @@ import { QuestionnairePanelComponent } from './components/questionnaire-panel/qu
     SkeletonCardComponent,
     PromptFieldComponent,
     VideoResultComponent,
-    QuestionnairePanelComponent
+    AgenticChatComponent
   ],
   templateUrl: './results.component.html',
   styleUrl: './results.component.css'
@@ -28,8 +28,6 @@ export class ResultsComponent {
   protected state = inject(PromptStateService);
   private router = inject(Router);
   isChatCollapsed = signal(false);
-  
-  @ViewChild('chatScroll') private chatScrollContainer!: ElementRef;
 
   constructor() {
     // Redirect to home if accessed directly without a prompt
@@ -45,16 +43,6 @@ export class ResultsComponent {
       // Re-evaluate whenever chatHistory or generation state changes
       this.state.chatHistory();
       this.state.isGenerationComplete();
-
-      setTimeout(() => this.scrollToBottom(), 100);
     });
-  }
-
-  private scrollToBottom(): void {
-    try {
-      if (this.chatScrollContainer) {
-        this.chatScrollContainer.nativeElement.scrollTop = this.chatScrollContainer.nativeElement.scrollHeight;
-      }
-    } catch(err) { }
   }
 }

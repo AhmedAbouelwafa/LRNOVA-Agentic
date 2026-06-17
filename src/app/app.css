@@ -115,7 +115,10 @@
   padding-bottom: 0;
 }
 .content-wrapper.animating-out > app-prompt-field {
-  display: none !important;
+  opacity: 0;
+  transform: translateY(-20px) scale(0.95);
+  pointer-events: none;
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
 }
 
 /* ===== Responsive Layout ===== */

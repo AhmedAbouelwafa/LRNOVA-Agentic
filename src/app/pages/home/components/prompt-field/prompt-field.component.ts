@@ -98,31 +98,84 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
     const text = this.state.promptText().trim();
     if (!text && this.state.attachedFiles().length === 0) return;
 
-    // Add user message to chat
-    this.state.addFollowUpMessage(text || 'Attached files', 'user');
-    this.state.promptText.set('');
-    this.state.attachedFiles.set([]);
+    const currentTool = this.state.selectedQuickTool() || 'Projects';
+    const isProjects = currentTool === 'Projects';
 
-    // Simulate agent response
+    const toolKeywords: Record<string, string> = {
+      'slides': 'Slides',
+      'course': 'Course Content',
+      'video': 'Video',
+      'activity': 'Activity',
+      'assessment': 'Assessment',
+      'script': 'Script',
+      'topic': 'Topic'
+    };
+
+    const lower = text.toLowerCase();
+    const matchedKey = Object.keys(toolKeywords).find(k => lower.includes(k));
+    
+    if (matchedKey) {
+      const detectedTool = toolKeywords[matchedKey];
+      
+      if (isProjects) {
+        // Projects Scenario: Add new tab
+        this.state.addFollowUpMessage(text || 'Attached files', 'user');
+        this.state.promptText.set('');
+        this.state.attachedFiles.set([]);
+        
+        this.state.addCanvasTab(text);
+        this.processFollowUp(currentTool);
+      } else {
+        // Tool Scenario: Different tool keyword detected -> Show Warning
+        // Use loose matching to avoid false positives on same tool
+        const isSameTool = currentTool.toLowerCase().includes(detectedTool.toLowerCase()) || detectedTool.toLowerCase().includes(currentTool.toLowerCase());
+        if (!isSameTool) {
+           this.state.toolSwitchWarning.set({ newTool: detectedTool, newPrompt: text });
+           return;
+        } else {
+           this.state.addFollowUpMessage(text || 'Attached files', 'user');
+           this.state.promptText.set('');
+           this.state.attachedFiles.set([]);
+           this.processFollowUp(currentTool);
+        }
+      }
+    } else {
+      // Normal flow, no keywords
+      this.state.addFollowUpMessage(text || 'Attached files', 'user');
+      this.state.promptText.set('');
+      this.state.attachedFiles.set([]);
+      this.processFollowUp(currentTool);
+    }
+  }
+
+  private processFollowUp(tool: string | null) {
+    if (tool === 'Video' || tool === 'Text Video') {
+      this.state.startFollowUp('video');
+      return;
+    }
+
+    // Simulate agent response for non-video workflows
     this.state.isGenerationComplete.set(false);
-    this.state.loadingText.set('Processing follow-up...');
+    this.state.loadingText.set('Acknowledging dashboard visibility...');
 
     let msgIndex = 0;
-    const msgs = ['Analyzing your request...', 'Applying changes...', 'Finalizing...'];
+    const msgs = [
+      'Analyzing requirements...',
+      'Executing actions...',
+      'Finalizing outputs...'
+    ];
+
     const interval = setInterval(() => {
       if (msgIndex < msgs.length) {
         this.state.loadingText.set(msgs[msgIndex]);
         msgIndex++;
       } else {
         clearInterval(interval);
+        this.state.isGenerationComplete.set(true);
+        this.state.addFollowUpMessage('[ThoughtProcess] Acknowledging dashboard visibility | Analyzed your request and executed the necessary changes to the dashboard components.', 'agent');
+        this.state.addFollowUpMessage('I have updated the result based on your instructions. Let me know if there is anything else you need!', 'agent');
       }
-    }, 1500);
-
-    setTimeout(() => {
-      clearInterval(interval);
-      this.state.isGenerationComplete.set(true);
-      this.state.addFollowUpMessage('I have updated the result based on your instructions.', 'agent');
-    }, 5000);
+    }, 1200);
   }
 
   triggerFileInput() {

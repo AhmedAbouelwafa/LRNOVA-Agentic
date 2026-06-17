@@ -1,4 +1,4 @@
-<div class="prompt-wrapper" id="prompt-wrapper" [class.compact-mode]="state.isAnimatingOut() && mode !== 'chat'">
+<div class="prompt-wrapper" id="prompt-wrapper">
   <div class="prompt-container" [class.focused]="state.isPromptFocused()" id="prompt-container">
     <div class="prompt-inner" style="position: relative; overflow: visible;">
       @if (state.tourStep() === 2) {
@@ -13,9 +13,22 @@
           </div>
         </div>
       }
-      <!-- Attached Files Preview -->
-      @if (state.attachedFiles().length > 0) {
+      <!-- Attached Files & Selected Tool Preview -->
+      @if (state.attachedFiles().length > 0 || state.selectedQuickTool()) {
         <div class="attached-files-container">
+          @if (state.selectedQuickTool()) {
+            <div class="attached-file-pill tool-pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+              </svg>
+              <span class="file-name">{{ state.selectedQuickTool() }}</span>
+              @if (mode !== 'chat') {
+                <button class="remove-file-btn" (click)="state.selectedQuickTool.set(null)" title="Remove tool">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                </button>
+              }
+            </div>
+          }
           @for (file of state.attachedFiles(); track file.name; let i = $index) {
             <div class="attached-file-pill">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -39,7 +52,7 @@
           (focus)="state.isPromptFocused.set(true)"
           (blur)="state.isPromptFocused.set(false)"
           (keydown.enter)="onSubmit()"
-          [readonly]="state.isGenerating() || state.isAnimatingOut()"
+          [readonly]="state.isGenerating() || (state.isAnimatingOut() && mode !== 'chat')"
           id="prompt-input" />
       </div>
       <div class="prompt-actions-row">

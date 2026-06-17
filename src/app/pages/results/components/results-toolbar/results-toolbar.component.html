@@ -1,25 +1,23 @@
-<div class="results-header">
-  <div class="tools-toolbar-wrapper">
-    <div class="tools-pills-container">
-      @for (tool of state.activeTools(); track tool) {
-        <button class="tool-pill" [class.active]="state.activeTool() === tool" (click)="state.activeTool.set(tool)">{{ translateTool(tool) }}</button>
-      }
-    </div>
-    <div class="tools-actions-container">
-      <button class="tool-action-pill">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="4" y1="21" x2="4" y2="14" /><line x1="4" y1="10" x2="4" y2="3" />
-          <line x1="12" y1="21" x2="12" y2="12" /><line x1="12" y1="8" x2="12" y2="3" />
-          <line x1="20" y1="21" x2="20" y2="16" /><line x1="20" y1="12" x2="20" y2="3" />
-          <line x1="1" y1="14" x2="7" y2="14" /><line x1="9" y1="8" x2="15" y2="8" />
-          <line x1="17" y1="16" x2="23" y2="16" />
+<!-- Browser Tabs Bar -->
+<div class="canvas-tabs-bar">
+  <div class="tab-group">
+    @for (tab of state.canvasTabs(); track tab.id) {
+      <div class="tab" [class.active]="state.activeTabId() === tab.id" (click)="state.setActiveTab(tab.id)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
         </svg>
-        {{ i18n.t('results.filter') }}
-      </button>
-      <button class="tool-action-pill">
-        {{ i18n.t('results.sources') }}
-        <span class="tool-badge">12</span>
-      </button>
-    </div>
+        <span class="tab-label">{{ tab.label }}</span>
+        @if (state.canvasTabs().length > 1) {
+          <button class="tab-close" (click)="state.removeCanvasTab(tab.id); $event.stopPropagation()">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        }
+      </div>
+    }
+  </div>
+  <div class="window-controls">
+    <span class="window-dot dot-close"></span>
+    <span class="window-dot dot-min"></span>
+    <span class="window-dot dot-max"></span>
   </div>
 </div>

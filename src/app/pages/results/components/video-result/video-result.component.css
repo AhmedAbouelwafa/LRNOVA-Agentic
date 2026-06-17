@@ -1,30 +1,102 @@
 :host { display: block; width: 100%; }
 
-.video-result-layout {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+/* ===== Canvas Layout Wrapper ===== */
+.canvas-workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: none;
+  border-radius: 0 0 14px 14px;
+  padding: 14px;
+  min-height: 520px;
+  animation: fadeInUp 0.5s ease-out;
 }
 
-/* ===== Glass Card ===== */
-.glass-card {
-  background: rgba(255, 255, 255, 0.42);
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 24px;
-  backdrop-filter: blur(35px) saturate(1.7);
-  -webkit-backdrop-filter: blur(35px) saturate(1.7);
-  box-shadow:
-    0 10px 40px rgba(139, 92, 246, 0.06),
-    inset 0 1px 1px rgba(255, 255, 255, 0.5),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.02);
+/* Top & Bottom Pill Rows */
+.workspace-top-row, .workspace-bottom-row {
+  display: flex;
+  gap: 10px;
+}
+.pill-panel {
+  height: 36px;
+  border-radius: 18px;
+  background: #F3F4F6;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+.pill-sm { flex: 1; }
+.pill-md { flex: 2; }
+.pill-lg { flex: 3; }
+
+/* Main 3-Column Layout */
+.workspace-main {
+  flex: 1;
+  display: flex;
+  gap: 10px;
 }
 
-/* ===== Video Player Card ===== */
+/* Left Sidebar */
+.sidebar-left {
+  width: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.sidebar-block {
+  border-radius: 12px;
+  background: #F3F4F6;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+.sidebar-block.tall { flex: 3; }
+.sidebar-block.short { flex: 1; }
+
+/* Right Sidebar */
+.sidebar-right {
+  width: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.right-block {
+  border-radius: 12px;
+  background: #F3F4F6;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+.right-block.square { flex: 1; }
+.right-block.rect { flex: 1.2; }
+
+/* Central Canvas */
+.central-canvas {
+  flex: 1;
+  border-radius: 14px;
+  background: #FAFBFC;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.central-canvas::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.03) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ===== Video Player Card (Now sits inside central canvas) ===== */
 .video-player-card {
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  background: white;
+  z-index: 2;
 }
 
 .video-wrapper {
@@ -32,7 +104,7 @@
   width: 100%;
   aspect-ratio: 16 / 9;
   background: #0f0f1a;
-  border-radius: 24px 24px 0 0;
+  border-radius: 14px 14px 0 0;
   overflow: hidden;
 }
 
@@ -40,7 +112,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 24px 24px 0 0;
+  border-radius: 14px 14px 0 0;
 }
 
 /* ===== Edit Mode Badge ===== */
@@ -222,7 +294,9 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
-  background: rgba(255, 255, 255, 0.3);
+  background: #FFFFFF;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 0 0 14px 14px;
 }
 
 .video-info {

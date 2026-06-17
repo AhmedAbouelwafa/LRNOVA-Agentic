@@ -14,13 +14,37 @@
     <h4 class="q-panel-question">{{ q.questionnaire!.title }}</h4>
 
     <!-- Options (radio select) -->
-    <div class="q-panel-options">
+    <div class="q-panel-options" [class.has-images]="q.questionnaire!.options[0]?.image" [class.has-audio]="q.questionnaire!.options[0]?.audio">
       @for (opt of q.questionnaire!.options; track opt.id) {
         <button class="q-panel-option" 
                 [class.selected]="selectedOption() === opt.label"
                 (click)="selectOption(opt.label)">
-          <span class="q-radio" [class.checked]="selectedOption() === opt.label"></span>
-          <span class="q-option-text">{{ opt.label }}</span>
+          
+          @if (opt.image) {
+            <div class="opt-image-wrapper">
+              <img [src]="opt.image" [alt]="opt.label" class="opt-image" />
+            </div>
+          }
+          
+          @if (opt.audio) {
+            <div class="opt-audio-btn" (click)="playAudio(opt.audio, $event)">
+              @if (activeAudioUrl() === opt.audio) {
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <rect x="6" y="4" width="4" height="16" />
+                  <rect x="14" y="4" width="4" height="16" />
+                </svg>
+              } @else {
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="5 3 19 12 5 21 5 3" />
+                </svg>
+              }
+            </div>
+          }
+
+          <div class="opt-text-content">
+            <span class="q-radio" [class.checked]="selectedOption() === opt.label"></span>
+            <span class="q-option-text">{{ opt.label }}</span>
+          </div>
         </button>
       }
     </div>
@@ -34,9 +58,9 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <polyline points="20 6 9 17 4 12" />
         </svg>
-        Submit answer
+        {{ i18n.currentLang() === 'ar' ? 'التالي' : 'Next' }}
       </button>
-      <span class="q-panel-esc" (click)="skipQuestion()">Esc to skip</span>
+      <span class="q-panel-esc" (click)="skipQuestion()">{{ i18n.currentLang() === 'ar' ? 'تخطي (Esc)' : 'Esc to skip' }}</span>
     </div>
   </div>
 }
