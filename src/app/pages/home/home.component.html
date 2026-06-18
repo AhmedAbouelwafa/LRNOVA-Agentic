@@ -1,3 +1,15 @@
+<div class="top-right-actions home-only-elements" [class.fade-out]="state.isAnimatingOut()">
+  <button class="notification-btn">
+    <div class="notification-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+      </svg>
+      <span class="badge">2</span>
+    </div>
+  </button>
+</div>
+
 <div class="home-hero" style="order: 1; width: 100%">
   <div class="home-only-elements" [class.fade-out]="state.isAnimatingOut()">
     <app-hero-section />
@@ -7,8 +19,15 @@
 <div class="home-agents" style="order: 3; width: 100%">
   <div class="home-only-elements" [class.fade-out]="state.isAnimatingOut()">
     
-    <app-agent-selector [class.tour-glow]="state.tourStep() >= 5 && state.tourStep() <= 7" style="position: relative; overflow: visible;" />
-    <app-suggestions [class.tour-glow]="state.tourStep() === 8" style="position: relative; overflow: visible;" />
+    <app-agent-selector [class.tour-glow]="state.tourStep() >= 5 && state.tourStep() <= 7" style="position: relative; overflow: visible;" [isQuickStartActive]="isToolsListVisible()" (quickStartToggled)="toggleToolsList()" />
+    
+    @if (isToolsListVisible()) {
+      <app-tools-list (toolSelected)="isToolsListVisible.set(false)" />
+    }
+
+    @if (!isToolsListVisible()) {
+      <app-suggestions [class.tour-glow]="state.tourStep() === 8" style="position: relative; overflow: visible;" />
+    }
 
   </div>
 </div>

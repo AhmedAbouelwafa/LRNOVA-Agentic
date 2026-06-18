@@ -1,0 +1,92 @@
+<div class="projects-page">
+  <!-- Page Header -->
+  <div class="projects-header">
+    <div class="header-icon">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+      </svg>
+    </div>
+    <div class="header-text">
+      <h1>{{ i18n.currentLang() === 'ar' ? 'مشاريعي' : 'My Projects' }}</h1>
+      <p>{{ i18n.currentLang() === 'ar' ? 'مساحتك لتصفح وإدارة جميع إبداعاتك' : 'Your workspace to browse and manage all your creations' }}</p>
+    </div>
+  </div>
+
+  <!-- Last Instant Creations Section -->
+  <section class="projects-section">
+    <div class="section-header">
+      <div class="section-title-row">
+        <div class="section-icon instant-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+          </svg>
+        </div>
+        <h2>{{ i18n.currentLang() === 'ar' ? 'آخر الإبداعات الفورية' : 'Last Instant Creations' }}</h2>
+      </div>
+      <span class="section-count">{{ instantCreations.length }} {{ i18n.currentLang() === 'ar' ? 'عناصر' : 'items' }}</span>
+    </div>
+
+    <div class="cards-grid">
+      @for (card of instantCreations; track card.id) {
+        <button class="project-card" (click)="openProject(card)">
+          <div class="card-image">
+            <img [src]="card.image" [alt]="card.title" />
+            <div class="card-tool-badge">{{ card.tool }}</div>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">{{ card.title }}</h3>
+            <p class="card-prompt">{{ card.prompt }}</p>
+            <div class="card-footer">
+              <span class="card-date">{{ card.date | date:'MMM d, y' }}</span>
+              <span class="card-arrow">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </span>
+            </div>
+          </div>
+        </button>
+      }
+    </div>
+  </section>
+
+  <!-- Last Project Creations Section -->
+  <section class="projects-section">
+    <div class="section-header">
+      <div class="section-title-row">
+        <div class="section-icon project-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 12 12 17 22 12"></polyline>
+            <polyline points="2 17 12 22 22 17"></polyline>
+          </svg>
+        </div>
+        <h2>{{ i18n.currentLang() === 'ar' ? 'آخر إبداعات المشاريع' : 'Last Project Creations' }}</h2>
+      </div>
+      <span class="section-count">{{ projectCreations.length }} {{ i18n.currentLang() === 'ar' ? 'عناصر' : 'items' }}</span>
+    </div>
+
+    <div class="cards-grid">
+      @for (card of projectCreations; track card.id) {
+        <button class="project-card" (click)="openProject(card, true)">
+          <div class="card-image">
+            <img [src]="card.image" [alt]="card.title" />
+            <div class="card-tool-badge">Project</div>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">{{ card.title }}</h3>
+            <p class="card-prompt">{{ card.prompt }}</p>
+            <div class="card-footer">
+              <span class="card-date">{{ card.date | date:'MMM d, y' }}</span>
+              <span class="card-arrow">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </span>
+            </div>
+          </div>
+        </button>
+      }
+    </div>
+  </section>
+</div>

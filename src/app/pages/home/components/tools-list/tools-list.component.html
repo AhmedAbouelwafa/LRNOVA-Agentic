@@ -1,0 +1,14 @@
+<div class="tools-list-wrapper expanded-panel" (click)="$event.stopPropagation()">
+  <div class="tools-grid">
+    @for (tool of tools; track tool.id) {
+      <button class="tool-card" (click)="selectTool(tool.id)" [title]="tool.desc">
+        <div class="tool-image-container">
+          <img [src]="tool.image" [alt]="tool.label" class="tool-image" />
+        </div>
+        <div class="tool-content">
+          <span class="tool-title">{{ tool.label }}</span>
+        </div>
+      </button>
+    }
+  </div>
+</div>

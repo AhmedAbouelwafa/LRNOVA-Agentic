@@ -278,15 +278,12 @@ export class PromptStateService {
       this.activeTool.set('Course Content');
     }
 
-    setTimeout(() => {
-      this.router.navigate(['/results']);
+    this.router.navigate(['/results']);
 
-      // Ask first clarification question
-      setTimeout(() => {
-        this.askNextQuestion(true);
-      }, 800);
-      
-    }, 600);
+    // Ask first clarification question
+    setTimeout(() => {
+      this.askNextQuestion(true);
+    }, 400);
   }
 
   private askNextQuestion(isFirst: boolean = false) {

@@ -1,0 +1,111 @@
+<div class="personal-info-card">
+  <div class="card-header">
+    <h2>Profile Information</h2>
+    <p>Update your personal details and public profile</p>
+  </div>
+
+  <!-- Avatar Section -->
+  <div class="avatar-section">
+    <div class="avatar-preview">
+      <div class="avatar-circle">
+        <span>AA</span>
+      </div>
+      <div class="avatar-overlay">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+          <circle cx="12" cy="13" r="4"></circle>
+        </svg>
+      </div>
+    </div>
+    <div class="avatar-info">
+      <span class="avatar-name">{{ profile.fullName }}</span>
+      <span class="avatar-role">Pro Plan Member</span>
+      <button class="change-photo-btn">Change Photo</button>
+    </div>
+  </div>
+
+  <div class="form-divider"></div>
+
+  <!-- Form Fields -->
+  <div class="form-grid">
+    <!-- Email -->
+    <div class="form-group full-width">
+      <label>Email Address</label>
+      <div class="input-with-badge">
+        <input type="email" [value]="profile.email" readonly />
+        <span class="input-badge locked">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          Email cannot be changed
+        </span>
+      </div>
+    </div>
+
+    <!-- Full Name -->
+    <div class="form-group">
+      <label>Full Name <span class="required">*</span></label>
+      <input type="text" [value]="profile.fullName" placeholder="Enter your full name" />
+    </div>
+
+    <!-- Phone -->
+    <div class="form-group">
+      <label>Phone Number</label>
+      <input type="tel" [value]="profile.phone" placeholder="Enter phone number" />
+    </div>
+
+    <!-- Company -->
+    <div class="form-group">
+      <label>Company</label>
+      <input type="text" [value]="profile.company" placeholder="Your company name" />
+    </div>
+
+    <!-- Industry -->
+    <div class="form-group">
+      <label>Industry</label>
+      <select>
+        <option selected>Education</option>
+        <option>Technology</option>
+        <option>Healthcare</option>
+        <option>Finance</option>
+        <option>Marketing</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <!-- Gender -->
+    <div class="form-group">
+      <label>Gender</label>
+      <div class="gender-options">
+        <label class="radio-option active">
+          <input type="radio" name="gender" value="Male" checked />
+          <span class="radio-circle"></span>
+          <span>Male</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="gender" value="Female" />
+          <span class="radio-circle"></span>
+          <span>Female</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Timezone -->
+    <div class="form-group">
+      <label>Timezone</label>
+      <select>
+        <option selected>Africa/Cairo (UTC+02:00)</option>
+        <option>America/New_York (UTC-05:00)</option>
+        <option>Europe/London (UTC+00:00)</option>
+        <option>Asia/Dubai (UTC+04:00)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="form-actions">
+    <button class="cancel-btn">Cancel</button>
+    <button class="save-btn">Save Changes</button>
+  </div>
+</div>

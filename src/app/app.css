@@ -46,9 +46,9 @@
   width: 700px; height: 700px;
   background-image: url('/logo.png'); background-size: contain;
   background-repeat: no-repeat; background-position: center;
-  filter: blur(70px); opacity: 0.20; z-index: 0; pointer-events: none;
+  filter: blur(40px); opacity: 0.20; z-index: 0; pointer-events: none;
   transition: opacity 0.8s ease-in-out, scale 0.8s ease-in-out;
-  animation: slowRotateLogo 40s linear infinite;
+  animation: slowRotateLogo 15s linear infinite;
 }
 @keyframes slowRotateLogo {
   0% { rotate: 0deg; }
@@ -102,7 +102,7 @@
 
 .content-wrapper {
   max-width: 900px; width: 100%; margin: 0 auto;
-  padding-top: max(25vh, 40px);
+  padding-top: max(15vh, 40px);
   display: flex; flex-direction: column; align-items: center;
   transition: padding-top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
               max-width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -115,10 +115,12 @@
   padding-bottom: 0;
 }
 .content-wrapper.animating-out > app-prompt-field {
-  opacity: 0;
-  transform: translateY(-20px) scale(0.95);
-  pointer-events: none;
-  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+  display: none;
+}
+
+.content-wrapper.projects-page {
+  padding-top: 24px;
+  max-width: 100%;
 }
 
 /* ===== Responsive Layout ===== */
@@ -133,7 +135,7 @@
     padding: 0 0.75rem 80px 0.75rem;
   }
   .content-wrapper {
-    padding-top: max(15vh, 30px);
+    padding-top: max(8vh, 30px);
   }
   .content-wrapper.animating-out {
     padding-top: 24px;

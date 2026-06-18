@@ -10,11 +10,22 @@
   padding: 8px 14px 0 14px;
   border: 1px solid rgba(0, 0, 0, 0.06);
   border-bottom: none;
+  width: 100%;
+  box-sizing: border-box;
 }
 .tab-group {
   display: flex;
   align-items: flex-end;
   gap: 2px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  flex: 1;
+  min-width: 0;
+}
+.tab-group::-webkit-scrollbar {
+  display: none;
 }
 .tab {
   display: flex;
@@ -34,6 +45,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  flex-shrink: 0;
 }
 .tab:hover {
   color: #6B7280;

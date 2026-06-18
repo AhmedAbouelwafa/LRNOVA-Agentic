@@ -188,3 +188,223 @@
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
+
+/* ===== User Profile Hover Card ===== */
+.user-profile-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-hover-card {
+  position: absolute;
+  bottom: 0;
+  left: calc(100% + 12px);
+  width: 280px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(24px) saturate(1.8);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 18px;
+  box-shadow:
+    0 20px 60px rgba(31, 38, 135, 0.12),
+    0 4px 16px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-8px) scale(0.96);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+
+/* Invisible bridge to keep hover state active across the gap */
+.user-hover-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -20px;
+  width: 20px;
+}
+.user-profile-wrapper:hover .user-hover-card {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0) scale(1);
+  pointer-events: auto;
+}
+
+/* Header */
+.user-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-card-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #06b6d4 0%, #8B5CF6 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+}
+
+.user-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.user-card-name {
+  font-size: 0.9rem;
+  font-weight: 650;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-card-email {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-card-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.12), transparent);
+  margin: 14px 0;
+}
+
+/* Wallet Section */
+.wallet-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wallet-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #7C3AED;
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+}
+
+.wallet-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(139, 92, 246, 0.04);
+  border: 1px solid rgba(139, 92, 246, 0.08);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.wallet-stat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stat-label {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.wallet-stat.available .stat-value {
+  color: #10b981;
+}
+
+.wallet-stat.reserved .stat-value {
+  color: #f59e0b;
+}
+
+.wallet-stat-divider {
+  height: 1px;
+  background: rgba(139, 92, 246, 0.1);
+  margin: 2px 0;
+}
+
+.wallet-stat.total .stat-label {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.wallet-stat.total .stat-value {
+  color: #1e293b;
+  font-size: 0.85rem;
+}
+
+/* Actions */
+.user-card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.user-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-action-btn:hover {
+  background: rgba(139, 92, 246, 0.06);
+  color: #7C3AED;
+}
+
+.user-action-btn.logout-btn:hover {
+  background: rgba(239, 68, 68, 0.06);
+  color: #EF4444;
+}
+
+/* RTL */
+:host-context(html[dir="rtl"]) .user-hover-card {
+  left: auto;
+  right: calc(100% + 12px);
+  transform: translateX(8px) scale(0.96);
+}
+
+:host-context(html[dir="rtl"]) .user-profile-wrapper:hover .user-hover-card {
+  transform: translateX(0) scale(1);
+}
+
+:host-context(html[dir="rtl"]) .user-hover-card::before {
+  left: auto;
+  right: -20px;
+}

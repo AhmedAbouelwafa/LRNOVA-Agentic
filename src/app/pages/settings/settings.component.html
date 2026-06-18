@@ -1,0 +1,212 @@
+<div class="settings-page">
+  <!-- Page Header -->
+  <div class="settings-header">
+    <div class="header-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      </svg>
+    </div>
+    <div class="header-text">
+      <h1>Settings</h1>
+      <p>Manage your account, preferences, and billing</p>
+    </div>
+  </div>
+
+  <div class="settings-layout">
+    <!-- Sidebar Navigation -->
+    <nav class="settings-nav">
+      @for (section of sections; track section.id) {
+        <button
+          class="nav-item"
+          [class.active]="activeSection === section.id"
+          (click)="activeSection = section.id">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path [attr.d]="section.icon"></path>
+          </svg>
+          <span>{{ section.label }}</span>
+        </button>
+      }
+    </nav>
+
+    <!-- Content Area -->
+    <div class="settings-content">
+      @if (activeSection === 'profile') {
+        <app-personal-info />
+      }
+
+      @if (activeSection === 'credits') {
+        <div class="settings-card">
+          <div class="card-header">
+            <h2>Credits & Billing</h2>
+            <p>Manage your credit wallet and billing information</p>
+          </div>
+
+          <div class="credits-overview">
+            <div class="credit-card available-card">
+              <div class="credit-card-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+              </div>
+              <span class="credit-label">Available Credits</span>
+              <span class="credit-amount green">49,999,685</span>
+            </div>
+            <div class="credit-card reserved-card">
+              <div class="credit-card-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+              <span class="credit-label">Reserved</span>
+              <span class="credit-amount amber">600</span>
+            </div>
+            <div class="credit-card total-card">
+              <div class="credit-card-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                  <line x1="1" y1="10" x2="23" y2="10"></line>
+                </svg>
+              </div>
+              <span class="credit-label">Total Credits</span>
+              <span class="credit-amount">50,000,285</span>
+            </div>
+          </div>
+
+          <div class="billing-section">
+            <h3>Current Plan</h3>
+            <div class="plan-badge-row">
+              <div class="current-plan-badge">
+                <span class="plan-name">Pro Plan</span>
+                <span class="plan-price">299 EGP/mo</span>
+              </div>
+              <button class="upgrade-btn" routerLink="/pricing">Change Plan</button>
+            </div>
+          </div>
+
+          <div class="billing-section">
+            <h3>Usage This Month</h3>
+            <div class="usage-bars">
+              <div class="usage-item">
+                <div class="usage-meta">
+                  <span>Text Creations</span>
+                  <span>38 / 50</span>
+                </div>
+                <div class="usage-track">
+                  <div class="usage-fill" style="width: 76%"></div>
+                </div>
+              </div>
+              <div class="usage-item">
+                <div class="usage-meta">
+                  <span>Video Generations</span>
+                  <span>3 / 5</span>
+                </div>
+                <div class="usage-track">
+                  <div class="usage-fill" style="width: 60%"></div>
+                </div>
+              </div>
+              <div class="usage-item">
+                <div class="usage-meta">
+                  <span>Avatar Minutes</span>
+                  <span>12 / 25 min</span>
+                </div>
+                <div class="usage-track">
+                  <div class="usage-fill" style="width: 48%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (activeSection === 'security') {
+        <div class="settings-card">
+          <div class="card-header">
+            <h2>Security</h2>
+            <p>Manage your password and account security</p>
+          </div>
+          <div class="form-group">
+            <label>Current Password</label>
+            <input type="password" placeholder="Enter current password" />
+          </div>
+          <div class="form-group">
+            <label>New Password</label>
+            <input type="password" placeholder="Enter new password" />
+          </div>
+          <div class="form-group">
+            <label>Confirm New Password</label>
+            <input type="password" placeholder="Confirm new password" />
+          </div>
+          <div class="form-actions">
+            <button class="save-btn">Update Password</button>
+          </div>
+
+          <div class="security-extra">
+            <h3>Two-Factor Authentication</h3>
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <span class="toggle-label">Enable 2FA</span>
+                <span class="toggle-desc">Add an extra layer of security to your account</span>
+              </div>
+              <div class="toggle-switch">
+                <div class="toggle-knob"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (activeSection === 'preferences') {
+        <div class="settings-card">
+          <div class="card-header">
+            <h2>Preferences</h2>
+            <p>Customize your workspace experience</p>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <span class="toggle-label">Dark Mode</span>
+              <span class="toggle-desc">Switch between light and dark theme</span>
+            </div>
+            <div class="toggle-switch">
+              <div class="toggle-knob"></div>
+            </div>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <span class="toggle-label">Email Notifications</span>
+              <span class="toggle-desc">Receive email updates about your projects</span>
+            </div>
+            <div class="toggle-switch active">
+              <div class="toggle-knob"></div>
+            </div>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <span class="toggle-label">Auto-save Drafts</span>
+              <span class="toggle-desc">Automatically save your work every 30 seconds</span>
+            </div>
+            <div class="toggle-switch active">
+              <div class="toggle-knob"></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Default Language</label>
+            <select>
+              <option>English</option>
+              <option>العربية</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Default AI Model</label>
+            <select>
+              <option>⚡ Rapid (Faster)</option>
+              <option>✨ Pro (Higher Quality)</option>
+            </select>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

@@ -14,6 +14,14 @@ export const routes: Routes = [
     loadComponent: () => import('./shared/components/pricing/pricing').then(m => m.Pricing)
   },
   {
+    path: 'projects',
+    loadComponent: () => import('./pages/projects/projects.component').then(m => m.ProjectsComponent)
+  },
+  {
+    path: 'settings',
+    loadComponent: () => import('./pages/settings/settings.component').then(m => m.SettingsComponent)
+  },
+  {
     path: '**',
     redirectTo: ''
   }
