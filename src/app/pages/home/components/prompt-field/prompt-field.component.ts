@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, OnDestroy, effect, ViewChild, ElementRef, Input, HostBinding } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { PromptStateService } from '../../../../core/services/prompt-state.service';
 import { TypewriterService } from '../../../../core/services/typewriter.service';
@@ -18,7 +19,12 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
   protected state = inject(PromptStateService);
   protected i18n = inject(LocalizationService);
   private tw = inject(TypewriterService);
+  private router = inject(Router);
   private placeholderWriter!: ReturnType<TypewriterService['create']>;
+
+  get canRemoveTool(): boolean {
+    return this.mode !== 'chat' && !this.router.url.startsWith('/apps');
+  }
 
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 

@@ -22,7 +22,8 @@ export class App {
       filter((e): e is NavigationEnd => e instanceof NavigationEnd)
     ).subscribe(e => {
       const url = e.urlAfterRedirects;
-      this.isFullWidthPage.set(url.startsWith('/projects') || url.startsWith('/settings') || url.startsWith('/results'));
+      const isAppsGrid = url === '/apps' || url.startsWith('/apps?');
+      this.isFullWidthPage.set(url.startsWith('/projects') || url.startsWith('/settings') || url.startsWith('/results') || isAppsGrid);
     });
   }
 }

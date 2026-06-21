@@ -22,7 +22,7 @@
                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
               </svg>
               <span class="file-name">{{ state.selectedQuickTool() }}</span>
-              @if (mode !== 'chat') {
+              @if (canRemoveTool) {
                 <button class="remove-file-btn" (click)="state.selectedQuickTool.set(null)" title="Remove tool">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
                 </button>
@@ -110,11 +110,13 @@
 
         <div class="prompt-actions-right">
 
-          <!-- <div class="plan-toggle" (click)="onTogglePlan($event)">
-            <div class="toggle-slider" [class.is-pro]="state.selectedPlan() === 'pro'"></div>
-            <span class="toggle-label" [class.active]="state.selectedPlan() === 'flash'">{{ i18n.t('prompt.flash') }}</span>
-            <span class="toggle-label" [class.active]="state.selectedPlan() === 'pro'">{{ i18n.t('prompt.pro') }}</span>
-          </div> -->
+          @if (mode !== 'chat' && (state.activeAgent() === 'video' || state.selectedQuickTool() === 'Video' || state.selectedQuickTool() === 'Text Video')) {
+            <div class="plan-toggle" (click)="onTogglePlan($event)">
+              <div class="toggle-slider" [class.is-pro]="state.selectedPlan() === 'pro'"></div>
+              <span class="toggle-label" [class.active]="state.selectedPlan() === 'flash'">{{ i18n.t('prompt.flash') }}</span>
+              <span class="toggle-label" [class.active]="state.selectedPlan() === 'pro'">{{ i18n.t('prompt.pro') }}</span>
+            </div>
+          }
           <button class="prompt-submit"
             [class.has-text]="state.promptText().trim().length > 0 || state.attachedFiles().length > 0"
             (click)="onSubmit()"

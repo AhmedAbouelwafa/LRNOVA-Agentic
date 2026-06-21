@@ -1,212 +1,164 @@
 <div class="pricing-page">
   <div class="pricing-container">
+
+    <!-- Hero Header -->
     <div class="pricing-header">
-      <div class="badge-pro">{{ i18n.t('pricing.badge') }}</div>
-      <h2>{{ i18n.t('pricing.title') }}</h2>
-      <p>{{ i18n.t('pricing.subtitle') }}</p>
+      <div class="badge-pill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 2 7 12 22 22 7 12 2"></polygon>
+          <polyline points="2 7 12 12 22 7"></polyline>
+          <polyline points="12 22 12 12"></polyline>
+        </svg>
+        <span>{{ i18n.t('pricing.badge') }}</span>
+      </div>
+      <h1 class="pricing-title">{{ i18n.t('pricing.title') }}</h1>
+      <p class="pricing-subtitle">{{ i18n.t('pricing.subtitle') }}</p>
     </div>
 
-    <div class="pricing-cards">
-      <!-- Free Plan -->
-      <div class="pricing-card">
-        <div class="card-header">
-          <h3>{{ i18n.t('pricing.free.name') }}</h3>
-          <div class="price">
-            <span class="amount">{{ i18n.t('pricing.free.price') }}</span>
-          </div>
-          <p class="desc">{{ i18n.t('pricing.free.desc') }}</p>
-        </div>
-        
-        <div class="features-section">
-          <h4 class="section-title">{{ i18n.t('pricing.section.text') }}</h4>
-          <ul class="features">
-            <li>
-              <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.free.f1') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.free.f2') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.free.f3') }}</span>
-            </li>
-          </ul>
+    <!-- Cards Row -->
+    <div class="plans-row">
 
-          <h4 class="section-title mt-4">{{ i18n.t('pricing.section.video') }}</h4>
-          <ul class="features">
-            <li>
-              <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.free.v1') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.free.v2') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.free.v3') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.free.v4') }}</span>
-            </li>
-            <li class="limitation">
-              <svg class="minus-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-              <span>{{ i18n.t('pricing.free.v5') }}</span>
-            </li>
-          </ul>
+      <!-- Free Plan -->
+      <div class="plan-card plan-free">
+        <div class="plan-top">
+          <div class="plan-icon-wrap free-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <h3 class="plan-name">{{ i18n.t('pricing.free.name') }}</h3>
+          <div class="plan-price">
+            <span class="price-amount">{{ i18n.t('pricing.free.price') }}</span>
+          </div>
+          <p class="plan-desc">{{ i18n.t('pricing.free.desc') }}</p>
+          <button class="plan-cta cta-outline">{{ i18n.t('pricing.free.btn') }}</button>
         </div>
-        
-        <div class="card-footer">
-          <button class="plan-btn outline">{{ i18n.t('pricing.free.btn') }}</button>
+
+        <div class="plan-features">
+          <div class="feature-group">
+            <span class="feature-group-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              {{ i18n.t('pricing.section.text') }}
+            </span>
+            <ul>
+              <li><span class="feat-check">✓</span>{{ i18n.t('pricing.free.f1') }}</li>
+              <li><span class="feat-check">✓</span>{{ i18n.t('pricing.free.f2') }}</li>
+              <li><span class="feat-check">✓</span>{{ i18n.t('pricing.free.f3') }}</li>
+            </ul>
+          </div>
+          <div class="feature-group">
+            <span class="feature-group-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+              {{ i18n.t('pricing.section.video') }}
+            </span>
+            <ul>
+              <li><span class="feat-check">✓</span>{{ i18n.t('pricing.free.v1') }}</li>
+              <li><span class="feat-check">✓</span>{{ i18n.t('pricing.free.v2') }}</li>
+              <li><span class="feat-check">✓</span>{{ i18n.t('pricing.free.v3') }}</li>
+              <li><span class="feat-check">✓</span>{{ i18n.t('pricing.free.v4') }}</li>
+              <li class="feat-disabled"><span class="feat-minus">—</span>{{ i18n.t('pricing.free.v5') }}</li>
+            </ul>
+          </div>
         </div>
       </div>
 
       <!-- Basic Plan -->
-      <div class="pricing-card highlighted">
-        <div class="card-header">
-          <h3>{{ i18n.t('pricing.basic.name') }}</h3>
-          <div class="price">
-            <span class="currency">{{ i18n.t('pricing.currency') }}</span>
-            <span class="amount">449</span>
-            <span class="period">{{ i18n.t('pricing.perMonth') }}</span>
+      <div class="plan-card plan-basic">
+        <div class="plan-top">
+          <div class="plan-icon-wrap basic-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
           </div>
-          <p class="desc">{{ i18n.t('pricing.basic.desc') }}</p>
+          <h3 class="plan-name">{{ i18n.t('pricing.basic.name') }}</h3>
+          <div class="plan-price">
+            <span class="price-currency">{{ i18n.t('pricing.currency') }}</span>
+            <span class="price-amount">449</span>
+            <span class="price-period">{{ i18n.t('pricing.perMonth') }}</span>
+          </div>
+          <p class="plan-desc">{{ i18n.t('pricing.basic.desc') }}</p>
+          <button class="plan-cta cta-dark">{{ i18n.t('pricing.basic.btn') }}</button>
         </div>
-        
-        <div class="features-section">
-          <h4 class="section-title">{{ i18n.t('pricing.section.text') }}</h4>
-          <ul class="features">
-            <li>
-              <svg class="check-icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.basic.f1') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.basic.f2') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.basic.f3') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.basic.f4') }}</span>
-            </li>
-          </ul>
 
-          <h4 class="section-title mt-4">{{ i18n.t('pricing.section.video') }}</h4>
-          <ul class="features">
-            <li>
-              <svg class="check-icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.basic.v1') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.basic.v2') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.basic.v3') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.basic.v4') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.basic.v5') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.basic.v6') }}</span>
-            </li>
-          </ul>
-        </div>
-        
-        <div class="card-footer">
-          <button class="plan-btn primary">{{ i18n.t('pricing.basic.btn') }}</button>
+        <div class="plan-features">
+          <div class="feature-group">
+            <span class="feature-group-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              {{ i18n.t('pricing.section.text') }}
+            </span>
+            <ul>
+              <li><span class="feat-check accent">✓</span>{{ i18n.t('pricing.basic.f1') }}</li>
+              <li><span class="feat-check accent">✓</span>{{ i18n.t('pricing.basic.f2') }}</li>
+              <li><span class="feat-check accent">✓</span>{{ i18n.t('pricing.basic.f3') }}</li>
+              <li><span class="feat-check accent">✓</span>{{ i18n.t('pricing.basic.f4') }}</li>
+            </ul>
+          </div>
+          <div class="feature-group">
+            <span class="feature-group-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+              {{ i18n.t('pricing.section.video') }}
+            </span>
+            <ul>
+              <li><span class="feat-check accent">✓</span>{{ i18n.t('pricing.basic.v1') }}</li>
+              <li><span class="feat-check accent">✓</span>{{ i18n.t('pricing.basic.v2') }}</li>
+              <li><span class="feat-check accent">✓</span>{{ i18n.t('pricing.basic.v3') }}</li>
+              <li><span class="feat-check accent">✓</span>{{ i18n.t('pricing.basic.v4') }}</li>
+              <li><span class="feat-check accent">✓</span>{{ i18n.t('pricing.basic.v5') }}</li>
+              <li><span class="feat-check accent">✓</span>{{ i18n.t('pricing.basic.v6') }}</li>
+            </ul>
+          </div>
         </div>
       </div>
 
       <!-- Pro Plan -->
-      <div class="pricing-card pro">
-        <div class="popular-badge">{{ i18n.t('pricing.pro.badge') }}</div>
-        <div class="card-header">
-          <div class="pro-title-wrap">
-            <svg class="diamond-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <div class="plan-card plan-pro">
+        <div class="plan-ribbon">{{ i18n.t('pricing.pro.badge') }}</div>
+        <div class="plan-top">
+          <div class="plan-icon-wrap pro-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polygon points="12 2 2 7 12 22 22 7 12 2"></polygon>
               <polyline points="2 7 12 12 22 7"></polyline>
               <polyline points="12 22 12 12"></polyline>
             </svg>
-            <h3>{{ i18n.t('pricing.pro.name') }}</h3>
           </div>
-          <div class="price">
-            <span class="currency">{{ i18n.t('pricing.currency') }}</span>
-            <span class="amount">849</span>
-            <span class="period">{{ i18n.t('pricing.perMonth') }}</span>
+          <h3 class="plan-name">{{ i18n.t('pricing.pro.name') }}</h3>
+          <div class="plan-price">
+            <span class="price-currency">{{ i18n.t('pricing.currency') }}</span>
+            <span class="price-amount">849</span>
+            <span class="price-period">{{ i18n.t('pricing.perMonth') }}</span>
           </div>
-          <p class="desc">{{ i18n.t('pricing.pro.desc') }}</p>
+          <p class="plan-desc">{{ i18n.t('pricing.pro.desc') }}</p>
+          <button class="plan-cta cta-gradient">{{ i18n.t('pricing.pro.btn') }}</button>
         </div>
-        
-        <div class="features-section">
-          <h4 class="section-title">{{ i18n.t('pricing.section.text') }}</h4>
-          <ul class="features">
-            <li>
-              <svg class="check-icon pro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.pro.f1') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon pro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.pro.f2') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon pro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.pro.f3') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon pro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.pro.f4') }}</span>
-            </li>
-          </ul>
 
-          <h4 class="section-title mt-4">{{ i18n.t('pricing.section.video') }}</h4>
-          <ul class="features">
-            <li>
-              <svg class="check-icon pro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.pro.v1') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon pro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.pro.v2') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon pro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.pro.v3') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon pro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.pro.v4') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon pro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.pro.v5') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon pro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.pro.v6') }}</span>
-            </li>
-            <li>
-              <svg class="check-icon pro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{{ i18n.t('pricing.pro.v7') }}</span>
-            </li>
-          </ul>
-        </div>
-        
-        <div class="card-footer">
-          <button class="plan-btn primary gradient">{{ i18n.t('pricing.pro.btn') }}</button>
+        <div class="plan-features">
+          <div class="feature-group">
+            <span class="feature-group-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              {{ i18n.t('pricing.section.text') }}
+            </span>
+            <ul>
+              <li><span class="feat-check pro-c">✓</span>{{ i18n.t('pricing.pro.f1') }}</li>
+              <li><span class="feat-check pro-c">✓</span>{{ i18n.t('pricing.pro.f2') }}</li>
+              <li><span class="feat-check pro-c">✓</span>{{ i18n.t('pricing.pro.f3') }}</li>
+              <li><span class="feat-check pro-c">✓</span>{{ i18n.t('pricing.pro.f4') }}</li>
+            </ul>
+          </div>
+          <div class="feature-group">
+            <span class="feature-group-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+              {{ i18n.t('pricing.section.video') }}
+            </span>
+            <ul>
+              <li><span class="feat-check pro-c">✓</span>{{ i18n.t('pricing.pro.v1') }}</li>
+              <li><span class="feat-check pro-c">✓</span>{{ i18n.t('pricing.pro.v2') }}</li>
+              <li><span class="feat-check pro-c">✓</span>{{ i18n.t('pricing.pro.v3') }}</li>
+              <li><span class="feat-check pro-c">✓</span>{{ i18n.t('pricing.pro.v4') }}</li>
+              <li><span class="feat-check pro-c">✓</span>{{ i18n.t('pricing.pro.v5') }}</li>
+              <li><span class="feat-check pro-c">✓</span>{{ i18n.t('pricing.pro.v6') }}</li>
+              <li><span class="feat-check pro-c">✓</span>{{ i18n.t('pricing.pro.v7') }}</li>
+            </ul>
+          </div>
         </div>
       </div>
 

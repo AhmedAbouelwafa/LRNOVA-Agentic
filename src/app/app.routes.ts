@@ -22,6 +22,18 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/settings/settings.component').then(m => m.SettingsComponent)
   },
   {
+    path: 'settings/:sectionId',
+    loadComponent: () => import('./pages/settings/settings.component').then(m => m.SettingsComponent)
+  },
+  {
+    path: 'apps',
+    loadComponent: () => import('./pages/apps/apps.component').then(m => m.AppsComponent)
+  },
+  {
+    path: 'apps/:toolId',
+    loadComponent: () => import('./pages/apps/apps.component').then(m => m.AppsComponent)
+  },
+  {
     path: '**',
     redirectTo: ''
   }

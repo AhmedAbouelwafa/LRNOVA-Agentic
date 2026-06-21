@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { PromptStateService } from '../../core/services/prompt-state.service';
 import { LocalizationService } from '../../core/services/localization.service';
 import { PersonalInfoComponent } from './components/personal-info/personal-info.component';
@@ -11,9 +11,11 @@ import { PersonalInfoComponent } from './components/personal-info/personal-info.
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css'
 })
-export class SettingsComponent {
+export class SettingsComponent implements OnInit {
   protected state = inject(PromptStateService);
   protected i18n = inject(LocalizationService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
   activeSection = 'profile';
 
@@ -23,4 +25,18 @@ export class SettingsComponent {
     { id: 'security', label: 'Security', icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z' },
     { id: 'preferences', label: 'Preferences', icon: 'M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z' }
   ];
+
+  ngOnInit() {
+    this.route.paramMap.subscribe(params => {
+      const section = params.get('sectionId');
+      if (section && this.sections.find(s => s.id === section)) {
+        this.activeSection = section;
+      }
+    });
+  }
+
+  onSectionChange(sectionId: string) {
+    this.activeSection = sectionId;
+    this.router.navigate(['/settings', sectionId]);
+  }
 }

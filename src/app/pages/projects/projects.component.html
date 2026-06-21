@@ -26,28 +26,63 @@
       <span class="section-count">{{ instantCreations.length }} {{ i18n.currentLang() === 'ar' ? 'عناصر' : 'items' }}</span>
     </div>
 
-    <div class="cards-grid">
-      @for (card of instantCreations; track card.id) {
-        <button class="project-card" (click)="openProject(card)">
-          <div class="card-image">
-            <img [src]="card.image" [alt]="card.title" />
-            <div class="card-tool-badge">{{ card.tool }}</div>
+    <div class="cards-list">
+      @for (card of paginatedInstant(); track card.id; let i = $index) {
+        <button class="project-card" (click)="openProject(card)" [style.animation-delay]="(i * 0.05) + 's'">
+          <div class="card-left">
+            <div class="card-tool-icon" [style.background]="getToolGradient(card.tool)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path [attr.d]="getToolIcon(card.tool)" />
+              </svg>
+            </div>
           </div>
-          <div class="card-body">
-            <h3 class="card-title">{{ card.title }}</h3>
+          <div class="card-center">
+            <div class="card-top-row">
+              <h3 class="card-title">{{ card.title }}</h3>
+              <span class="card-tool-tag" [style.--tag-color]="getToolAccent(card.tool)">{{ card.tool }}</span>
+            </div>
             <p class="card-prompt">{{ card.prompt }}</p>
-            <div class="card-footer">
-              <span class="card-date">{{ card.date | date:'MMM d, y' }}</span>
-              <span class="card-arrow">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="9 18 15 12 9 6"></polyline>
+            <div class="card-meta">
+              <span class="card-date">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
                 </svg>
+                {{ card.date | date:'MMM d, y · h:mm a' }}
+              </span>
+              <span class="card-status">
+                <span class="status-dot"></span>
+                Completed
               </span>
             </div>
+          </div>
+          <div class="card-right">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </div>
         </button>
       }
     </div>
+
+    <!-- Instant Pagination -->
+    @if (instantTotalPages() > 1) {
+      <div class="pagination" id="instant-pagination">
+        <button class="page-btn page-nav" [disabled]="instantPage() === 1" (click)="goInstantPage(instantPage() - 1)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </button>
+        @for (p of getInstantPages(); track p) {
+          <button class="page-btn" [class.active]="p === instantPage()" (click)="goInstantPage(p)">{{ p }}</button>
+        }
+        <button class="page-btn page-nav" [disabled]="instantPage() === instantTotalPages()" (click)="goInstantPage(instantPage() + 1)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </button>
+      </div>
+    }
   </section>
 
   <!-- Last Project Creations Section -->
@@ -66,27 +101,71 @@
       <span class="section-count">{{ projectCreations.length }} {{ i18n.currentLang() === 'ar' ? 'عناصر' : 'items' }}</span>
     </div>
 
-    <div class="cards-grid">
-      @for (card of projectCreations; track card.id) {
-        <button class="project-card" (click)="openProject(card, true)">
-          <div class="card-image">
-            <img [src]="card.image" [alt]="card.title" />
-            <div class="card-tool-badge">Project</div>
+    <div class="cards-list">
+      @for (card of paginatedProjects(); track card.id; let i = $index) {
+        <button class="project-card project-type" (click)="openProject(card, true)" [style.animation-delay]="(i * 0.05) + 's'">
+          <div class="card-left">
+            <div class="card-tool-icon project-badge-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polyline points="2 12 12 17 22 12"></polyline>
+                <polyline points="2 17 12 22 22 17"></polyline>
+              </svg>
+            </div>
           </div>
-          <div class="card-body">
-            <h3 class="card-title">{{ card.title }}</h3>
+          <div class="card-center">
+            <div class="card-top-row">
+              <h3 class="card-title">{{ card.title }}</h3>
+              <span class="card-tool-tag project-tag">Project</span>
+            </div>
             <p class="card-prompt">{{ card.prompt }}</p>
-            <div class="card-footer">
-              <span class="card-date">{{ card.date | date:'MMM d, y' }}</span>
-              <span class="card-arrow">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="9 18 15 12 9 6"></polyline>
+            <div class="card-meta">
+              <span class="card-date">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
                 </svg>
+                {{ card.date | date:'MMM d, y · h:mm a' }}
+              </span>
+              <span class="card-chapters">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
+                  <path d="M4 19.5V4.5A2.5 2.5 0 016.5 2H20v20H6.5A2.5 2.5 0 014 19.5z" />
+                </svg>
+                4 chapters
+              </span>
+              <span class="card-status">
+                <span class="status-dot"></span>
+                Completed
               </span>
             </div>
+          </div>
+          <div class="card-right">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </div>
         </button>
       }
     </div>
+
+    <!-- Project Pagination -->
+    @if (projectTotalPages() > 1) {
+      <div class="pagination" id="project-pagination">
+        <button class="page-btn page-nav" [disabled]="projectPage() === 1" (click)="goProjectPage(projectPage() - 1)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </button>
+        @for (p of getProjectPages(); track p) {
+          <button class="page-btn" [class.active]="p === projectPage()" (click)="goProjectPage(p)">{{ p }}</button>
+        }
+        <button class="page-btn page-nav" [disabled]="projectPage() === projectTotalPages()" (click)="goProjectPage(projectPage() + 1)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </button>
+      </div>
+    }
   </section>
 </div>

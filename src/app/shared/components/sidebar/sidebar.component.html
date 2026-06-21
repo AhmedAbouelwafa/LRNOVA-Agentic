@@ -1,10 +1,13 @@
-<aside class="agentic-sidebar" id="main-sidebar" [class.tour-glow]="state.tourStep() === 1" [class.compact-mode]="state.isAnimatingOut() || state.submittedPrompt()">
+<aside class="agentic-sidebar" id="main-sidebar" [class.tour-glow]="state.tourStep() === 1"
+  [class.compact-mode]="state.isAnimatingOut() || state.submittedPrompt()">
   <div class="sidebar-top">
     <!-- Home Wrapper to avoid routerLink click hijacking -->
     <div style="position: relative; width: 100%; display: flex; flex-direction: column; align-items: center;">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="sidebar-item" (click)="state.goHome()">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="sidebar-item"
+        (click)="state.goHome()">
         <div class="sidebar-icon home-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
             <polyline points="9 22 9 12 15 12 15 22"></polyline>
           </svg>
@@ -13,21 +16,23 @@
       </a>
 
       @if (state.tourStep() === 1) {
-        <div class="tour-card arrow-start arrow-start-top-align" style="top: -10px; left: calc(100% + 28px); cursor: default;" (click)="$event.stopPropagation()">
-          <div class="tour-content">
-            <h3>Main Menu</h3>
-            <p>From here you can navigate between the home page, browse plans and pricing, and easily manage your account settings.</p>
-          </div>
-          <div class="tour-actions">
-            <button class="skip-btn" (click)="state.tourStep.set(0)">Skip Tour</button>
-            <button class="next-btn" (click)="state.tourStep.set(2)">Next</button>
-          </div>
+      <div class="tour-card arrow-start arrow-start-top-align"
+        style="top: -10px; left: calc(100% + 28px); cursor: default;" (click)="$event.stopPropagation()">
+        <div class="tour-content">
+          <h3>Main Menu</h3>
+          <p>From here you can navigate between the home page, browse plans and pricing, and easily manage your account
+            settings.</p>
         </div>
+        <div class="tour-actions">
+          <button class="skip-btn" (click)="state.tourStep.set(0)">Skip Tour</button>
+          <button class="next-btn" (click)="state.tourStep.set(2)">Next</button>
+        </div>
+      </div>
       }
     </div>
 
     <!-- Avatar -->
-    <a href="#" class="sidebar-item">
+    <!-- <a href="#" class="sidebar-item">
       <div class="sidebar-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -35,24 +40,27 @@
         </svg>
       </div>
       <span class="sidebar-text">{{ i18n.t('sidebar.avatar') }}</span>
-    </a>
+    </a> -->
 
     <!-- Brand -->
-    <a href="#" class="sidebar-item">
+    <!-- <a href="#" class="sidebar-item">
       <div class="sidebar-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
         </svg>
       </div>
       <span class="sidebar-text">{{ i18n.t('sidebar.brand') }}</span>
-    </a>
+    </a> -->
 
     <!-- Apps -->
-    <a href="#" class="sidebar-item">
+    <a routerLink="/app" routerLinkActive="active" class="sidebar-item">
       <div class="sidebar-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21.17 3.22c.98.98.98 2.56 0 3.54l-11.3 11.3-4.95 1.41 1.41-4.95 11.3-11.3c.98-.98 2.56-.98 3.54 0z" />
-          <path d="M15 5l4 4" />
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1.5" />
+          <rect x="14" y="3" width="7" height="7" rx="1.5" />
+          <rect x="3" y="14" width="7" height="7" rx="1.5" />
+          <rect x="14" y="14" width="7" height="7" rx="1.5" />
         </svg>
       </div>
       <span class="sidebar-text">{{ i18n.t('sidebar.apps') }}</span>
@@ -63,7 +71,8 @@
     <!-- My Projects -->
     <a routerLink="/projects" routerLinkActive="active" class="sidebar-item">
       <div class="sidebar-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
           <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
         </svg>
       </div>
@@ -72,18 +81,14 @@
   </div>
 
   <div class="sidebar-bottom">
-    <!-- Language Toggle -->
-    <button class="sidebar-item" (click)="i18n.toggleLang()" id="lang-toggle">
-      <div class="sidebar-icon lang-icon">
-        <span class="lang-label">{{ i18n.currentLang() === 'en' ? 'AR' : 'EN' }}</span>
-      </div>
-    </button>
+
 
 
     <!-- Diamond -->
     <button class="sidebar-item" routerLink="/pricing" routerLinkActive="active">
       <div class="sidebar-icon circle-icon diamond">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
           <polygon points="12 2 2 7 12 22 22 7 12 2"></polygon>
           <polyline points="2 7 12 12 22 7"></polyline>
           <polyline points="12 22 12 12"></polyline>
@@ -92,14 +97,14 @@
     </button>
 
     <!-- Code -->
-    <button class="sidebar-item">
+    <!-- <button class="sidebar-item">
       <div class="sidebar-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="16 18 22 12 16 6" />
           <polyline points="8 6 2 12 8 18" />
         </svg>
-      </div>
-    </button>
+      </div> -->
+    <!-- </button> -->
 
     <!-- User Profile -->
     <div class="user-profile-wrapper">
@@ -108,9 +113,9 @@
           <span>L</span>
         </div>
       </button>
- 
+
       <!-- Hover Card -->
-      <!-- <div class="user-hover-card">
+      <div class="user-hover-card">
         <div class="user-card-header">
           <div class="user-card-avatar">L</div>
           <div class="user-card-info">
@@ -123,7 +128,8 @@
 
         <div class="wallet-section">
           <div class="wallet-title">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
               <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
               <line x1="1" y1="10" x2="23" y2="10"></line>
             </svg>
@@ -151,14 +157,18 @@
 
         <div class="user-card-actions">
           <button class="user-action-btn" routerLink="/settings">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="3"></circle>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z">
+              </path>
             </svg>
             <span>Settings</span>
           </button>
           <button class="user-action-btn logout-btn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
               <polyline points="16 17 21 12 16 7"></polyline>
               <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -166,9 +176,9 @@
             <span>Log Out</span>
           </button>
         </div>
-      </div> -->
+      </div>
 
-      
+
     </div>
   </div>
 </aside>

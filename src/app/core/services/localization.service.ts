@@ -37,4 +37,8 @@ export class LocalizationService {
   toggleLang() {
     this.currentLang.update(l => l === 'en' ? 'ar' : 'en');
   }
+
+  setLang(lang: Lang) {
+    this.currentLang.set(lang);
+  }
 }

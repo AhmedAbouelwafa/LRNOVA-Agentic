@@ -20,7 +20,7 @@
         <button
           class="nav-item"
           [class.active]="activeSection === section.id"
-          (click)="activeSection = section.id">
+          (click)="onSectionChange(section.id)">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path [attr.d]="section.icon"></path>
           </svg>
@@ -191,11 +191,11 @@
               <div class="toggle-knob"></div>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group" style="margin-top: 24px;">
             <label>Default Language</label>
-            <select>
-              <option>English</option>
-              <option>العربية</option>
+            <select [value]="i18n.currentLang()" (change)="i18n.setLang($any($event.target).value)">
+              <option value="en">English</option>
+              <option value="ar">العربية</option>
             </select>
           </div>
           <div class="form-group">
