@@ -30,13 +30,14 @@
   display: block;
   position: relative;
   min-height: 100dvh;
-  background: #FFFFFF;
+  background: var(--surface-primary);
+  transition: background 0.3s ease;
 }
 
 /* Backgrounds & Orbs */
 .bg-gradient-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: linear-gradient(180deg, #F6F8FB 0%, #E9EDFC 50%, #F9E5F9 100%);
+  background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 50%, var(--bg-gradient-end) 100%);
   z-index: 0; opacity: 0; transition: opacity 0.8s ease-in-out; pointer-events: none;
 }
 .bg-gradient-overlay.show-bg { opacity: 1; }

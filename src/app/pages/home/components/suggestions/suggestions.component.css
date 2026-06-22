@@ -4,7 +4,7 @@
 .suggestion-chip {
   display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px;
   border-radius: 100px; background: transparent;
-  border: 1px dashed rgba(139, 92, 246, 0.3); color: #64748B;
+  border: 1px dashed rgba(139, 92, 246, 0.3); color: var(--text-subtle);
   font-size: 0.8rem; font-weight: 500; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap; cursor: pointer;
 }

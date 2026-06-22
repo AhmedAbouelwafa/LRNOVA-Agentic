@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { PromptStateService } from '../../core/services/prompt-state.service';
 import { LocalizationService } from '../../core/services/localization.service';
+import { ThemeService } from '../../core/services/theme.service';
 import { PersonalInfoComponent } from './components/personal-info/personal-info.component';
 
 @Component({
@@ -16,6 +17,7 @@ export class SettingsComponent implements OnInit {
   protected i18n = inject(LocalizationService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  protected themeService = inject(ThemeService);
 
   activeSection = 'profile';
 

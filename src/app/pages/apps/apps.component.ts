@@ -5,16 +5,7 @@ import { LocalizationService } from '../../core/services/localization.service';
 import { TypewriterService } from '../../core/services/typewriter.service';
 import { SuggestionsComponent } from '../home/components/suggestions/suggestions.component';
 
-export interface AppTool {
-  id: string;
-  slug: string;
-  label: string;
-  desc: string;
-  icon: string;
-  gradient: string;
-  accentColor: string;
-  image: string;
-}
+import { AppTool } from '../../core/models';
 
 @Component({
   selector: 'app-apps',

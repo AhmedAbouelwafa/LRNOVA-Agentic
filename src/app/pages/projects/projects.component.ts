@@ -1,17 +1,10 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, ElementRef, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { PromptStateService } from '../../core/services/prompt-state.service';
 import { LocalizationService } from '../../core/services/localization.service';
 import { DatePipe } from '@angular/common';
 
-export interface ProjectCard {
-  id: string;
-  title: string;
-  tool: string;
-  prompt: string;
-  date: Date;
-  image: string;
-}
+import { ProjectCard } from '../../core/models';
 
 @Component({
   selector: 'app-projects',
@@ -20,18 +13,28 @@ export interface ProjectCard {
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.css'
 })
-export class ProjectsComponent {
+export class ProjectsComponent implements AfterViewInit, OnDestroy {
   protected state = inject(PromptStateService);
   protected i18n = inject(LocalizationService);
   private router = inject(Router);
 
-  readonly itemsPerPage = 4;
+  @ViewChild('scrollTrigger') scrollTrigger!: ElementRef;
+  private observer: IntersectionObserver | null = null;
+  isLoadingMore = signal(false);
 
-  // Pagination state
-  readonly instantPage = signal(1);
-  readonly projectPage = signal(1);
+  readonly itemsPerPage = 8;
+  visibleItemsCount = signal(this.itemsPerPage);
 
-  instantCreations: ProjectCard[] = [
+  allHistory: ProjectCard[] = [
+    {
+      id: 'proj-1',
+      title: 'Complete Python Programming Course',
+      tool: 'Full Course Content',
+      prompt: 'Generate a full course on Python programming from basics to advanced topics',
+      date: new Date(2026, 5, 18, 8, 0),
+      image: '',
+      isProject: true
+    },
     {
       id: 'inst-1',
       title: 'Introduction to Machine Learning',
@@ -39,6 +42,24 @@ export class ProjectsComponent {
       prompt: 'Create a detailed script about introduction to machine learning for beginners',
       date: new Date(2026, 5, 17, 14, 30),
       image: ''
+    },
+    {
+      id: 'proj-2',
+      title: 'Digital Marketing Masterclass',
+      tool: 'Full Course Script',
+      prompt: 'Generate a full course script for Digital Marketing covering SEO, SEM, and social media',
+      date: new Date(2026, 5, 17, 12, 0),
+      image: '',
+      isProject: true
+    },
+    {
+      id: 'proj-3',
+      title: 'Chemistry Lab Safety Training',
+      tool: 'Text Video',
+      prompt: 'Convert the chemistry lab safety manual into an engaging video lesson series',
+      date: new Date(2026, 5, 16, 15, 30),
+      image: '',
+      isProject: true
     },
     {
       id: 'inst-2',
@@ -81,12 +102,30 @@ export class ProjectsComponent {
       image: ''
     },
     {
+      id: 'proj-4',
+      title: 'Leadership Skills Workshop',
+      tool: 'Full Course Content',
+      prompt: 'Create comprehensive content for a leadership skills development workshop',
+      date: new Date(2026, 5, 12, 9, 0),
+      image: '',
+      isProject: true
+    },
+    {
       id: 'inst-7',
       title: 'Spanish for Beginners',
       tool: 'Activity',
       prompt: 'Design interactive learning activities for Spanish vocabulary and grammar',
       date: new Date(2026, 5, 11, 15, 30),
       image: ''
+    },
+    {
+      id: 'proj-5',
+      title: 'Data Science Bootcamp',
+      tool: 'Full Course Content',
+      prompt: 'Build a complete data science bootcamp curriculum with hands-on projects',
+      date: new Date(2026, 5, 10, 10, 0),
+      image: '',
+      isProject: true
     },
     {
       id: 'inst-8',
@@ -103,6 +142,15 @@ export class ProjectsComponent {
       prompt: 'Generate a set of algebra quizzes for 8th grade students with increasing difficulty',
       date: new Date(2026, 5, 9, 11, 45),
       image: ''
+    },
+    {
+      id: 'proj-6',
+      title: 'UX Design Fundamentals',
+      tool: 'Full Course Script',
+      prompt: 'Create a full course script for UX design principles and user research methods',
+      date: new Date(2026, 5, 8, 14, 30),
+      image: '',
+      isProject: true
     },
     {
       id: 'inst-10',
@@ -127,57 +175,6 @@ export class ProjectsComponent {
       prompt: 'Convert text about the solar system into an animated video presentation',
       date: new Date(2026, 5, 6, 16, 0),
       image: ''
-    }
-  ];
-
-  projectCreations: ProjectCard[] = [
-    {
-      id: 'proj-1',
-      title: 'Complete Python Programming Course',
-      tool: 'Full Course Content',
-      prompt: 'Generate a full course on Python programming from basics to advanced topics',
-      date: new Date(2026, 5, 18, 8, 0),
-      image: ''
-    },
-    {
-      id: 'proj-2',
-      title: 'Digital Marketing Masterclass',
-      tool: 'Full Course Script',
-      prompt: 'Generate a full course script for Digital Marketing covering SEO, SEM, and social media',
-      date: new Date(2026, 5, 17, 12, 0),
-      image: ''
-    },
-    {
-      id: 'proj-3',
-      title: 'Chemistry Lab Safety Training',
-      tool: 'Text Video',
-      prompt: 'Convert the chemistry lab safety manual into an engaging video lesson series',
-      date: new Date(2026, 5, 16, 15, 30),
-      image: ''
-    },
-    {
-      id: 'proj-4',
-      title: 'Leadership Skills Workshop',
-      tool: 'Full Course Content',
-      prompt: 'Create comprehensive content for a leadership skills development workshop',
-      date: new Date(2026, 5, 12, 9, 0),
-      image: ''
-    },
-    {
-      id: 'proj-5',
-      title: 'Data Science Bootcamp',
-      tool: 'Full Course Content',
-      prompt: 'Build a complete data science bootcamp curriculum with hands-on projects',
-      date: new Date(2026, 5, 10, 10, 0),
-      image: ''
-    },
-    {
-      id: 'proj-6',
-      title: 'UX Design Fundamentals',
-      tool: 'Full Course Script',
-      prompt: 'Create a full course script for UX design principles and user research methods',
-      date: new Date(2026, 5, 8, 14, 30),
-      image: ''
     },
     {
       id: 'proj-7',
@@ -185,7 +182,8 @@ export class ProjectsComponent {
       tool: 'Full Course Content',
       prompt: 'Generate comprehensive course content for photography from composition to post-processing',
       date: new Date(2026, 5, 5, 11, 0),
-      image: ''
+      image: '',
+      isProject: true
     },
     {
       id: 'proj-8',
@@ -193,7 +191,8 @@ export class ProjectsComponent {
       tool: 'Full Course Script',
       prompt: 'Draft a complete course script on personal finance, budgeting, and investing basics',
       date: new Date(2026, 5, 3, 9, 0),
-      image: ''
+      image: '',
+      isProject: true
     },
     {
       id: 'proj-9',
@@ -201,42 +200,45 @@ export class ProjectsComponent {
       tool: 'Full Course Content',
       prompt: 'Build a full-stack web development course covering HTML, CSS, JS, Node.js, and React',
       date: new Date(2026, 5, 1, 8, 0),
-      image: ''
+      image: '',
+      isProject: true
     }
   ];
 
-  // Computed paginated lists
-  readonly instantTotalPages = computed(() => Math.ceil(this.instantCreations.length / this.itemsPerPage));
-  readonly projectTotalPages = computed(() => Math.ceil(this.projectCreations.length / this.itemsPerPage));
-
-  readonly paginatedInstant = computed(() => {
-    const start = (this.instantPage() - 1) * this.itemsPerPage;
-    return this.instantCreations.slice(start, start + this.itemsPerPage);
+  readonly visibleHistory = computed(() => {
+    return this.allHistory.slice(0, this.visibleItemsCount());
   });
 
-  readonly paginatedProjects = computed(() => {
-    const start = (this.projectPage() - 1) * this.itemsPerPage;
-    return this.projectCreations.slice(start, start + this.itemsPerPage);
+  readonly hasMoreItems = computed(() => {
+    return this.visibleItemsCount() < this.allHistory.length;
   });
 
-  getInstantPages(): number[] {
-    return Array.from({ length: this.instantTotalPages() }, (_, i) => i + 1);
+  ngAfterViewInit() {
+    this.observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && this.hasMoreItems() && !this.isLoadingMore()) {
+        this.triggerLoadMore();
+      }
+    }, { rootMargin: '100px' });
+    
+    setTimeout(() => {
+      if (this.scrollTrigger) {
+        this.observer?.observe(this.scrollTrigger.nativeElement);
+      }
+    }, 100);
   }
 
-  getProjectPages(): number[] {
-    return Array.from({ length: this.projectTotalPages() }, (_, i) => i + 1);
-  }
-
-  goInstantPage(page: number) {
-    if (page >= 1 && page <= this.instantTotalPages()) {
-      this.instantPage.set(page);
+  ngOnDestroy() {
+    if (this.observer) {
+      this.observer.disconnect();
     }
   }
 
-  goProjectPage(page: number) {
-    if (page >= 1 && page <= this.projectTotalPages()) {
-      this.projectPage.set(page);
-    }
+  triggerLoadMore() {
+    this.isLoadingMore.set(true);
+    setTimeout(() => {
+      this.visibleItemsCount.update(c => c + this.itemsPerPage);
+      this.isLoadingMore.set(false);
+    }, 1500); // Simulate network delay to show the skeleton
   }
 
   private toolStyles: Record<string, { gradient: string; icon: string; accent: string }> = {

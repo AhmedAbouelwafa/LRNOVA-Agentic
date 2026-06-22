@@ -2,8 +2,7 @@ import { Injectable, signal, computed, effect } from '@angular/core';
 import enTranslations from '../i18n/en.json';
 import arTranslations from '../i18n/ar.json';
 
-export type Lang = 'en' | 'ar';
-
+import { Lang } from '../models';
 const translations: Record<Lang, Record<string, string>> = {
   en: enTranslations,
   ar: arTranslations

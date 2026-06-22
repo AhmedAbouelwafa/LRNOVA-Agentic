@@ -45,4 +45,9 @@ export class ResultsComponent {
       this.state.isGenerationComplete();
     });
   }
+
+  activateProAndMakeProject() {
+    this.state.toolSwitchWarning.set(null); // Close modal
+    this.router.navigate(['/pricing']);
+  }
 }

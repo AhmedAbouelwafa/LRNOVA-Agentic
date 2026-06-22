@@ -1,35 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 
-export interface CanvasTab {
-  id: string;
-  label: string;
-  icon?: string;
-}
-
-export type AgentType = 'video' | 'text' | 'slides' | null;
-export type PlanType = 'flash' | 'pro';
-
-export interface Suggestion {
-  id: string;
-  icon: string;
-  text: string;
-}
-
-export interface ChatMessage {
-  id: string;
-  role: 'user' | 'agent';
-  content: string;
-  timestamp: Date;
-  type?: 'text' | 'questionnaire';
-  questionnaire?: {
-    title: string;
-    options: { id: number; label: string; image?: string; audio?: string }[];
-    answered?: boolean;
-    step?: number;
-    totalSteps?: number;
-  };
-}
+import { CanvasTab, AgentType, PlanType, Suggestion, PipelineStep, Goal, ChatMessage } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class PromptStateService {
@@ -47,6 +19,8 @@ export class PromptStateService {
   readonly attachedFiles = signal<File[]>([]);
   readonly chatHistory = signal<ChatMessage[]>([]);
   readonly selectedQuickTool = signal<string | null>(null);
+  readonly selectedGoal = signal<Goal | null>(null);
+  readonly activeGoalLevel = signal<1 | 2>(1);
   readonly canvasTabs = signal<CanvasTab[]>([]);
   readonly activeTabId = signal<string>('main');
   readonly toolSwitchWarning = signal<{ newTool: string, newPrompt: string } | null>(null);
@@ -78,14 +52,6 @@ export class PromptStateService {
     const tool = this.selectedQuickTool();
     
     if (!tool) {
-      if (this.tourStep() === 8) {
-        // Mock suggestions for the tour if nothing is selected
-        return [
-          { id: 'def1', icon: 'M12 2v20 M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6', text: 'Generate a full course on Machine Learning' },
-          { id: 'def2', icon: 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14v-4z M4 6h10a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2z', text: 'Create an explainer video about DNA' },
-          { id: 'def3', icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', text: 'Build an assessment quiz for Physics' }
-        ];
-      }
       return [];
     }
 
@@ -143,6 +109,40 @@ export class PromptStateService {
           { id: 'pr1', icon: 'M4 4h16v16H4z M12 8v8 M8 12h8', text: 'Continue working on my last project' },
           { id: 'pr2', icon: 'M9 12h6 M9 16h6 M4 4h16v16H4z', text: 'Review my recent video creations' },
           { id: 'pr3', icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', text: 'Organize my course materials' }
+        ];
+      case 'Explain It':
+        return [
+          { id: 'ex1', icon: 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14v-4z M4 6h10a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2z', text: 'Explain the theory of relativity visually' },
+          { id: 'ex2', icon: 'M12 2v20 M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6', text: 'How does a quantum computer work?' },
+          { id: 'ex3', icon: 'M4 4h16v16H4z', text: 'Explain DNA replication' }
+        ];
+      case 'Write It':
+        return [
+          { id: 'wr1', icon: 'M4 4h16v16H4z M12 8v8 M8 12h8', text: 'Write a lesson on ancient Rome' },
+          { id: 'wr2', icon: 'M9 12h6 M9 16h6 M4 4h16v16H4z', text: 'Draft a script about climate change' },
+          { id: 'wr3', icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', text: 'Create a story about the solar system' }
+        ];
+      case 'Test It':
+        return [
+          { id: 'tst1', icon: 'M4 4h16v16H4z M12 8v8 M8 12h8', text: 'Build a math test for 5th grade' },
+          { id: 'tst2', icon: 'M9 12h6 M9 16h6 M4 4h16v16H4z', text: 'Create a quiz on world capitals' },
+          { id: 'tst3', icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', text: 'Generate biology multiple choice questions' }
+        ];
+      case 'Learn It':
+        return [
+          { id: 'ln1', icon: 'M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z', text: 'I want to learn about the French Revolution' },
+          { id: 'ln2', icon: 'M9 12h6 M9 16h6 M4 4h16v16H4z', text: 'Teach me the basics of investing' },
+          { id: 'ln3', icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', text: 'Learn JavaScript fundamentals' }
+        ];
+      case 'Teach It':
+      case 'Explore It':
+      case 'Course It':
+      case 'Train It':
+      case 'Study It':
+        return [
+          { id: 'cm1', icon: 'M12 14l9-5-9-5-9 5 9 5z', text: `Create a comprehensive package on ${tool.toLowerCase()}` },
+          { id: 'cm2', icon: 'M9 12h6 M9 16h6 M4 4h16v16H4z', text: 'Draft a full professional training module' },
+          { id: 'cm3', icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', text: 'Generate an entire end-to-end curriculum' }
         ];
       default:
         return [];
@@ -253,9 +253,22 @@ export class PromptStateService {
     this.isAnimatingOut.set(true);
     this.currentQuestionIndex = 0;
 
-    // Initialize canvas tabs with the first tab
-    this.canvasTabs.set([{ id: 'main', label: text.slice(0, 30) || 'Workspace' }]);
-    this.activeTabId.set('main');
+    // Initialize canvas tabs with the first tab or the project pipeline
+    const goal = this.selectedGoal();
+    if (goal && goal.level === 2 && goal.pipeline) {
+      const tabs = [
+        { id: 'main', label: 'Overview' },
+        ...goal.pipeline.map((step, idx) => ({
+          id: `tab-${step.toolId.toLowerCase().replace(/\s+/g, '-')}-${idx}`,
+          label: step.tabLabel
+        }))
+      ];
+      this.canvasTabs.set(tabs);
+      this.activeTabId.set('main');
+    } else {
+      this.canvasTabs.set([{ id: 'main', label: text.slice(0, 30) || 'Workspace' }]);
+      this.activeTabId.set('main');
+    }
 
     const tool = this.selectedQuickTool();
     const isVideo = tool === 'Video' || tool === 'Text Video' || this.activeAgent() === 'video';

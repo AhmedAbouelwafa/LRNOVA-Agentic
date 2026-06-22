@@ -20,19 +20,19 @@ import { ParticleCanvasDirective } from '../../core/directives/particle-canvas.d
 })
 export class HomeComponent implements OnInit, OnDestroy {
   protected state = inject(PromptStateService);
-  isToolsListVisible = signal(false);
+  isGoalsGridVisible = signal(false);
 
   @HostListener('document:click')
   onDocumentClick() {
-    if (this.isToolsListVisible()) {
-      this.isToolsListVisible.set(false);
+    if (this.isGoalsGridVisible()) {
+      this.isGoalsGridVisible.set(false);
     }
   }
 
-  toggleToolsList() {
+  toggleGoalsGrid() {
     // Timeout prevents document click from immediately closing it
     setTimeout(() => {
-      this.isToolsListVisible.update(v => !v);
+      this.isGoalsGridVisible.update(v => !v);
     });
   }
 

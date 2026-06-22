@@ -2,7 +2,7 @@
   "sidebar.home": "Home",
   "sidebar.avatar": "Avatar",
   "sidebar.brand": "Brand",
-  "sidebar.apps": "Apps",
+  "sidebar.apps": "Agents",
   "sidebar.projects": "My Projects",
 
   "apps.title": "All Apps",
@@ -113,6 +113,10 @@
   "pricing.pro.v5": "Free 3 Personalized Avatars",
   "pricing.pro.v6": "Faster video processing",
   "pricing.pro.v7": "Watermark removal",
+
+  "pricing.free.credits": "100 Credits / mo",
+  "pricing.basic.credits": "500 Credits / mo",
+  "pricing.pro.credits": "2,000 Credits / mo",
 
   "pricing.currency": "EGP",
   "pricing.perMonth": "/mo"

@@ -12,34 +12,49 @@
     </div>
   </div>
 
-  <!-- Last Instant Creations Section -->
+  <!-- History Section -->
   <section class="projects-section">
     <div class="section-header">
       <div class="section-title-row">
         <div class="section-icon instant-icon">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            <polyline points="12 8 12 12 14 14" />
+            <circle cx="12" cy="12" r="10" />
           </svg>
         </div>
-        <h2>{{ i18n.currentLang() === 'ar' ? 'آخر الإبداعات الفورية' : 'Last Instant Creations' }}</h2>
+        <h2>{{ i18n.currentLang() === 'ar' ? 'سجل الإبداعات' : 'Creation History' }}</h2>
       </div>
-      <span class="section-count">{{ instantCreations.length }} {{ i18n.currentLang() === 'ar' ? 'عناصر' : 'items' }}</span>
+      <span class="section-count">{{ allHistory.length }} {{ i18n.currentLang() === 'ar' ? 'عناصر' : 'items' }}</span>
     </div>
 
     <div class="cards-list">
-      @for (card of paginatedInstant(); track card.id; let i = $index) {
-        <button class="project-card" (click)="openProject(card)" [style.animation-delay]="(i * 0.05) + 's'">
+      @for (card of visibleHistory(); track card.id; let i = $index) {
+        <button class="project-card" [class.project-type]="card.isProject" (click)="openProject(card, !!card.isProject)" [style.animation-delay]="(i * 0.05) + 's'">
           <div class="card-left">
-            <div class="card-tool-icon" [style.background]="getToolGradient(card.tool)">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path [attr.d]="getToolIcon(card.tool)" />
-              </svg>
-            </div>
+            @if (card.isProject) {
+              <div class="card-tool-icon project-badge-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                  <polyline points="2 12 12 17 22 12"></polyline>
+                  <polyline points="2 17 12 22 22 17"></polyline>
+                </svg>
+              </div>
+            } @else {
+              <div class="card-tool-icon" [style.background]="getToolGradient(card.tool)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path [attr.d]="getToolIcon(card.tool)" />
+                </svg>
+              </div>
+            }
           </div>
           <div class="card-center">
             <div class="card-top-row">
               <h3 class="card-title">{{ card.title }}</h3>
-              <span class="card-tool-tag" [style.--tag-color]="getToolAccent(card.tool)">{{ card.tool }}</span>
+              @if (card.isProject) {
+                <span class="card-tool-tag project-tag">Project</span>
+              } @else {
+                <span class="card-tool-tag" [style.--tag-color]="getToolAccent(card.tool)">{{ card.tool }}</span>
+              }
             </div>
             <p class="card-prompt">{{ card.prompt }}</p>
             <div class="card-meta">
@@ -50,6 +65,15 @@
                 </svg>
                 {{ card.date | date:'MMM d, y · h:mm a' }}
               </span>
+              @if (card.isProject) {
+                <span class="card-chapters">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
+                    <path d="M4 19.5V4.5A2.5 2.5 0 016.5 2H20v20H6.5A2.5 2.5 0 014 19.5z" />
+                  </svg>
+                  4 chapters
+                </span>
+              }
               <span class="card-status">
                 <span class="status-dot"></span>
                 Completed
@@ -65,107 +89,31 @@
       }
     </div>
 
-    <!-- Instant Pagination -->
-    @if (instantTotalPages() > 1) {
-      <div class="pagination" id="instant-pagination">
-        <button class="page-btn page-nav" [disabled]="instantPage() === 1" (click)="goInstantPage(instantPage() - 1)">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
-        </button>
-        @for (p of getInstantPages(); track p) {
-          <button class="page-btn" [class.active]="p === instantPage()" (click)="goInstantPage(p)">{{ p }}</button>
+    @if (isLoadingMore()) {
+      <div class="skeleton-list">
+        @for (item of [1, 2, 3]; track item) {
+          <div class="project-card skeleton-card">
+            <div class="card-left">
+              <div class="skeleton-icon"></div>
+            </div>
+            <div class="card-center">
+              <div class="card-top-row">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-tag"></div>
+              </div>
+              <div class="skeleton-prompt"></div>
+              <div class="skeleton-meta"></div>
+            </div>
+            <div class="card-right">
+              <div class="skeleton-arrow"></div>
+            </div>
+          </div>
         }
-        <button class="page-btn page-nav" [disabled]="instantPage() === instantTotalPages()" (click)="goInstantPage(instantPage() + 1)">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
-        </button>
       </div>
     }
-  </section>
 
-  <!-- Last Project Creations Section -->
-  <section class="projects-section">
-    <div class="section-header">
-      <div class="section-title-row">
-        <div class="section-icon project-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-            <polyline points="2 12 12 17 22 12"></polyline>
-            <polyline points="2 17 12 22 22 17"></polyline>
-          </svg>
-        </div>
-        <h2>{{ i18n.currentLang() === 'ar' ? 'آخر إبداعات المشاريع' : 'Last Project Creations' }}</h2>
-      </div>
-      <span class="section-count">{{ projectCreations.length }} {{ i18n.currentLang() === 'ar' ? 'عناصر' : 'items' }}</span>
-    </div>
-
-    <div class="cards-list">
-      @for (card of paginatedProjects(); track card.id; let i = $index) {
-        <button class="project-card project-type" (click)="openProject(card, true)" [style.animation-delay]="(i * 0.05) + 's'">
-          <div class="card-left">
-            <div class="card-tool-icon project-badge-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                <polyline points="2 12 12 17 22 12"></polyline>
-                <polyline points="2 17 12 22 22 17"></polyline>
-              </svg>
-            </div>
-          </div>
-          <div class="card-center">
-            <div class="card-top-row">
-              <h3 class="card-title">{{ card.title }}</h3>
-              <span class="card-tool-tag project-tag">Project</span>
-            </div>
-            <p class="card-prompt">{{ card.prompt }}</p>
-            <div class="card-meta">
-              <span class="card-date">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="12 6 12 12 16 14" />
-                </svg>
-                {{ card.date | date:'MMM d, y · h:mm a' }}
-              </span>
-              <span class="card-chapters">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
-                  <path d="M4 19.5V4.5A2.5 2.5 0 016.5 2H20v20H6.5A2.5 2.5 0 014 19.5z" />
-                </svg>
-                4 chapters
-              </span>
-              <span class="card-status">
-                <span class="status-dot"></span>
-                Completed
-              </span>
-            </div>
-          </div>
-          <div class="card-right">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </div>
-        </button>
-      }
-    </div>
-
-    <!-- Project Pagination -->
-    @if (projectTotalPages() > 1) {
-      <div class="pagination" id="project-pagination">
-        <button class="page-btn page-nav" [disabled]="projectPage() === 1" (click)="goProjectPage(projectPage() - 1)">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
-        </button>
-        @for (p of getProjectPages(); track p) {
-          <button class="page-btn" [class.active]="p === projectPage()" (click)="goProjectPage(p)">{{ p }}</button>
-        }
-        <button class="page-btn page-nav" [disabled]="projectPage() === projectTotalPages()" (click)="goProjectPage(projectPage() + 1)">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
-        </button>
-      </div>
+    @if (hasMoreItems()) {
+      <div #scrollTrigger class="scroll-trigger"></div>
     }
   </section>
 </div>

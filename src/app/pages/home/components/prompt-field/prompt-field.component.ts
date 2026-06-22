@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, effect, ViewChild, ElementRef, Input, HostBinding } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, effect, ViewChild, ElementRef, Input, HostBinding, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { PromptStateService } from '../../../../core/services/prompt-state.service';
@@ -29,6 +29,41 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   protected typedPlaceholder!: ReturnType<TypewriterService['create']>;
+
+  get showDropdown(): boolean {
+    return this.router.url.startsWith('/apps');
+  }
+
+  isAppDropdownOpen = false;
+  
+  availableTools = [
+    { id: 'Video', slug: 'video', label: 'Video' },
+    { id: 'Text Video', slug: 'text-video', label: 'Text Video' },
+    { id: 'Script', slug: 'script', label: 'Script' },
+    { id: 'Assessment', slug: 'assessment', label: 'Assessment' },
+    { id: 'Activity', slug: 'activity', label: 'Activity' },
+    { id: 'Topic', slug: 'topic', label: 'Topic' },
+    { id: 'Full Course Script', slug: 'course-script', label: 'Course Script' },
+    { id: 'Full Course Content', slug: 'course-content', label: 'Course Content' }
+  ];
+
+  @HostListener('document:click')
+  closeDropdown() {
+    this.isAppDropdownOpen = false;
+  }
+
+  toggleAppDropdown(event: Event) {
+    if (this.showDropdown) {
+      this.isAppDropdownOpen = !this.isAppDropdownOpen;
+      event.stopPropagation();
+    }
+  }
+
+  switchTool(tool: any) {
+    this.isAppDropdownOpen = false;
+    this.router.navigate(['/apps', tool.slug]);
+  }
+
 
   constructor() {
     // React to language changes
@@ -105,7 +140,8 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
     if (!text && this.state.attachedFiles().length === 0) return;
 
     const currentTool = this.state.selectedQuickTool() || 'Projects';
-    const isProjects = currentTool === 'Projects';
+    const selectedGoal = this.state.selectedGoal();
+    const isProjects = currentTool === 'Projects' || (selectedGoal && selectedGoal.level === 2);
 
     const toolKeywords: Record<string, string> = {
       'slides': 'Slides',

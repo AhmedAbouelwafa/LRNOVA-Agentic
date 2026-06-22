@@ -3,7 +3,7 @@
 .hero-title {
   font-size: clamp(2rem, 5vw, 3.8rem);
   font-weight: 800; line-height: 1.1; letter-spacing: -0.03em;
-  color: #1E293B;
+  color: var(--text-heading);
 }
 .title-line { display: block; }
 

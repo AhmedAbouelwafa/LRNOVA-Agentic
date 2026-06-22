@@ -9,18 +9,18 @@
   bottom: 0;
   left: 0;
   width: 76px;
-  background: white;
+  background: var(--sidebar-bg);
   z-index: 100;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem 0;
-  border-right: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.03);
+  border-right: 1px solid var(--sidebar-border);
+  box-shadow: 4px 0 24px var(--sidebar-shadow);
   border-top-right-radius: 24px;
   border-bottom-right-radius: 24px;
-  transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), padding 0.4s;
+  transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), padding 0.4s, background 0.3s ease;
 }
 
 /* Compact Mode (Results Page) */
@@ -68,13 +68,13 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #475569;
+  color: var(--sidebar-text);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
 }
 
 .sidebar-item:hover {
-  color: #1E293B;
+  color: var(--text-heading);
 }
 
 .sidebar-icon {
@@ -89,7 +89,7 @@
 }
 
 .sidebar-item:hover .sidebar-icon {
-  background: rgba(0, 0, 0, 0.04);
+  background: var(--sidebar-hover-bg);
 }
 
 .home-icon {
@@ -113,13 +113,13 @@
 .sidebar-divider {
   width: 32px;
   height: 1px;
-  background: rgba(0, 0, 0, 0.08);
+  background: var(--border-default);
   margin: 0.25rem 0;
 }
 
 .circle-icon {
   border-radius: 50%;
-  border: 1.5px solid rgba(0, 0, 0, 0.1);
+  border: 1.5px solid var(--border-default);
 }
 
 .circle-icon.diamond {
@@ -150,7 +150,7 @@
   font-weight: bold;
   padding: 1px 4px;
   border-radius: 10px;
-  border: 2px solid white;
+  border: 2px solid var(--badge-border);
 }
 
 .lang-icon {
@@ -203,10 +203,10 @@
   bottom: 0;
   left: calc(100% + 12px);
   width: 280px;
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--sidebar-hover-card-bg);
   backdrop-filter: blur(24px) saturate(1.8);
   -webkit-backdrop-filter: blur(24px) saturate(1.8);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--surface-card-border);
   border-radius: 18px;
   box-shadow:
     0 20px 60px rgba(31, 38, 135, 0.12),
@@ -269,7 +269,7 @@
 .user-card-name {
   font-size: 0.9rem;
   font-weight: 650;
-  color: #1e293b;
+  color: var(--text-heading);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -277,7 +277,7 @@
 
 .user-card-email {
   font-size: 0.72rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-weight: 400;
   white-space: nowrap;
   overflow: hidden;
@@ -356,7 +356,7 @@
 }
 
 .wallet-stat.total .stat-value {
-  color: #1e293b;
+  color: var(--text-heading);
   font-size: 0.85rem;
 }
 
@@ -378,7 +378,7 @@
   border-radius: 10px;
   font-size: 0.78rem;
   font-weight: 500;
-  color: #475569;
+  color: var(--sidebar-text);
   cursor: pointer;
   transition: all 0.2s ease;
 }

@@ -1,4 +1,4 @@
-import { Component, inject, output, signal, HostListener, input } from '@angular/core';
+import { Component, inject, output, signal, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { PromptStateService } from '../../../../core/services/prompt-state.service';
 import { LocalizationService } from '../../../../core/services/localization.service';
@@ -13,17 +13,14 @@ export class AgentSelectorComponent {
   protected state = inject(PromptStateService);
   protected i18n = inject(LocalizationService);
   private router = inject(Router);
-  isQuickStartActive = input(false);
+
+  isGoalsGridActive = input(false);
   agentChanged = output<void>();
-  quickStartToggled = output<void>();
+  goalsToggled = output<void>();
 
-  toggleQuickStart(event: Event) {
+  selectLevel(level: 1 | 2, event: Event) {
     event.stopPropagation();
-    this.quickStartToggled.emit();
-  }
-
-  goToProjects() {
-    this.state.selectedQuickTool.set('Projects');
-    this.agentChanged.emit();
+    this.state.activeGoalLevel.set(level);
+    this.goalsToggled.emit();
   }
 }

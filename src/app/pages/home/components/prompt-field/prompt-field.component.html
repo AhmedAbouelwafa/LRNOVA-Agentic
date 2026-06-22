@@ -17,15 +17,38 @@
       @if (state.attachedFiles().length > 0 || state.selectedQuickTool()) {
         <div class="attached-files-container">
           @if (state.selectedQuickTool()) {
-            <div class="attached-file-pill tool-pill">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-              </svg>
+            <div class="attached-file-pill tool-pill" [class.has-dropdown]="showDropdown" (click)="toggleAppDropdown($event)" style="user-select: none; position: relative;">
+              @if (state.selectedGoal()) {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" />
+                </svg>
+              } @else {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                </svg>
+              }
               <span class="file-name">{{ state.selectedQuickTool() }}</span>
+
+              @if (showDropdown) {
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dropdown-chevron" style="margin-left: 2px;">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              }
+
               @if (canRemoveTool) {
-                <button class="remove-file-btn" (click)="state.selectedQuickTool.set(null)" title="Remove tool">
+                <button class="remove-file-btn" (click)="state.selectedQuickTool.set(null); state.selectedGoal.set(null); $event.stopPropagation()" title="Remove tool">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
                 </button>
+              }
+
+              @if (isAppDropdownOpen && showDropdown) {
+                <div class="tool-dropdown-menu fade-in-up" (click)="$event.stopPropagation()">
+                  @for (tool of availableTools; track tool.id) {
+                    <div class="tool-dropdown-item" [class.active]="tool.id === state.selectedQuickTool()" (click)="switchTool(tool)">
+                      <span>{{ tool.label }}</span>
+                    </div>
+                  }
+                </div>
               }
             </div>
           }
@@ -119,6 +142,7 @@
           }
           <button class="prompt-submit"
             [class.has-text]="state.promptText().trim().length > 0 || state.attachedFiles().length > 0"
+            [disabled]="mode === 'chat' && state.isGenerating()"
             (click)="onSubmit()"
             id="btn-submit-prompt">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">

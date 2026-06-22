@@ -114,6 +114,10 @@
   "pricing.pro.v6": "معالجة فيديو أسرع",
   "pricing.pro.v7": "إزالة العلامة المائية",
 
+  "pricing.free.credits": "100 رصيد / شهر",
+  "pricing.basic.credits": "500 رصيد / شهر",
+  "pricing.pro.credits": "2,000 رصيد / شهر",
+
   "pricing.currency": "ج.م",
   "pricing.perMonth": "/شهر"
 }

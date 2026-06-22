@@ -1,12 +1,31 @@
 <div class="tools-list-wrapper expanded-panel" (click)="$event.stopPropagation()">
-  <div class="tools-grid">
-    @for (tool of tools; track tool.id) {
-      <button class="tool-card" (click)="selectTool(tool.id)" [title]="tool.desc">
-        <div class="tool-image-container">
-          <img [src]="tool.image" [alt]="tool.label" class="tool-image" />
+  <div class="goals-grid">
+    @for (goal of filteredGoals(); track goal.id; let i = $index) {
+      <button class="goal-card" (click)="selectGoal(goal)" [title]="goal.description" [style.animation-delay]="(i * 0.06) + 's'">
+        <div class="goal-icon" [style.background]="goal.gradient">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path [attr.d]="goal.icon" />
+          </svg>
         </div>
-        <div class="tool-content">
-          <span class="tool-title">{{ tool.label }}</span>
+        <div class="goal-info">
+          <span class="goal-title">{{ goal.label }}</span>
+          <span class="goal-desc">{{ goal.description }}</span>
+        </div>
+        <div class="goal-pipeline">
+          @for (step of goal.pipeline; track step.order; let last = $last) {
+            <span class="pipeline-step">{{ step.tabLabel }}</span>
+            @if (!last) {
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="pipeline-arrow">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            }
+          }
+        </div>
+        <div class="goal-time">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+          </svg>
+          {{ goal.estimatedTime }}
         </div>
       </button>
     }

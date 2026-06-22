@@ -19,15 +19,13 @@
 <div class="home-agents" style="order: 3; width: 100%">
   <div class="home-only-elements" [class.fade-out]="state.isAnimatingOut()">
     
-    <app-agent-selector [class.tour-glow]="state.tourStep() >= 5 && state.tourStep() <= 7" style="position: relative; overflow: visible;" [isQuickStartActive]="isToolsListVisible()" (quickStartToggled)="toggleToolsList()" />
+    <app-agent-selector [class.tour-glow]="state.tourStep() >= 5 && state.tourStep() <= 7" style="position: relative; overflow: visible;" [isGoalsGridActive]="isGoalsGridVisible()" (goalsToggled)="toggleGoalsGrid()" />
     
-    @if (isToolsListVisible()) {
-      <app-tools-list (toolSelected)="isToolsListVisible.set(false)" />
+    @if (isGoalsGridVisible()) {
+      <app-tools-list (toolSelected)="isGoalsGridVisible.set(false)" />
     }
 
-    @if (!isToolsListVisible()) {
-      <app-suggestions [class.tour-glow]="state.tourStep() === 8" style="position: relative; overflow: visible;" />
-    }
+    <app-suggestions [class.tour-glow]="state.tourStep() === 8" style="position: relative; overflow: visible;" />
 
   </div>
 </div>

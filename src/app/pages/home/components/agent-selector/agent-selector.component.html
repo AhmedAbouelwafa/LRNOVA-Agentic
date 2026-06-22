@@ -1,12 +1,14 @@
 <div class="scenarios-wrapper">
   <div class="agent-icons">
-    <!-- Quick Start Scenario -->
-    <button class="agent-btn scenario-btn" (click)="toggleQuickStart($event)" id="btn-quick-start" title="Quick Start Options" [class.active]="isQuickStartActive()" style="position: relative; overflow: visible;">
+    <!-- Quick Start Goals (Level 1) -->
+    <button class="agent-btn level-btn" (click)="selectLevel(1, $event)" id="btn-level-quick"
+      [class.active]="state.activeGoalLevel() === 1 && isGoalsGridActive()"
+      style="position: relative; overflow: visible;">
       @if (state.tourStep() === 5) {
         <div class="tour-card arrow-bottom" style="bottom: calc(100% + 20px); left: 50%; transform: translateX(-50%); cursor: default; position: absolute; z-index: 100;" (click)="$event.stopPropagation()">
           <div class="tour-content">
             <h3>{{ i18n.currentLang() === 'ar' ? 'البدء السريع' : 'Quick Start' }}</h3>
-            <p>{{ i18n.currentLang() === 'ar' ? 'اختر أداة من أدوات البدء السريع لإنشاء المحتوى مباشرة.' : 'Choose a quick start tool to generate content instantly.' }}</p>
+            <p>{{ i18n.currentLang() === 'ar' ? 'أهداف بسيطة وسريعة تعتمد على أداة واحدة للحصول على نتائج فورية.' : 'Simple, fast goals powered by a single tool for instant results.' }}</p>
           </div>
           <div class="tour-actions">
             <button class="skip-btn" (click)="state.tourStep.set(0)">{{ i18n.currentLang() === 'ar' ? 'تخطي الجولة' : 'Skip Tour' }}</button>
@@ -15,23 +17,22 @@
         </div>
       }
       <div class="agent-icon-wrap">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
         </svg>
       </div>
-      <span class="agent-label">Quick Start</span>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 4px; transition: transform 0.3s;" [style.transform]="isQuickStartActive() ? 'rotate(180deg)' : 'rotate(0)'">
-        <polyline points="6 9 12 15 18 9"></polyline>
-      </svg>
+      <span class="agent-label">{{ i18n.currentLang() === 'ar' ? 'البدء السريع' : 'Quick Start' }}</span>
     </button>
 
-    <!-- Projects Scenario -->
-    <button class="agent-btn scenario-btn" (click)="goToProjects()" id="btn-projects" title="Manage your previous projects" [class.active]="state.selectedQuickTool() === 'Projects'" style="position: relative; overflow: visible;">
+    <!-- Project Goals (Level 2) -->
+    <button class="agent-btn level-btn" (click)="selectLevel(2, $event)" id="btn-level-project"
+      [class.active]="state.activeGoalLevel() === 2 && isGoalsGridActive()"
+      style="position: relative; overflow: visible;">
       @if (state.tourStep() === 6) {
         <div class="tour-card arrow-bottom" style="bottom: calc(100% + 20px); left: 50%; transform: translateX(-50%); cursor: default; position: absolute; z-index: 100;" (click)="$event.stopPropagation()">
           <div class="tour-content">
-            <h3>{{ i18n.currentLang() === 'ar' ? 'المشاريع' : 'Projects' }}</h3>
-            <p>{{ i18n.currentLang() === 'ar' ? 'يمكنك الوصول إلى مشاريعك السابقة وإدارتها من هنا.' : 'Generate multiple result from multiple tool.' }}</p>
+            <h3>{{ i18n.currentLang() === 'ar' ? 'المشاريع' : 'Project' }}</h3>
+            <p>{{ i18n.currentLang() === 'ar' ? 'أهداف متعددة الأدوات تنتج حزمة تعليمية متكاملة.' : 'Multi-tool goals that produce a complete learning package.' }}</p>
           </div>
           <div class="tour-actions">
             <button class="skip-btn" (click)="state.tourStep.set(0)">{{ i18n.currentLang() === 'ar' ? 'تخطي الجولة' : 'Skip Tour' }}</button>
@@ -40,13 +41,14 @@
         </div>
       }
       <div class="agent-icon-wrap">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1" />
+          <rect x="14" y="3" width="7" height="7" rx="1" />
+          <rect x="3" y="14" width="7" height="7" rx="1" />
+          <rect x="14" y="14" width="7" height="7" rx="1" />
         </svg>
       </div>
-      <span class="agent-label">Project</span>
+      <span class="agent-label">{{ i18n.currentLang() === 'ar' ? 'مشروع' : 'Project' }}</span>
     </button>
   </div>
-
-
 </div>
