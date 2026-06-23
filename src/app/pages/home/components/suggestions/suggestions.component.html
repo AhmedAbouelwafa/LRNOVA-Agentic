@@ -1,6 +1,6 @@
-@if (state.suggestions().length > 0 || state.tourStep() === 8) {
+@if (state.suggestions().length > 0 || state.tourStep() === 7) {
   <div class="quick-suggestions" id="quick-suggestions">
-    @if (state.tourStep() === 8) {
+    @if (state.tourStep() === 7) {
       <div class="tour-card arrow-bottom" style="bottom: calc(100% + 20px); left: 50%; transform: translateX(-50%); cursor: default; position: absolute;" (click)="$event.stopPropagation()">
         <div class="tour-content">
           <h3>{{ i18n.currentLang() === 'ar' ? 'ابدأ باقتراح سريع' : 'Start with a Suggestion' }}</h3>

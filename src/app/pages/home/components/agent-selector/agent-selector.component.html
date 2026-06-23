@@ -14,35 +14,8 @@
           (mouseenter)="onGoalHover(goal, $event)"
           (mouseleave)="onGoalLeave()"
           [class.active]="isGoalActive(goal)"
-          [class.multi-tool]="goal.level === 2">
-
-          <!-- Tour card: step 5 on first single-tool goal -->
-          @if (state.tourStep() === 5 && idx === 0) {
-            <div class="tour-card arrow-bottom" style="bottom: calc(100% + 20px); left: 50%; transform: translateX(-50%); cursor: default; position: absolute; z-index: 100;" (click)="$event.stopPropagation()">
-              <div class="tour-content">
-                <h3>{{ i18n.currentLang() === 'ar' ? 'أهداف فردية' : 'Single Goals' }}</h3>
-                <p>{{ i18n.currentLang() === 'ar' ? 'أهداف سريعة ومركّزة تعتمد على أداة ذكاء اصطناعي واحدة.' : 'Quick, focused goals powered by one AI tool for instant results.' }}</p>
-              </div>
-              <div class="tour-actions">
-                <button class="skip-btn" (click)="state.tourStep.set(0)">{{ i18n.currentLang() === 'ar' ? 'تخطي الجولة' : 'Skip Tour' }}</button>
-                <button class="next-btn" (click)="state.tourStep.set(6)">{{ i18n.currentLang() === 'ar' ? 'التالي' : 'Next' }}</button>
-              </div>
-            </div>
-          }
-
-          <!-- Tour card: step 6 on first multi-tool goal (Full Course) -->
-          @if (state.tourStep() === 6 && idx === 4) {
-            <div class="tour-card arrow-bottom" style="bottom: calc(100% + 20px); left: 50%; transform: translateX(-50%); cursor: default; position: absolute; z-index: 100;" (click)="$event.stopPropagation()">
-              <div class="tour-content">
-                <h3>{{ i18n.currentLang() === 'ar' ? 'أهداف متعددة الأدوات' : 'Multi-Tool Goals' }}</h3>
-                <p>{{ i18n.currentLang() === 'ar' ? 'تجمع هذه الأهداف أدوات ذكاء اصطناعي متعددة لإنتاج حزمة تعليمية كاملة.' : 'Combine multiple AI tools to produce a complete learning package.' }}</p>
-              </div>
-              <div class="tour-actions">
-                <button class="skip-btn" (click)="state.tourStep.set(0)">{{ i18n.currentLang() === 'ar' ? 'تخطي الجولة' : 'Skip Tour' }}</button>
-                <button class="next-btn" (click)="state.tourStep.set(8)">{{ i18n.currentLang() === 'ar' ? 'التالي' : 'Next' }}</button>
-              </div>
-            </div>
-          }
+          [class.multi-tool]="goal.level === 2"
+          [class.tour-glow]="(state.tourStep() === 5 && idx === 0) || (state.tourStep() === 6 && idx === 4)">
 
           <!-- Icon -->
           <div class="agent-icon-wrap">
@@ -110,7 +83,7 @@
   </button>
 
   <!-- Hover card: rendered OUTSIDE the scroll container so it is never clipped -->
-  @if (hoveredGoal()) {
+  @if (hoveredGoal() && state.tourStep() === 0) {
     <div class="goal-hover-card visible"
       [class.multi-tool]="isHoverMultiTool()"
       [style.left]="hoverCardStyle().left"
@@ -125,6 +98,40 @@
         }
       </div>
       <p class="hover-desc">{{ hoveredGoal()!.description }}</p>
+    </div>
+  }
+
+  <!-- Tour Step 5: Single-tool goals -->
+  @if (state.tourStep() === 5) {
+    <div class="tour-card tour-card-floating arrow-bottom"
+      [style.left]="tourCardStyle().left"
+      [style.top]="tourCardStyle().top"
+      (click)="$event.stopPropagation()">
+      <div class="tour-content">
+        <h3>{{ i18n.currentLang() === 'ar' ? 'أهداف فردية' : 'Single-Tool Goals' }}</h3>
+        <p>{{ i18n.currentLang() === 'ar' ? 'أهداف سريعة ومركّزة تستخدم أداة ذكاء اصطناعي واحدة للحصول على نتائج فورية.' : 'Quick, focused goals powered by a single AI tool for instant results.' }}</p>
+      </div>
+      <div class="tour-actions">
+        <button class="skip-btn" (click)="state.tourStep.set(0)">{{ i18n.currentLang() === 'ar' ? 'تخطي' : 'Skip' }}</button>
+        <button class="next-btn" (click)="state.tourStep.set(6)">{{ i18n.currentLang() === 'ar' ? 'التالي' : 'Next' }}</button>
+      </div>
+    </div>
+  }
+
+  <!-- Tour Step 6: Multi-tool goals -->
+  @if (state.tourStep() === 6) {
+    <div class="tour-card tour-card-floating arrow-bottom"
+      [style.left]="tourCardStyle().left"
+      [style.top]="tourCardStyle().top"
+      (click)="$event.stopPropagation()">
+      <div class="tour-content">
+        <h3>{{ i18n.currentLang() === 'ar' ? 'أهداف متعددة الأدوات' : 'Multi-Tool Goals' }}</h3>
+        <p>{{ i18n.currentLang() === 'ar' ? 'تجمع هذه الأهداف عدة أدوات ذكاء اصطناعي لإنتاج حزمة تعليمية كاملة في مساحة عمل متعددة.' : 'These goals combine multiple AI tools to produce a complete learning package in a multi-tab workspace.' }}</p>
+      </div>
+      <div class="tour-actions">
+        <button class="skip-btn" (click)="state.tourStep.set(0)">{{ i18n.currentLang() === 'ar' ? 'تخطي' : 'Skip' }}</button>
+        <button class="next-btn" (click)="state.tourStep.set(7)">{{ i18n.currentLang() === 'ar' ? 'التالي' : 'Next' }}</button>
+      </div>
     </div>
   }
 

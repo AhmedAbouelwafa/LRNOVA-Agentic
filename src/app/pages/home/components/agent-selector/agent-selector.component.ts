@@ -1,4 +1,4 @@
-import { Component, inject, signal, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, signal, ViewChild, ElementRef, AfterViewInit, effect } from '@angular/core';
 import { Router } from '@angular/router';
 import { PromptStateService } from '../../../../core/services/prompt-state.service';
 import { LocalizationService } from '../../../../core/services/localization.service';
@@ -10,7 +10,7 @@ import { Goal } from '../../../../core/models';
   templateUrl: './agent-selector.component.html',
   styleUrl: './agent-selector.component.css'
 })
-export class AgentSelectorComponent {
+export class AgentSelectorComponent implements AfterViewInit {
   protected state = inject(PromptStateService);
   protected i18n = inject(LocalizationService);
   private router = inject(Router);
@@ -19,9 +19,60 @@ export class AgentSelectorComponent {
   hoveredGoal = signal<Goal | null>(null);
   hoverCardStyle = signal<{ left: string; top: string }>({ left: '0px', top: '0px' });
   isHoverMultiTool = signal(false);
+  tourCardStyle = signal<{ left: string; top: string }>({ left: '0px', top: '0px' });
 
   @ViewChild('scrollContainer') scrollContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('wrapperEl') wrapperEl!: ElementRef<HTMLDivElement>;
+
+  constructor() {
+    // React to tour step changes to position the tour card
+    effect(() => {
+      const step = this.state.tourStep();
+      if (step === 5 || step === 6) {
+        setTimeout(() => this.positionTourCard(step), 100);
+      }
+    });
+  }
+
+  ngAfterViewInit() {
+    const step = this.state.tourStep();
+    if (step === 5 || step === 6) {
+      setTimeout(() => this.positionTourCard(step), 300);
+    }
+  }
+
+  private positionTourCard(step: number) {
+    const wrapper = this.wrapperEl?.nativeElement;
+    const container = this.scrollContainer?.nativeElement;
+    if (!wrapper || !container) return;
+
+    // Step 5 targets idx 0 (first single-tool goal), step 6 targets idx 4 (first multi-tool goal)
+    const targetIdx = step === 5 ? 0 : 4;
+    const buttons = container.querySelectorAll('.agent-btn');
+    const btn = buttons[targetIdx] as HTMLElement;
+    if (!btn) return;
+
+    // Auto-scroll to make the target button visible
+    const containerRect = container.getBoundingClientRect();
+    const btnRect = btn.getBoundingClientRect();
+
+    if (btnRect.left < containerRect.left || btnRect.right > containerRect.right) {
+      btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      // Recalculate position after scroll completes
+      setTimeout(() => this.computeTourPosition(btn, wrapper), 350);
+    } else {
+      this.computeTourPosition(btn, wrapper);
+    }
+  }
+
+  private computeTourPosition(btn: HTMLElement, wrapper: HTMLElement) {
+    const btnRect = btn.getBoundingClientRect();
+    const wrapperRect = wrapper.getBoundingClientRect();
+    this.tourCardStyle.set({
+      left: (btnRect.left + btnRect.width / 2 - wrapperRect.left) + 'px',
+      top: (btnRect.top - wrapperRect.top - 14) + 'px'
+    });
+  }
 
   scrollLeft(event: Event) {
     event.stopPropagation();

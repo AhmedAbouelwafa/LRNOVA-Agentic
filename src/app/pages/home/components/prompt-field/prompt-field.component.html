@@ -90,6 +90,8 @@
         </div>
       }
 
+      <!-- Removed inline credit preview -->
+
       <div class="prompt-input-row">
         <input type="text" class="prompt-input"
           [placeholder]="typedPlaceholder.output()"
@@ -178,3 +180,110 @@
     </div>
   </div>
 </div>
+
+
+
+
+<!-- Credit Preview Popup Modal -->
+@if (showCreditPreviewModal) {
+  <div class="credit-modal-overlay" (click)="cancelGenerate()">
+    <div class="credit-modal-panel" (click)="$event.stopPropagation()">
+
+      <!-- Decorative gradient header strip -->
+      <div class="credit-modal-gradient-strip"></div>
+
+      <!-- Header -->
+      <div class="credit-modal-header">
+        <div class="credit-header-left">
+          <div class="credit-icon-ring">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="credit-modal-title">{{ i18n.currentLang() === 'ar' ? 'تأكيد الإنشاء' : 'Confirm Generation' }}</h3>
+            <p class="credit-modal-subtitle">{{ i18n.currentLang() === 'ar' ? 'مراجعة التكلفة قبل المتابعة' : 'Review cost before proceeding' }}</p>
+          </div>
+        </div>
+        <button class="credit-close-btn" (click)="cancelGenerate()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+        </button>
+      </div>
+
+      <!-- Credit Gauge Section -->
+      <div class="credit-gauge-section">
+        <div class="credit-gauge">
+          <svg class="gauge-ring" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(139,92,246,0.1)" stroke-width="5"/>
+            <circle cx="40" cy="40" r="34" fill="none" stroke="url(#gaugeGradient)" stroke-width="5" stroke-linecap="round" stroke-dasharray="213.6" stroke-dashoffset="0.6" transform="rotate(-90 40 40)" class="gauge-progress"/>
+            <defs>
+              <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#8B5CF6"/>
+                <stop offset="100%" stop-color="#06B6D4"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="gauge-center">
+            <span class="gauge-number">14</span>
+            <span class="gauge-unit">{{ i18n.currentLang() === 'ar' ? 'رصيد' : 'Credits' }}</span>
+          </div>
+        </div>
+        <div class="gauge-meta">
+          <div class="gauge-status">
+            <span class="gauge-status-dot"></span>
+            {{ i18n.currentLang() === 'ar' ? 'رصيد كافٍ' : 'Sufficient Balance' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Stat Row -->
+      <div class="credit-stat-row">
+        <div class="credit-stat-item">
+          <div class="stat-icon-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="stat-text-block">
+            <span class="stat-item-label">{{ i18n.currentLang() === 'ar' ? 'المدة المقدرة' : 'Est. Duration' }}</span>
+            <span class="stat-item-value">0:03</span>
+          </div>
+        </div>
+        <div class="credit-stat-divider"></div>
+        <div class="credit-stat-item">
+          <div class="stat-icon-wrap accent">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="stat-text-block">
+            <span class="stat-item-label">{{ i18n.currentLang() === 'ar' ? 'التكلفة' : 'Cost' }}</span>
+            <span class="stat-item-value accent">14 {{ i18n.currentLang() === 'ar' ? 'رصيد' : 'Credits' }}</span>
+          </div>
+        </div>
+        <div class="credit-stat-divider"></div>
+        <div class="credit-stat-item">
+          <div class="stat-icon-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          </div>
+          <div class="stat-text-block">
+            <span class="stat-item-label">{{ i18n.currentLang() === 'ar' ? 'الرصيد المتاح' : 'Balance' }}</span>
+            <span class="stat-item-value">49,999,019</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="credit-modal-footer">
+        <button class="btn-modal-cancel" (click)="cancelGenerate()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+          {{ i18n.currentLang() === 'ar' ? 'إلغاء' : 'Cancel' }}
+        </button>
+        <button class="btn-modal-continue" (click)="confirmGenerate()">
+          {{ i18n.currentLang() === 'ar' ? 'متابعة وإنشاء' : 'Continue & Generate' }}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" [style.transform]="i18n.currentLang() === 'ar' ? 'scaleX(-1)' : 'none'">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+}

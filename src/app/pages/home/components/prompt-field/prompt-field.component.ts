@@ -127,12 +127,30 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
     this.updatePhrasesForCurrentState();
   }
 
+  showCreditPreviewModal = false;
+
   onSubmit() {
     if (this.mode === 'chat') {
       this.submitFollowUp();
     } else {
+      /* DISABLED CREDIT PREVIEW MODAL 
+      if (this.state.selectedGoal()) {
+        this.showCreditPreviewModal = true;
+      } else {
+        this.confirmGenerate();
+      }
+      */
       this.state.submitPrompt();
     }
+  }
+
+  confirmGenerate() {
+    this.showCreditPreviewModal = false;
+    this.state.submitPrompt();
+  }
+
+  cancelGenerate() {
+    this.showCreditPreviewModal = false;
   }
 
   private submitFollowUp() {

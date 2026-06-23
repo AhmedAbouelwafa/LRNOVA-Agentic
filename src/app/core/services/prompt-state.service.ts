@@ -15,7 +15,7 @@ export class PromptStateService {
   readonly selectedPlan = signal<PlanType>('flash');
   readonly activeTool = signal('Course Content');
   readonly loadingText = signal('Thinking...');
-  readonly tourStep = signal(1); // 1=Sidebar, 2=Prompt, 3=Attach, 4=Voice, 5=Agents, 6=Suggestions
+  readonly tourStep = signal(1); // 1=Sidebar, 2=Prompt, 3=Attach, 4=Voice, 5=SingleGoals, 6=MultiGoals, 7=Suggestions
   readonly attachedFiles = signal<File[]>([]);
   readonly chatHistory = signal<ChatMessage[]>([]);
   readonly selectedQuickTool = signal<string | null>(null);
