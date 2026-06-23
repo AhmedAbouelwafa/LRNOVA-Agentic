@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnDestroy } from '@angular/core';
+import { Component, inject, signal, OnDestroy, effect } from '@angular/core';
 import { PromptStateService } from '../../../../core/services/prompt-state.service';
 import { LocalizationService } from '../../../../core/services/localization.service';
 
@@ -17,6 +17,41 @@ export class QuestionnairePanelComponent implements OnDestroy {
   selectedOption = signal<string | null>(null);
   activeAudioUrl = signal<string | null>(null);
   private audioPlayer: HTMLAudioElement | null = null;
+  
+  displayedTitle = signal<string>('');
+  private typeWriterInterval: any;
+
+  constructor() {
+    effect(() => {
+      const q = this.state.activeQuestion();
+      if (q && q.questionnaire) {
+        setTimeout(() => this.startTypewriter(q.questionnaire!.title), 0);
+      } else {
+        setTimeout(() => {
+          this.displayedTitle.set('');
+          if (this.typeWriterInterval) {
+            clearInterval(this.typeWriterInterval);
+          }
+        }, 0);
+      }
+    });
+  }
+
+  private startTypewriter(fullText: string) {
+    if (this.typeWriterInterval) {
+      clearInterval(this.typeWriterInterval);
+    }
+    this.displayedTitle.set('');
+    let i = 0;
+    this.typeWriterInterval = setInterval(() => {
+      if (i < fullText.length) {
+        this.displayedTitle.update(prev => prev + fullText.charAt(i));
+        i++;
+      } else {
+        clearInterval(this.typeWriterInterval);
+      }
+    }, 20);
+  }
 
   selectOption(label: string) {
     this.selectedOption.set(label);
@@ -72,6 +107,9 @@ export class QuestionnairePanelComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
+    if (this.typeWriterInterval) {
+      clearInterval(this.typeWriterInterval);
+    }
     if (this.audioPlayer) {
       this.audioPlayer.pause();
       this.audioPlayer = null;

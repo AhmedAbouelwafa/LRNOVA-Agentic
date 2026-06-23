@@ -15,7 +15,7 @@
         <app-thinking-indicator />
       }
     } @else {
-      @if (state.activeAgent() === 'video' || state.selectedQuickTool() === 'Video' || state.selectedQuickTool() === 'Text Video') {
+      @if (state.activeAgent() === 'video' || state.selectedQuickTool() === 'Video' || state.selectedQuickTool() === 'Text Video' || (state.selectedGoal() && state.selectedGoal()!.id.includes('video'))) {
         <app-video-result />
       } @else {
         <app-skeleton-card />

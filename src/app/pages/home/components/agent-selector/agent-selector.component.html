@@ -1,54 +1,131 @@
-<div class="scenarios-wrapper">
-  <div class="agent-icons">
-    <!-- Quick Start Goals (Level 1) -->
-    <button class="agent-btn level-btn" (click)="selectLevel(1, $event)" id="btn-level-quick"
-      [class.active]="state.activeGoalLevel() === 1 && isGoalsGridActive()"
-      style="position: relative; overflow: visible;">
-      @if (state.tourStep() === 5) {
-        <div class="tour-card arrow-bottom" style="bottom: calc(100% + 20px); left: 50%; transform: translateX(-50%); cursor: default; position: absolute; z-index: 100;" (click)="$event.stopPropagation()">
-          <div class="tour-content">
-            <h3>{{ i18n.currentLang() === 'ar' ? 'البدء السريع' : 'Quick Start' }}</h3>
-            <p>{{ i18n.currentLang() === 'ar' ? 'أهداف بسيطة وسريعة تعتمد على أداة واحدة للحصول على نتائج فورية.' : 'Simple, fast goals powered by a single tool for instant results.' }}</p>
-          </div>
-          <div class="tour-actions">
-            <button class="skip-btn" (click)="state.tourStep.set(0)">{{ i18n.currentLang() === 'ar' ? 'تخطي الجولة' : 'Skip Tour' }}</button>
-            <button class="next-btn" (click)="state.tourStep.set(6)">{{ i18n.currentLang() === 'ar' ? 'التالي' : 'Next' }}</button>
-          </div>
-        </div>
-      }
-      <div class="agent-icon-wrap">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-        </svg>
-      </div>
-      <span class="agent-label">{{ i18n.currentLang() === 'ar' ? 'البدء السريع' : 'Quick Start' }}</span>
-    </button>
+<div class="scenarios-wrapper" #wrapperEl>
+  <button class="scroll-arrow left-arrow" (click)="scrollLeft($event)">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  </button>
 
-    <!-- Project Goals (Level 2) -->
-    <button class="agent-btn level-btn" (click)="selectLevel(2, $event)" id="btn-level-project"
-      [class.active]="state.activeGoalLevel() === 2 && isGoalsGridActive()"
-      style="position: relative; overflow: visible;">
-      @if (state.tourStep() === 6) {
-        <div class="tour-card arrow-bottom" style="bottom: calc(100% + 20px); left: 50%; transform: translateX(-50%); cursor: default; position: absolute; z-index: 100;" (click)="$event.stopPropagation()">
-          <div class="tour-content">
-            <h3>{{ i18n.currentLang() === 'ar' ? 'المشاريع' : 'Project' }}</h3>
-            <p>{{ i18n.currentLang() === 'ar' ? 'أهداف متعددة الأدوات تنتج حزمة تعليمية متكاملة.' : 'Multi-tool goals that produce a complete learning package.' }}</p>
+  <div class="agent-icons-container" #scrollContainer>
+    <div class="agent-icons">
+      @for (goal of goals; track goal.id; let idx = $index) {
+
+        <button class="agent-btn goal-btn"
+          (click)="selectGoal(goal, $event)"
+          (mouseenter)="onGoalHover(goal, $event)"
+          (mouseleave)="onGoalLeave()"
+          [class.active]="isGoalActive(goal)"
+          [class.multi-tool]="goal.level === 2">
+
+          <!-- Tour card: step 5 on first single-tool goal -->
+          @if (state.tourStep() === 5 && idx === 0) {
+            <div class="tour-card arrow-bottom" style="bottom: calc(100% + 20px); left: 50%; transform: translateX(-50%); cursor: default; position: absolute; z-index: 100;" (click)="$event.stopPropagation()">
+              <div class="tour-content">
+                <h3>{{ i18n.currentLang() === 'ar' ? 'أهداف فردية' : 'Single Goals' }}</h3>
+                <p>{{ i18n.currentLang() === 'ar' ? 'أهداف سريعة ومركّزة تعتمد على أداة ذكاء اصطناعي واحدة.' : 'Quick, focused goals powered by one AI tool for instant results.' }}</p>
+              </div>
+              <div class="tour-actions">
+                <button class="skip-btn" (click)="state.tourStep.set(0)">{{ i18n.currentLang() === 'ar' ? 'تخطي الجولة' : 'Skip Tour' }}</button>
+                <button class="next-btn" (click)="state.tourStep.set(6)">{{ i18n.currentLang() === 'ar' ? 'التالي' : 'Next' }}</button>
+              </div>
+            </div>
+          }
+
+          <!-- Tour card: step 6 on first multi-tool goal (Full Course) -->
+          @if (state.tourStep() === 6 && idx === 4) {
+            <div class="tour-card arrow-bottom" style="bottom: calc(100% + 20px); left: 50%; transform: translateX(-50%); cursor: default; position: absolute; z-index: 100;" (click)="$event.stopPropagation()">
+              <div class="tour-content">
+                <h3>{{ i18n.currentLang() === 'ar' ? 'أهداف متعددة الأدوات' : 'Multi-Tool Goals' }}</h3>
+                <p>{{ i18n.currentLang() === 'ar' ? 'تجمع هذه الأهداف أدوات ذكاء اصطناعي متعددة لإنتاج حزمة تعليمية كاملة.' : 'Combine multiple AI tools to produce a complete learning package.' }}</p>
+              </div>
+              <div class="tour-actions">
+                <button class="skip-btn" (click)="state.tourStep.set(0)">{{ i18n.currentLang() === 'ar' ? 'تخطي الجولة' : 'Skip Tour' }}</button>
+                <button class="next-btn" (click)="state.tourStep.set(8)">{{ i18n.currentLang() === 'ar' ? 'التالي' : 'Next' }}</button>
+              </div>
+            </div>
+          }
+
+          <!-- Icon -->
+          <div class="agent-icon-wrap">
+            @switch (goal.icon) {
+              @case ('lightbulb') {
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 18h6"/>
+                  <path d="M10 22h4"/>
+                  <path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/>
+                </svg>
+              }
+              @case ('pen') {
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              }
+              @case ('clipboard-check') {
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 11l3 3L22 4"/>
+                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                </svg>
+              }
+              @case ('video') {
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14v-4z"/>
+                  <path d="M4 6h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/>
+                </svg>
+              }
+              @case ('layers') {
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                  <path d="M2 17l10 5 10-5"/>
+                  <path d="M2 12l10 5 10-5"/>
+                </svg>
+              }
+              @case ('film') {
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 2H5a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3z"/>
+                  <path d="M2 7h20M2 17h20M7 2v5M17 2v5M7 17v5M17 17v5"/>
+                </svg>
+              }
+              @case ('book') {
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                </svg>
+              }
+            }
           </div>
-          <div class="tour-actions">
-            <button class="skip-btn" (click)="state.tourStep.set(0)">{{ i18n.currentLang() === 'ar' ? 'تخطي الجولة' : 'Skip Tour' }}</button>
-            <button class="next-btn" (click)="state.tourStep.set(8)">{{ i18n.currentLang() === 'ar' ? 'التالي' : 'Next' }}</button>
-          </div>
-        </div>
+
+          <span class="agent-label">
+            {{ i18n.currentLang() === 'ar' ? goalLabelAr[goal.id] : goal.label }}
+          </span>
+
+        </button>
       }
-      <div class="agent-icon-wrap">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="7" height="7" rx="1" />
-          <rect x="14" y="3" width="7" height="7" rx="1" />
-          <rect x="3" y="14" width="7" height="7" rx="1" />
-          <rect x="14" y="14" width="7" height="7" rx="1" />
-        </svg>
-      </div>
-      <span class="agent-label">{{ i18n.currentLang() === 'ar' ? 'مشروع' : 'Project' }}</span>
-    </button>
+    </div>
   </div>
+
+  <button class="scroll-arrow right-arrow" (click)="scrollRight($event)">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </button>
+
+  <!-- Hover card: rendered OUTSIDE the scroll container so it is never clipped -->
+  @if (hoveredGoal()) {
+    <div class="goal-hover-card visible"
+      [class.multi-tool]="isHoverMultiTool()"
+      [style.left]="hoverCardStyle().left"
+      [style.top]="hoverCardStyle().top">
+      <div class="hover-header">
+        <span class="hover-title">{{ i18n.currentLang() === 'ar' ? goalLabelAr[hoveredGoal()!.id] : hoveredGoal()!.label }}</span>
+        <span class="hover-time">{{ hoveredGoal()!.estimatedTime }}</span>
+      </div>
+      <div class="hover-tools">
+        @for (step of hoveredGoal()!.pipeline; track step.order) {
+          <span class="tool-chip">{{ step.tabLabel }}</span>
+        }
+      </div>
+      <p class="hover-desc">{{ hoveredGoal()!.description }}</p>
+    </div>
+  }
+
 </div>

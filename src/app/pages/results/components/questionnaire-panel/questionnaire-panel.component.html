@@ -11,7 +11,7 @@
     </div>
 
     <!-- Question -->
-    <h4 class="q-panel-question">{{ q.questionnaire!.title }}</h4>
+    <h4 class="q-panel-question">{{ displayedTitle() }}</h4>
 
     <!-- Options (radio select) -->
     <div class="q-panel-options" [class.has-images]="q.questionnaire!.options[0]?.image" [class.has-audio]="q.questionnaire!.options[0]?.audio">

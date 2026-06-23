@@ -2,7 +2,6 @@ import { Component, inject, OnInit, OnDestroy, signal, HostListener } from '@ang
 import { HeroSectionComponent } from './components/hero-section/hero-section.component';
 import { AgentSelectorComponent } from './components/agent-selector/agent-selector.component';
 import { SuggestionsComponent } from './components/suggestions/suggestions.component';
-import { ToolsListComponent } from './components/tools-list/tools-list.component';
 import { PromptStateService } from '../../core/services/prompt-state.service';
 import { ParticleCanvasDirective } from '../../core/directives/particle-canvas.directive';
 
@@ -12,29 +11,15 @@ import { ParticleCanvasDirective } from '../../core/directives/particle-canvas.d
   imports: [
     HeroSectionComponent,
     AgentSelectorComponent,
-    SuggestionsComponent,
-    ToolsListComponent
+    SuggestionsComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit, OnDestroy {
   protected state = inject(PromptStateService);
-  isGoalsGridVisible = signal(false);
-
   @HostListener('document:click')
-  onDocumentClick() {
-    if (this.isGoalsGridVisible()) {
-      this.isGoalsGridVisible.set(false);
-    }
-  }
-
-  toggleGoalsGrid() {
-    // Timeout prevents document click from immediately closing it
-    setTimeout(() => {
-      this.isGoalsGridVisible.update(v => !v);
-    });
-  }
+  onDocumentClick() {}
 
   ngOnInit() {
     // Reset state when returning home

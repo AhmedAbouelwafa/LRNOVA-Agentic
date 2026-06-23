@@ -49,105 +49,64 @@ export class PromptStateService {
   ];
 
   readonly suggestions = computed<Suggestion[]>(() => {
-    const tool = this.selectedQuickTool();
+    const goal = this.selectedGoal();
     
-    if (!tool) {
-      return [];
+    if (!goal) {
+      return [
+        { id: 'def1', icon: 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14v-4z', text: 'Create an explainer video about DNA' },
+        { id: 'def2', icon: 'M12 2v20 M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6', text: 'Write a YouTube script for learning Python' },
+        { id: 'def3', icon: 'M4 4h16v16H4z M12 8v8 M8 12h8', text: 'Build an assessment quiz for Physics' }
+      ];
     }
 
-    switch (tool) {
-      case 'Video':
+    switch (goal.id) {
+      case 'explain-it':
         return [
-          { id: 'v1', icon: 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14v-4z M4 6h10a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2z', text: 'Create an explainer video about DNA' },
-          { id: 'v2', icon: 'M12 2v20 M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6', text: 'Generate an AI Avatar presentation' },
-          { id: 'v3', icon: 'M4 4h16v16H4z', text: 'Convert my script into a video lesson' }
+          { id: 'ex1', icon: 'M9 18h6 M10 22h4 M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z', text: 'Explain quantum entanglement' },
+          { id: 'ex2', icon: 'M9 18h6 M10 22h4 M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z', text: 'How does a combustion engine work?' },
+          { id: 'ex3', icon: 'M9 18h6 M10 22h4 M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z', text: 'Explain inflation to a 5-year-old' }
         ];
-      case 'Text Video':
+      case 'script-it':
         return [
-          { id: 'tv1', icon: 'M4 4h16v16H4z M12 8v8 M8 12h8', text: 'Convert this article to a video' },
-          { id: 'tv2', icon: 'M9 12h6 M9 16h6 M4 4h16v16H4z', text: 'Summarize my notes into a video format' },
-          { id: 'tv3', icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', text: 'Create a story video from text' }
+          { id: 'sc1', icon: 'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z', text: 'Write a YouTube script for learning Python' },
+          { id: 'sc2', icon: 'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z', text: 'Draft a podcast script about history' },
+          { id: 'sc3', icon: 'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z', text: 'Create a short script for a commercial' }
         ];
-      case 'Script':
+      case 'test-it':
         return [
-          { id: 'sc1', icon: 'M4 4h16v16H4z M12 8v8 M8 12h8', text: 'Write a YouTube script for learning Python' },
-          { id: 'sc2', icon: 'M9 12h6 M9 16h6 M4 4h16v16H4z', text: 'Draft a podcast script about history' },
-          { id: 'sc3', icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', text: 'Create a short script for a commercial' }
+          { id: 'ts1', icon: 'M9 11l3 3L22 4 M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11', text: 'Build an assessment quiz for Physics' },
+          { id: 'ts2', icon: 'M9 11l3 3L22 4 M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11', text: 'Create a math test for 5th grade' },
+          { id: 'ts3', icon: 'M9 11l3 3L22 4 M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11', text: 'Generate multiple choice questions on biology' }
         ];
-      case 'Assessment':
+      case 'video-clip':
         return [
-          { id: 'as1', icon: 'M4 4h16v16H4z M12 8v8 M8 12h8', text: 'Build an assessment quiz for Physics' },
-          { id: 'as2', icon: 'M9 12h6 M9 16h6 M4 4h16v16H4z', text: 'Create a math test for 5th grade' },
-          { id: 'as3', icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', text: 'Generate multiple choice questions on biology' }
+          { id: 'vc1', icon: 'M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14v-4z M4 6h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z', text: 'Create an explainer video about DNA' },
+          { id: 'vc2', icon: 'M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14v-4z M4 6h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z', text: 'Generate an AI Avatar presentation' },
+          { id: 'vc3', icon: 'M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14v-4z M4 6h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z', text: 'Convert my script into a video lesson' }
         ];
-      case 'Activity':
+      case 'full-course':
         return [
-          { id: 'ac1', icon: 'M4 4h16v16H4z M12 8v8 M8 12h8', text: 'Design an interactive learning activity for Spanish' },
-          { id: 'ac2', icon: 'M9 12h6 M9 16h6 M4 4h16v16H4z', text: 'Create a group activity for team building' },
-          { id: 'ac3', icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', text: 'Brainstorm engaging activities for remote learning' }
+          { id: 'fc1', icon: 'M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5', text: 'Create a full course on Digital Marketing' },
+          { id: 'fc2', icon: 'M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5', text: 'Design a comprehensive Leadership training' },
+          { id: 'fc3', icon: 'M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5', text: 'Develop an introductory cooking class' }
         ];
-      case 'Topic':
+      case 'video-course':
         return [
-          { id: 'tp1', icon: 'M4 4h16v16H4z M12 8v8 M8 12h8', text: 'Explore the topic of Quantum Computing' },
-          { id: 'tp2', icon: 'M9 12h6 M9 16h6 M4 4h16v16H4z', text: 'Deep dive into Ancient Egypt' },
-          { id: 'tp3', icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', text: 'Learn about the basics of Economics' }
+          { id: 'vcrs1', icon: 'M19 2H5a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3z M2 7h20M2 17h20M7 2v5M17 2v5M7 17v5M17 17v5', text: 'Create a video course on personal finance' },
+          { id: 'vcrs2', icon: 'M19 2H5a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3z M2 7h20M2 17h20M7 2v5M17 2v5M7 17v5M17 17v5', text: 'Design a video tutorial series for Excel' },
+          { id: 'vcrs3', icon: 'M19 2H5a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3z M2 7h20M2 17h20M7 2v5M17 2v5M7 17v5M17 17v5', text: 'Develop a video masterclass on photography' }
         ];
-      case 'Full Course Script':
+      case 'learn-kit':
         return [
-          { id: 'fc1', icon: 'M4 4h16v16H4z M12 8v8 M8 12h8', text: 'Generate a full course script for Digital Marketing' },
-          { id: 'fc2', icon: 'M9 12h6 M9 16h6 M4 4h16v16H4z', text: 'Draft a comprehensive script for a Leadership course' },
-          { id: 'fc3', icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', text: 'Write a full script for an introductory cooking class' }
-        ];
-      case 'Full Course Content':
-        return [
-          { id: 'fcc1', icon: 'M4 4h16v16H4z M12 8v8 M8 12h8', text: 'Generate a full course on Machine Learning' },
-          { id: 'fcc2', icon: 'M9 12h6 M9 16h6 M4 4h16v16H4z', text: 'Create comprehensive content for a Photography course' },
-          { id: 'fcc3', icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', text: 'Build a complete curriculum for Personal Finance' }
-        ];
-      case 'Projects':
-        return [
-          { id: 'pr1', icon: 'M4 4h16v16H4z M12 8v8 M8 12h8', text: 'Continue working on my last project' },
-          { id: 'pr2', icon: 'M9 12h6 M9 16h6 M4 4h16v16H4z', text: 'Review my recent video creations' },
-          { id: 'pr3', icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', text: 'Organize my course materials' }
-        ];
-      case 'Explain It':
-        return [
-          { id: 'ex1', icon: 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14v-4z M4 6h10a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2z', text: 'Explain the theory of relativity visually' },
-          { id: 'ex2', icon: 'M12 2v20 M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6', text: 'How does a quantum computer work?' },
-          { id: 'ex3', icon: 'M4 4h16v16H4z', text: 'Explain DNA replication' }
-        ];
-      case 'Write It':
-        return [
-          { id: 'wr1', icon: 'M4 4h16v16H4z M12 8v8 M8 12h8', text: 'Write a lesson on ancient Rome' },
-          { id: 'wr2', icon: 'M9 12h6 M9 16h6 M4 4h16v16H4z', text: 'Draft a script about climate change' },
-          { id: 'wr3', icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', text: 'Create a story about the solar system' }
-        ];
-      case 'Test It':
-        return [
-          { id: 'tst1', icon: 'M4 4h16v16H4z M12 8v8 M8 12h8', text: 'Build a math test for 5th grade' },
-          { id: 'tst2', icon: 'M9 12h6 M9 16h6 M4 4h16v16H4z', text: 'Create a quiz on world capitals' },
-          { id: 'tst3', icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', text: 'Generate biology multiple choice questions' }
-        ];
-      case 'Learn It':
-        return [
-          { id: 'ln1', icon: 'M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z', text: 'I want to learn about the French Revolution' },
-          { id: 'ln2', icon: 'M9 12h6 M9 16h6 M4 4h16v16H4z', text: 'Teach me the basics of investing' },
-          { id: 'ln3', icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', text: 'Learn JavaScript fundamentals' }
-        ];
-      case 'Teach It':
-      case 'Explore It':
-      case 'Course It':
-      case 'Train It':
-      case 'Study It':
-        return [
-          { id: 'cm1', icon: 'M12 14l9-5-9-5-9 5 9 5z', text: `Create a comprehensive package on ${tool.toLowerCase()}` },
-          { id: 'cm2', icon: 'M9 12h6 M9 16h6 M4 4h16v16H4z', text: 'Draft a full professional training module' },
-          { id: 'cm3', icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', text: 'Generate an entire end-to-end curriculum' }
+          { id: 'lk1', icon: 'M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z', text: 'Generate a learning kit for Spanish basics' },
+          { id: 'lk2', icon: 'M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z', text: 'Create a study guide for world geography' },
+          { id: 'lk3', icon: 'M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z', text: 'Compile a resource kit for learning guitar' }
         ];
       default:
         return [];
     }
   });
+
 
   readonly videoTools = ['Video Avatar', 'Scorm Video'];
   readonly textTools = ['Course Content', 'Script', 'Assessment', 'Topic', 'Activity'];
@@ -294,9 +253,7 @@ export class PromptStateService {
     this.router.navigate(['/results']);
 
     // Ask first clarification question
-    setTimeout(() => {
-      this.askNextQuestion(true);
-    }, 400);
+    this.askNextQuestion(true);
   }
 
   private askNextQuestion(isFirst: boolean = false) {
@@ -333,14 +290,10 @@ export class PromptStateService {
 
     if (this.currentQuestionIndex < this.activeQuestionnaire.length) {
       // Ask next question
-      setTimeout(() => {
-        this.askNextQuestion();
-      }, 600);
+      this.askNextQuestion();
     } else {
       // Finished all questions, now start the generation
-      setTimeout(() => {
-        this.startGenerationProcess();
-      }, 500);
+      this.startGenerationProcess();
     }
   }
 
