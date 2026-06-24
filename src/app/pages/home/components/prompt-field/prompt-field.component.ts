@@ -35,7 +35,7 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
   }
 
   isAppDropdownOpen = false;
-  
+
   availableTools = [
     { id: 'Video', slug: 'video', label: 'Video' },
     { id: 'Text Video', slug: 'text-video', label: 'Text Video' },
@@ -133,14 +133,7 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
     if (this.mode === 'chat') {
       this.submitFollowUp();
     } else {
-      /* DISABLED CREDIT PREVIEW MODAL 
-      if (this.state.selectedGoal()) {
-        this.showCreditPreviewModal = true;
-      } else {
-        this.confirmGenerate();
-      }
-      */
-      this.state.submitPrompt();
+      this.showCreditPreviewModal = true;
     }
   }
 
@@ -173,16 +166,16 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
 
     const lower = text.toLowerCase();
     const matchedKey = Object.keys(toolKeywords).find(k => lower.includes(k));
-    
+
     if (matchedKey) {
       const detectedTool = toolKeywords[matchedKey];
-      
+
       if (isProjects) {
         // Projects Scenario: Add new tab
         this.state.addFollowUpMessage(text || 'Attached files', 'user');
         this.state.promptText.set('');
         this.state.attachedFiles.set([]);
-        
+
         this.state.addCanvasTab(text);
         this.processFollowUp(currentTool);
       } else {
@@ -190,13 +183,13 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
         // Use loose matching to avoid false positives on same tool
         const isSameTool = currentTool.toLowerCase().includes(detectedTool.toLowerCase()) || detectedTool.toLowerCase().includes(currentTool.toLowerCase());
         if (!isSameTool) {
-           this.state.toolSwitchWarning.set({ newTool: detectedTool, newPrompt: text });
-           return;
+          this.state.toolSwitchWarning.set({ newTool: detectedTool, newPrompt: text });
+          return;
         } else {
-           this.state.addFollowUpMessage(text || 'Attached files', 'user');
-           this.state.promptText.set('');
-           this.state.attachedFiles.set([]);
-           this.processFollowUp(currentTool);
+          this.state.addFollowUpMessage(text || 'Attached files', 'user');
+          this.state.promptText.set('');
+          this.state.attachedFiles.set([]);
+          this.processFollowUp(currentTool);
         }
       }
     } else {
@@ -289,10 +282,10 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
         const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
         // Create a File object so it integrates with existing attachedFiles
         const audioFile = new File([audioBlob], `Voice_Record_${new Date().toLocaleTimeString().replace(/:/g, '-')}.webm`, { type: 'audio/webm' });
-        
+
         // Add to attached files
         this.state.addFiles([audioFile]);
-        
+
         // Stop all tracks to release mic
         stream.getTracks().forEach(track => track.stop());
       };
