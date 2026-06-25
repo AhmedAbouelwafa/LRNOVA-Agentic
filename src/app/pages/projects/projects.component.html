@@ -25,7 +25,7 @@
         <h2>{{ i18n.currentLang() === 'ar' ? 'سجل الإبداعات' : 'Creation History' }}</h2>
       </div>
       <div class="section-actions filter-dropdown-container">
-        <button class="sort-btn filter-btn" (click)="toggleFilterDropdown($event)" [class.active]="isFilterDropdownOpen() || selectedFilterTool() !== 'All'">
+        <button class="sort-btn filter-btn" (click)="toggleFilterDropdown($event)" [class.active]="isFilterDropdownOpen() || selectedFilterGoal() !== 'All'">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line>
             <line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line>
@@ -34,14 +34,17 @@
             <line x1="9" y1="8" x2="15" y2="8"></line>
             <line x1="17" y1="16" x2="23" y2="16"></line>
           </svg>
-          {{ selectedFilterTool() === 'All' ? (i18n.currentLang() === 'ar' ? 'كل الأدوات' : 'All Tools') : selectedFilterTool() }}
+          {{ getSelectedFilterLabel() }}
         </button>
 
         @if (isFilterDropdownOpen()) {
           <div class="filter-dropdown">
-            @for (filter of availableFilters(); track filter) {
-              <button class="filter-option" [class.selected]="selectedFilterTool() === filter" (click)="selectFilter(filter, $event)">
-                {{ filter === 'All' ? (i18n.currentLang() === 'ar' ? 'الكل' : 'All Tools') : filter }}
+            @for (filter of availableFilters(); track filter.id) {
+              <button class="filter-option" [class.selected]="selectedFilterGoal() === filter.id" (click)="selectFilter(filter.id, $event)">
+                @if (filter.id !== 'All') {
+                  <span class="filter-goal-dot" [style.background]="getGoalInfo(filter.id).gradient"></span>
+                }
+                {{ filter.label }}
               </button>
             }
           </div>
@@ -53,32 +56,20 @@
 
     <div class="cards-list">
       @for (card of visibleHistory(); track card.id; let i = $index) {
-        <button class="project-card" [class.project-type]="card.isProject" (click)="openProject(card, !!card.isProject)" [style.animation-delay]="(i * 0.05) + 's'">
+        <button class="project-card" [class.project-type]="getGoalInfo(card.goalId).level === 2" (click)="openProject(card)" [style.animation-delay]="(i * 0.05) + 's'">
           <div class="card-left">
-            @if (card.isProject) {
-              <div class="card-tool-icon project-badge-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                  <polyline points="2 12 12 17 22 12"></polyline>
-                  <polyline points="2 17 12 22 22 17"></polyline>
-                </svg>
-              </div>
-            } @else {
-              <div class="card-tool-icon" [style.background]="getToolGradient(card.tool)">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path [attr.d]="getToolIcon(card.tool)" />
-                </svg>
-              </div>
-            }
+            <div class="card-tool-icon" [style.background]="getGoalInfo(card.goalId).gradient">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path [attr.d]="getGoalInfo(card.goalId).icon" />
+              </svg>
+            </div>
           </div>
           <div class="card-center">
             <div class="card-top-row">
               <h3 class="card-title">{{ card.title }}</h3>
-              @if (card.isProject) {
-                <span class="card-tool-tag project-tag">Project</span>
-              } @else {
-                <span class="card-tool-tag" [style.--tag-color]="getToolAccent(card.tool)">{{ card.tool }}</span>
-              }
+              <span class="card-tool-tag" [style.--tag-color]="getGoalInfo(card.goalId).accentColor">
+                {{ getGoalLabel(card.goalId) }}
+              </span>
             </div>
             <p class="card-prompt">{{ card.prompt }}</p>
             <div class="card-meta">
@@ -89,7 +80,7 @@
                 </svg>
                 {{ card.date | date:'MMM d, y · h:mm a' }}
               </span>
-              @if (card.isProject) {
+              @if (getGoalInfo(card.goalId).level === 2) {
                 <span class="card-chapters">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />

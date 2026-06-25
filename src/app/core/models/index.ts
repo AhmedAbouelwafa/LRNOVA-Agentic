@@ -52,11 +52,10 @@ export interface ChatMessage {
 export interface ProjectCard {
   id: string;
   title: string;
-  tool: string;
+  goalId: string;
   prompt: string;
   date: Date;
   image: string;
-  isProject?: boolean;
 }
 
 export interface AppTool {

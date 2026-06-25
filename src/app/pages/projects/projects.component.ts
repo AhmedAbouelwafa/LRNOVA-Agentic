@@ -4,7 +4,7 @@ import { PromptStateService } from '../../core/services/prompt-state.service';
 import { LocalizationService } from '../../core/services/localization.service';
 import { DatePipe } from '@angular/common';
 
-import { ProjectCard } from '../../core/models';
+import { ProjectCard, Goal } from '../../core/models';
 
 @Component({
   selector: 'app-projects',
@@ -25,20 +25,31 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
   readonly itemsPerPage = 8;
   visibleItemsCount = signal(this.itemsPerPage);
 
+  /** Goal definitions (same as agent-selector) */
+  readonly goalMap: Record<string, { label: string; labelAr: string; icon: string; gradient: string; accentColor: string; level: 1 | 2 }> = {
+    'explain-it':   { label: 'Explain It',    labelAr: 'اشرح',         icon: 'M9 18h6 M10 22h4 M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z', gradient: 'linear-gradient(135deg, #F59E0B, #EF4444)', accentColor: '#F59E0B', level: 1 },
+    'script-it':    { label: 'Script It',     labelAr: 'اكتب نصًا',     icon: 'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z', gradient: 'linear-gradient(135deg, #3B82F6, #8B5CF6)', accentColor: '#3B82F6', level: 1 },
+    'test-it':      { label: 'Test It',       labelAr: 'اختبر',         icon: 'M9 11l3 3L22 4 M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11', gradient: 'linear-gradient(135deg, #10B981, #3B82F6)', accentColor: '#10B981', level: 1 },
+    'video-clip':   { label: 'Video Clip',    labelAr: 'مقطع فيديو',    icon: 'M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14v-4z M4 6h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z', gradient: 'linear-gradient(135deg, #EF4444, #F59E0B)', accentColor: '#EF4444', level: 1 },
+    'slides':       { label: 'Slides',        labelAr: 'شرائح',         icon: 'M2 3h20v14H2z M2 7h20 M8 21h8 M12 17v4', gradient: 'linear-gradient(135deg, #F59E0B, #D97706)', accentColor: '#F59E0B', level: 1 },
+    'full-course':  { label: 'Full Course',   labelAr: 'دورة كاملة',   icon: 'M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5', gradient: 'linear-gradient(135deg, #8B5CF6, #6366F1)', accentColor: '#8B5CF6', level: 2 },
+    'video-course': { label: 'Video Course',  labelAr: 'دورة فيديو',   icon: 'M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14v-4z M4 6h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z', gradient: 'linear-gradient(135deg, #EC4899, #8B5CF6)', accentColor: '#EC4899', level: 2 },
+    'learn-kit':    { label: 'Learn Kit',     labelAr: 'حزمة تعلم',     icon: 'M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z', gradient: 'linear-gradient(135deg, #06B6D4, #3B82F6)', accentColor: '#06B6D4', level: 2 },
+  };
+
   allHistory: ProjectCard[] = [
     {
       id: 'proj-1',
       title: 'Complete Python Programming Course',
-      tool: 'Full Course Content',
+      goalId: 'full-course',
       prompt: 'Generate a full course on Python programming from basics to advanced topics',
       date: new Date(2026, 5, 18, 8, 0),
-      image: '',
-      isProject: true
+      image: ''
     },
     {
       id: 'inst-1',
       title: 'Introduction to Machine Learning',
-      tool: 'Script',
+      goalId: 'script-it',
       prompt: 'Create a detailed script about introduction to machine learning for beginners',
       date: new Date(2026, 5, 17, 14, 30),
       image: ''
@@ -46,25 +57,23 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     {
       id: 'proj-2',
       title: 'Digital Marketing Masterclass',
-      tool: 'Full Course Script',
+      goalId: 'full-course',
       prompt: 'Generate a full course script for Digital Marketing covering SEO, SEM, and social media',
       date: new Date(2026, 5, 17, 12, 0),
-      image: '',
-      isProject: true
+      image: ''
     },
     {
       id: 'proj-3',
       title: 'Chemistry Lab Safety Training',
-      tool: 'Text Video',
+      goalId: 'video-course',
       prompt: 'Convert the chemistry lab safety manual into an engaging video lesson series',
       date: new Date(2026, 5, 16, 15, 30),
-      image: '',
-      isProject: true
+      image: ''
     },
     {
       id: 'inst-2',
       title: 'DNA Explainer Video',
-      tool: 'Video',
+      goalId: 'video-clip',
       prompt: 'Generate an explainer video about DNA structure and replication',
       date: new Date(2026, 5, 16, 9, 15),
       image: ''
@@ -72,7 +81,7 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     {
       id: 'inst-3',
       title: 'Physics Assessment Quiz',
-      tool: 'Assessment',
+      goalId: 'test-it',
       prompt: 'Build a comprehensive assessment quiz for high school physics covering Newton\'s laws',
       date: new Date(2026, 5, 15, 11, 0),
       image: ''
@@ -80,7 +89,7 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     {
       id: 'inst-4',
       title: 'World History Topics',
-      tool: 'Topic',
+      goalId: 'explain-it',
       prompt: 'Explore the topic of Ancient Roman civilization and its impact on modern society',
       date: new Date(2026, 5, 14, 16, 45),
       image: ''
@@ -88,7 +97,7 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     {
       id: 'inst-5',
       title: 'Team Building Activities',
-      tool: 'Activity',
+      goalId: 'learn-kit',
       prompt: 'Design interactive team building activities for remote learning environments',
       date: new Date(2026, 5, 13, 10, 20),
       image: ''
@@ -96,7 +105,7 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     {
       id: 'inst-6',
       title: 'Quantum Computing Basics',
-      tool: 'Script',
+      goalId: 'script-it',
       prompt: 'Write a script explaining quantum computing concepts for university students',
       date: new Date(2026, 5, 12, 13, 0),
       image: ''
@@ -104,16 +113,15 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     {
       id: 'proj-4',
       title: 'Leadership Skills Workshop',
-      tool: 'Full Course Content',
+      goalId: 'full-course',
       prompt: 'Create comprehensive content for a leadership skills development workshop',
       date: new Date(2026, 5, 12, 9, 0),
-      image: '',
-      isProject: true
+      image: ''
     },
     {
       id: 'inst-7',
       title: 'Spanish for Beginners',
-      tool: 'Activity',
+      goalId: 'learn-kit',
       prompt: 'Design interactive learning activities for Spanish vocabulary and grammar',
       date: new Date(2026, 5, 11, 15, 30),
       image: ''
@@ -121,16 +129,15 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     {
       id: 'proj-5',
       title: 'Data Science Bootcamp',
-      tool: 'Full Course Content',
+      goalId: 'full-course',
       prompt: 'Build a complete data science bootcamp curriculum with hands-on projects',
       date: new Date(2026, 5, 10, 10, 0),
-      image: '',
-      isProject: true
+      image: ''
     },
     {
       id: 'inst-8',
       title: 'Biology Lab Safety',
-      tool: 'Video',
+      goalId: 'video-clip',
       prompt: 'Create a safety training video for biology laboratory procedures',
       date: new Date(2026, 5, 10, 9, 0),
       image: ''
@@ -138,7 +145,7 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     {
       id: 'inst-9',
       title: 'Algebra Quiz Set',
-      tool: 'Assessment',
+      goalId: 'test-it',
       prompt: 'Generate a set of algebra quizzes for 8th grade students with increasing difficulty',
       date: new Date(2026, 5, 9, 11, 45),
       image: ''
@@ -146,16 +153,15 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     {
       id: 'proj-6',
       title: 'UX Design Fundamentals',
-      tool: 'Full Course Script',
+      goalId: 'video-course',
       prompt: 'Create a full course script for UX design principles and user research methods',
       date: new Date(2026, 5, 8, 14, 30),
-      image: '',
-      isProject: true
+      image: ''
     },
     {
       id: 'inst-10',
       title: 'Climate Change Overview',
-      tool: 'Topic',
+      goalId: 'explain-it',
       prompt: 'Explore the topic of climate change causes, effects, and solutions',
       date: new Date(2026, 5, 8, 14, 0),
       image: ''
@@ -163,7 +169,7 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     {
       id: 'inst-11',
       title: 'Creative Writing Workshop',
-      tool: 'Activity',
+      goalId: 'learn-kit',
       prompt: 'Create engaging creative writing activities for high school English class',
       date: new Date(2026, 5, 7, 10, 30),
       image: ''
@@ -171,54 +177,58 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     {
       id: 'inst-12',
       title: 'Solar System Presentation',
-      tool: 'Text Video',
-      prompt: 'Convert text about the solar system into an animated video presentation',
+      goalId: 'slides',
+      prompt: 'Create an animated slide presentation about the solar system',
       date: new Date(2026, 5, 6, 16, 0),
       image: ''
     },
     {
       id: 'proj-7',
       title: 'Photography Masterclass',
-      tool: 'Full Course Content',
+      goalId: 'full-course',
       prompt: 'Generate comprehensive course content for photography from composition to post-processing',
       date: new Date(2026, 5, 5, 11, 0),
-      image: '',
-      isProject: true
+      image: ''
     },
     {
       id: 'proj-8',
       title: 'Personal Finance 101',
-      tool: 'Full Course Script',
+      goalId: 'video-course',
       prompt: 'Draft a complete course script on personal finance, budgeting, and investing basics',
       date: new Date(2026, 5, 3, 9, 0),
-      image: '',
-      isProject: true
+      image: ''
     },
     {
       id: 'proj-9',
       title: 'Web Development Full Stack',
-      tool: 'Full Course Content',
+      goalId: 'full-course',
       prompt: 'Build a full-stack web development course covering HTML, CSS, JS, Node.js, and React',
       date: new Date(2026, 5, 1, 8, 0),
-      image: '',
-      isProject: true
+      image: ''
     }
   ];
 
-  selectedFilterTool = signal<string>('All');
+  selectedFilterGoal = signal<string>('All');
   isFilterDropdownOpen = signal(false);
 
   readonly availableFilters = computed(() => {
-    const tools = new Set(this.allHistory.map(h => h.tool));
-    return ['All', ...Array.from(tools).sort()];
+    const goalIds = new Set(this.allHistory.map(h => h.goalId));
+    const filters: { id: string; label: string }[] = [{ id: 'All', label: this.i18n.currentLang() === 'ar' ? 'الكل' : 'All Goals' }];
+    goalIds.forEach(gid => {
+      const g = this.goalMap[gid];
+      if (g) {
+        filters.push({ id: gid, label: this.i18n.currentLang() === 'ar' ? g.labelAr : g.label });
+      }
+    });
+    return filters;
   });
 
   readonly filteredHistory = computed(() => {
-    const filter = this.selectedFilterTool();
+    const filter = this.selectedFilterGoal();
     if (filter === 'All') {
       return this.allHistory;
     }
-    return this.allHistory.filter(h => h.tool === filter);
+    return this.allHistory.filter(h => h.goalId === filter);
   });
 
   readonly visibleHistory = computed(() => {
@@ -262,9 +272,9 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     this.isFilterDropdownOpen.update(v => !v);
   }
 
-  selectFilter(filter: string, event: Event) {
+  selectFilter(filterId: string, event: Event) {
     event.stopPropagation();
-    this.selectedFilterTool.set(filter);
+    this.selectedFilterGoal.set(filterId);
     this.isFilterDropdownOpen.set(false);
     this.visibleItemsCount.set(this.itemsPerPage); // Reset pagination on filter change
   }
@@ -274,68 +284,25 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     this.isFilterDropdownOpen.set(false);
   }
 
-  private toolStyles: Record<string, { gradient: string; icon: string; accent: string }> = {
-    'Video': {
-      gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      icon: 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14v-4z M4 6h10a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2z',
-      accent: '#764ba2'
-    },
-    'Text Video': {
-      gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-      icon: 'M4 4h16v16H4z M12 8v8 M8 12h8',
-      accent: '#f5576c'
-    },
-    'Script': {
-      gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-      icon: 'M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8',
-      accent: '#4facfe'
-    },
-    'Assessment': {
-      gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-      icon: 'M9 11l3 3L22 4 M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11',
-      accent: '#38d9a9'
-    },
-    'Activity': {
-      gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-      icon: 'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2 M9 7a4 4 0 100-8 4 4 0 000 8',
-      accent: '#fa709a'
-    },
-    'Topic': {
-      gradient: 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)',
-      icon: 'M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z',
-      accent: '#a18cd1'
-    },
-    'Full Course Script': {
-      gradient: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
-      icon: 'M4 19.5A2.5 2.5 0 016.5 17H20 M4 19.5V4.5A2.5 2.5 0 016.5 2H20v20H6.5A2.5 2.5 0 014 19.5z',
-      accent: '#f4845f'
-    },
-    'Full Course Content': {
-      gradient: 'linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)',
-      icon: 'M12 14l9-5-9-5-9 5 9 5z M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z',
-      accent: '#66a6ff'
-    }
-  };
-
-  private defaultStyle = {
-    gradient: 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)',
-    icon: 'M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z',
-    accent: '#8B5CF6'
-  };
-
-  getToolGradient(tool: string): string {
-    return (this.toolStyles[tool] || this.defaultStyle).gradient;
+  getGoalInfo(goalId: string) {
+    return this.goalMap[goalId] || { label: goalId, labelAr: goalId, icon: 'M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z', gradient: 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)', accentColor: '#8B5CF6', level: 1 as (1 | 2) };
   }
 
-  getToolIcon(tool: string): string {
-    return (this.toolStyles[tool] || this.defaultStyle).icon;
+  getGoalLabel(goalId: string): string {
+    const g = this.getGoalInfo(goalId);
+    return this.i18n.currentLang() === 'ar' ? g.labelAr : g.label;
   }
 
-  getToolAccent(tool: string): string {
-    return (this.toolStyles[tool] || this.defaultStyle).accent;
+  getSelectedFilterLabel(): string {
+    const id = this.selectedFilterGoal();
+    if (id === 'All') return this.i18n.currentLang() === 'ar' ? 'كل الأهداف' : 'All Goals';
+    return this.getGoalLabel(id);
   }
 
-  openProject(card: ProjectCard, isProject: boolean = false) {
+  openProject(card: ProjectCard) {
+    const goal = this.getGoalInfo(card.goalId);
+    const isProject = goal.level === 2;
+
     // Reset state and set up as if we submitted the prompt
     this.state.isAnimatingOut.set(true);
     this.state.submittedPrompt.set(card.prompt);
@@ -349,7 +316,7 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
         { id: 'tab3', label: 'Resources' }
       ]);
     } else {
-      this.state.selectedQuickTool.set(card.tool);
+      this.state.selectedQuickTool.set(card.goalId);
       this.state.canvasTabs.set([{ id: 'main', label: card.title.slice(0, 30) }]);
     }
 
