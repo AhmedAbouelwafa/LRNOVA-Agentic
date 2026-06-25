@@ -10,10 +10,7 @@
     <app-results-toolbar />
     
     @if (!state.isGenerationComplete()) {
-      <app-skeleton-card />
-      @if (state.isGenerating()) {
-        <app-thinking-indicator />
-      }
+      <app-skeleton-card [showThinking]="state.isGenerating()" />
     } @else {
       <!-- Route to correct result component based on resultType -->
       @switch (state.resultType()) {

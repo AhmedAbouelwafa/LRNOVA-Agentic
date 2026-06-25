@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { PromptStateService } from '../../core/services/prompt-state.service';
 import { ResultsToolbarComponent } from './components/results-toolbar/results-toolbar.component';
-import { ThinkingIndicatorComponent } from './components/thinking-indicator/thinking-indicator.component';
+
 import { SkeletonCardComponent } from './components/skeleton-card/skeleton-card.component';
 import { PromptFieldComponent } from '../home/components/prompt-field/prompt-field.component';
 import { VideoResultComponent } from './components/video-result/video-result.component';
@@ -17,7 +17,7 @@ import { AgenticChatComponent } from './components/agentic-chat/agentic-chat.com
   imports: [
     DatePipe,
     ResultsToolbarComponent,
-    ThinkingIndicatorComponent,
+
     SkeletonCardComponent,
     PromptFieldComponent,
     VideoResultComponent,

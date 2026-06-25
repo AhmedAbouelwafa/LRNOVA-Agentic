@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
+import { PromptStateService } from '../../../../core/services/prompt-state.service';
+import { LocalizationService } from '../../../../core/services/localization.service';
 
 @Component({
   selector: 'app-skeleton-card',
@@ -46,6 +48,18 @@ import { Component } from '@angular/core';
         <div class="pill-panel pill-lg"></div>
         <div class="pill-panel pill-md"></div>
       </div>
+
+      <!-- Integrated Thinking Strip (inside the canvas) -->
+      @if (showThinking) {
+        <div class="thinking-strip">
+          <div class="thinking-dot-group">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+          <span class="thinking-text">{{ translateLoading(state.loadingText()) }}</span>
+        </div>
+      }
     </div>
   `,
   styles: [`
@@ -185,6 +199,44 @@ import { Component } from '@angular/core';
     .right-block.square { flex: 1; }
     .right-block.rect { flex: 1.2; }
 
+    /* ===== Integrated Thinking Strip ===== */
+    .thinking-strip {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 6px 2px;
+      border-top: 1px solid var(--border-light);
+      margin-top: 4px;
+    }
+    .thinking-dot-group {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+    .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #8B5CF6;
+      animation: dotBounce 1.4s infinite ease-in-out;
+    }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes dotBounce {
+      0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+      40% { opacity: 1; transform: scale(1.2); }
+    }
+    .thinking-text {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      animation: labelFade 2.5s ease-in-out infinite;
+    }
+    @keyframes labelFade {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
     /* Animations */
     @keyframes canvasSpin {
       from { transform: rotate(0deg); }
@@ -212,4 +264,24 @@ import { Component } from '@angular/core';
     }
   `]
 })
-export class SkeletonCardComponent {}
+export class SkeletonCardComponent {
+  @Input() showThinking = false;
+
+  protected state = inject(PromptStateService);
+  protected i18n = inject(LocalizationService);
+
+  private loadingMap: Record<string, string> = {
+    'Thinking...': 'loading.thinking',
+    'Analyzing context...': 'loading.analyzing',
+    'Querying AI agent cluster...': 'loading.querying',
+    'Synthesizing learning vectors...': 'loading.synthesizing',
+    'Drafting educational content...': 'loading.drafting',
+    'Rendering interactive modules...': 'loading.rendering',
+    'Finalizing layout...': 'loading.finalizing',
+  };
+
+  translateLoading(text: string): string {
+    const key = this.loadingMap[text];
+    return key ? this.i18n.t(key) : text;
+  }
+}
