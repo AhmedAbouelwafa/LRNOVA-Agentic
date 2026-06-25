@@ -137,7 +137,7 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
       const text = this.state.promptText().trim();
       if (!text && this.state.attachedFiles().length === 0) return;
 
-      this.showCreditPreviewModal = true;
+      this.state.submitPrompt();
     }
   }
 
