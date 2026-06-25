@@ -4,12 +4,10 @@
   "sidebar.brand": "Brand",
   "sidebar.apps": "Agents",
   "sidebar.projects": "My Projects",
-
-  "apps.title": "All Apps",
+  "apps.title": "All Agents",
   "apps.subtitle": "Explore our powerful AI tools. Pick one and start creating.",
   "apps.backToApps": "Back to Apps",
   "apps.createWith": "Create with",
-
   "hero.line1": "Create Learning",
   "hero.line3": "with AI Agents",
   "hero.phrase.experiences": "Experiences",
@@ -17,11 +15,9 @@
   "hero.phrase.3d": "Interactive 3D",
   "hero.phrase.videos": "LRNOVA AI Videos",
   "hero.phrase.assessments": "Smart Assessments",
-
   "agent.video": "Video Agent",
   "agent.text": "Text Agent",
   "agent.slides": "Slides Generator",
-
   "prompt.addFile": "Add File",
   "prompt.flash": "⚡ Rapid",
   "prompt.pro": "✨ Pro",
@@ -34,7 +30,6 @@
   "prompt.text.1": "Describe the course or script...",
   "prompt.text.2": "Try: \"A lesson plan for Algebra\"",
   "prompt.text.3": "Try: \"A 10-question quiz on Biology\"",
-
   "suggestion.def1.short": "DNA Video",
   "suggestion.def2.short": "Python Script",
   "suggestion.def3.short": "Physics Quiz",
@@ -59,7 +54,6 @@
   "suggestion.lk1.short": "Spanish Basics Kit",
   "suggestion.lk2.short": "World Geography Guide",
   "suggestion.lk3.short": "Guitar Learning Kit",
-
   "suggestion.act1.short": "Ice Breakers",
   "suggestion.act1": "Create a fun ice breaker activity to get students introduced to each other.",
   "suggestion.act2.short": "Energizers",
@@ -92,7 +86,6 @@
   "suggestion.act15": "Provide guidelines for an individual student presentation.",
   "suggestion.act16.short": "Peer Reviews",
   "suggestion.act16": "Create a peer review rubric and activity for students to evaluate each other.",
-
   "suggestion.def1": "Create an explainer video about DNA",
   "suggestion.def2": "Write a YouTube script for learning Python",
   "suggestion.def3": "Build an assessment quiz for Physics",
@@ -117,7 +110,6 @@
   "suggestion.lk1": "Generate a learning kit for Spanish basics",
   "suggestion.lk2": "Create a study guide for world geography",
   "suggestion.lk3": "Compile a resource kit for learning guitar",
-
   "results.filter": "Filter",
   "results.sources": "Sources",
   "results.tool.courseContent": "Course Content",
@@ -127,9 +119,7 @@
   "results.tool.activity": "Activity",
   "results.tool.videoAvatar": "Video Avatar",
   "results.tool.scormVideo": "Scorm Video",
-
   "sticky.placeholder": "Ask a follow-up question...",
-
   "loading.thinking": "Thinking...",
   "loading.analyzing": "Analyzing context...",
   "loading.querying": "Querying AI agent cluster...",
@@ -137,7 +127,6 @@
   "loading.drafting": "Drafting educational content...",
   "loading.rendering": "Rendering interactive modules...",
   "loading.finalizing": "Finalizing layout...",
-
   "pricing.badge": "LRNOVA PLANS",
   "pricing.title": "Choose the right plan for you",
   "pricing.subtitle": "Whether you're a solo creator or a growing team, we have a plan designed to accelerate your content creation with AI.",
@@ -154,7 +143,6 @@
   "pricing.pro.badge": "Best Value",
   "pricing.section.text": "Text Content",
   "pricing.section.video": "Video Features",
-
   "pricing.free.f1": "Access basic AI tools of text learning content creation",
   "pricing.free.f2": "Export the text-based content to multiple formats",
   "pricing.free.f3": "Total 10 Text Creations",
@@ -163,7 +151,6 @@
   "pricing.free.v3": "Total 1 video generation",
   "pricing.free.v4": "Export videos up to 720 HD resolution",
   "pricing.free.v5": "LRNOVA Watermark",
-
   "pricing.basic.f1": "Access to all advanced AI tools of text learning content creation",
   "pricing.basic.f2": "Import files and personal resources",
   "pricing.basic.f3": "Export the text-based content to multiple formats",
@@ -174,7 +161,6 @@
   "pricing.basic.v4": "Export videos up to 1080 UHD resolution",
   "pricing.basic.v5": "Free 1 Personalized Avatar",
   "pricing.basic.v6": "Watermark removal",
-
   "pricing.pro.f1": "Access to all advanced AI tools of text learning content creation",
   "pricing.pro.f2": "Import files and personal resources",
   "pricing.pro.f3": "Export the text-based content to multiple formats",
@@ -186,11 +172,9 @@
   "pricing.pro.v5": "Free 3 Personalized Avatars",
   "pricing.pro.v6": "Faster video processing",
   "pricing.pro.v7": "Watermark removal",
-
   "pricing.free.credits": "100 Credits / mo",
   "pricing.basic.credits": "500 Credits / mo",
   "pricing.pro.credits": "2,000 Credits / mo",
-
   "pricing.currency": "EGP",
   "pricing.perMonth": "/mo"
 }
