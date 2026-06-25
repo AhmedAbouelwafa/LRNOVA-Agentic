@@ -1,0 +1,247 @@
+:host { 
+  display: flex; 
+  flex-direction: column; 
+  flex: 1; 
+  min-height: 0; 
+}
+
+.canvas-workspace {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background: var(--surface-primary);
+  border: 1px solid var(--border-light);
+  border-top: none;
+  border-radius: 0 0 14px 14px;
+  min-height: 520px;
+  overflow: hidden;
+}
+
+.workspace-main {
+  flex: 1;
+  display: flex;
+}
+
+/* ── Text Result Canvas ── */
+.text-result-canvas {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.text-result-canvas.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Document Header ── */
+.doc-header {
+  padding: 24px 28px 16px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.doc-badges {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.doc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.doc-badge.ai-badge {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(99, 102, 241, 0.1));
+  color: #7C3AED;
+}
+.doc-badge.type-badge {
+  background: rgba(59, 130, 246, 0.08);
+  color: #2563EB;
+}
+
+.doc-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin: 0;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+/* ── Document Body ── */
+.doc-body {
+  flex: 1;
+  padding: 24px 28px;
+  overflow-y: auto;
+}
+
+/* ── Markdown Styles ── */
+.markdown-content :first-child {
+  margin-top: 0;
+}
+
+:host ::ng-deep .md-h1 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-heading);
+  margin: 28px 0 12px;
+  letter-spacing: -0.02em;
+  padding-bottom: 8px;
+  border-bottom: 2px solid rgba(139, 92, 246, 0.15);
+}
+
+:host ::ng-deep .md-h2 {
+  font-size: 1.18rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin: 24px 0 10px;
+  letter-spacing: -0.01em;
+}
+
+:host ::ng-deep .md-h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-heading);
+  margin: 18px 0 8px;
+}
+
+:host ::ng-deep .md-p {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text-body);
+  margin: 6px 0;
+}
+
+:host ::ng-deep .md-ul,
+:host ::ng-deep .md-ol {
+  margin: 8px 0;
+  padding-left: 22px;
+}
+
+:host ::ng-deep .md-li,
+:host ::ng-deep .md-oli {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--text-body);
+  margin-bottom: 4px;
+}
+
+:host ::ng-deep .md-blockquote {
+  margin: 12px 0;
+  padding: 10px 16px;
+  border-left: 3px solid #8B5CF6;
+  background: rgba(139, 92, 246, 0.04);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+:host ::ng-deep .md-hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.08), transparent);
+  margin: 20px 0;
+}
+
+:host ::ng-deep .md-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+}
+:host ::ng-deep .md-table tr:first-child {
+  background: rgba(139, 92, 246, 0.06);
+  font-weight: 600;
+  color: var(--text-heading);
+}
+:host ::ng-deep .md-table td {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-body);
+}
+:host ::ng-deep .md-table tr:nth-child(even) {
+  background: var(--surface-hover);
+}
+
+:host ::ng-deep .md-code-block {
+  background: #1E293B;
+  color: #E2E8F0;
+  padding: 14px 18px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  overflow-x: auto;
+  margin: 12px 0;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+:host ::ng-deep .md-inline-code {
+  background: rgba(139, 92, 246, 0.08);
+  color: #7C3AED;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.84em;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ── Document Footer ── */
+.doc-footer {
+  padding: 14px 28px;
+  border-top: 1px solid var(--border-light);
+}
+
+.doc-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+.action-btn.outline {
+  background: var(--surface-hover);
+  border: 1px solid var(--border-light);
+  color: var(--text-body);
+}
+.action-btn.outline:hover {
+  background: var(--surface-secondary);
+  border-color: rgba(139, 92, 246, 0.25);
+  color: #7C3AED;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.08);
+}
+
+/* ── Fade In Animation ── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in-up { animation: fadeInUp 0.5s ease-out; }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .doc-header, .doc-body, .doc-footer { padding-left: 16px; padding-right: 16px; }
+  .doc-title { font-size: 1.1rem; }
+  .doc-actions { flex-wrap: wrap; }
+}

@@ -12,6 +12,7 @@ export interface Suggestion {
   id: string;
   icon: string;
   text: string;
+  prompt: string;
 }
 
 export interface PipelineStep {

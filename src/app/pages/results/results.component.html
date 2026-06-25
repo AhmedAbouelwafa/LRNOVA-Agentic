@@ -15,10 +15,17 @@
         <app-thinking-indicator />
       }
     } @else {
-      @if (state.activeAgent() === 'video' || state.selectedQuickTool() === 'Video' || state.selectedQuickTool() === 'Text Video' || (state.selectedGoal() && state.selectedGoal()!.id.includes('video'))) {
-        <app-video-result />
-      } @else {
-        <app-skeleton-card />
+      <!-- Route to correct result component based on resultType -->
+      @switch (state.resultType()) {
+        @case ('video') {
+          <app-video-result />
+        }
+        @case ('slides') {
+          <app-slides-result />
+        }
+        @case ('text') {
+          <app-text-result />
+        }
       }
     }
   </div>

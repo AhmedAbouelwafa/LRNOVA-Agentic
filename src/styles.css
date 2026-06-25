@@ -41,6 +41,9 @@
 
   /* Prompt / Input Fields */
   --prompt-bg: rgba(255, 255, 255, 0.85);
+  --prompt-bg-hover: rgba(255, 255, 255, 0.75);
+  --prompt-bg-focused: rgba(255, 255, 255, 0.95);
+  --prompt-bg-chat: rgba(255, 255, 255, 0.9);
   --prompt-border: rgba(139, 92, 246, 0.15);
   --prompt-shadow: rgba(31, 38, 135, 0.06);
 
@@ -103,6 +106,9 @@ html[data-theme="dark"] {
 
   /* Prompt / Input Fields */
   --prompt-bg: rgba(26, 29, 39, 0.9);
+  --prompt-bg-hover: rgba(35, 39, 54, 0.9);
+  --prompt-bg-focused: rgba(40, 44, 60, 0.98);
+  --prompt-bg-chat: rgba(30, 34, 48, 0.95);
   --prompt-border: rgba(139, 92, 246, 0.2);
   --prompt-shadow: rgba(0, 0, 0, 0.3);
 

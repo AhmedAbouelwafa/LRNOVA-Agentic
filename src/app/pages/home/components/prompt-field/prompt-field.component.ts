@@ -43,6 +43,7 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
     { id: 'Assessment', slug: 'assessment', label: 'Assessment' },
     { id: 'Activity', slug: 'activity', label: 'Activity' },
     { id: 'Topic', slug: 'topic', label: 'Topic' },
+    { id: 'Slides', slug: 'slides', label: 'Slides' },
     { id: 'Full Course Script', slug: 'course-script', label: 'Course Script' },
     { id: 'Full Course Content', slug: 'course-content', label: 'Course Content' }
   ];
@@ -150,8 +151,19 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
     const text = this.state.promptText().trim();
     if (!text && this.state.attachedFiles().length === 0) return;
 
-    const currentTool = this.state.selectedQuickTool() || 'Projects';
+    let currentTool = this.state.selectedQuickTool();
     const selectedGoal = this.state.selectedGoal();
+
+    if (!currentTool && selectedGoal) {
+      if (selectedGoal.level === 1 && selectedGoal.pipeline.length > 0) {
+        currentTool = selectedGoal.pipeline[0].toolId;
+      } else {
+        currentTool = 'Projects';
+      }
+    } else if (!currentTool) {
+      currentTool = 'Projects';
+    }
+
     const isProjects = currentTool === 'Projects' || (selectedGoal && selectedGoal.level === 2);
 
     const toolKeywords: Record<string, string> = {

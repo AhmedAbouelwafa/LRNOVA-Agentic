@@ -43,7 +43,7 @@
 }
 
 .goal-card:hover {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--surface-overlay, rgba(255, 255, 255, 0.95));
   border-color: rgba(139, 92, 246, 0.3);
   transform: translateX(4px);
   box-shadow: 0 8px 28px rgba(139, 92, 246, 0.12);

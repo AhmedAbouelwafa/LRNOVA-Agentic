@@ -1,0 +1,61 @@
+<div class="canvas-workspace fade-in-up">
+  <div class="workspace-main">
+    <div class="text-result-canvas" [class.revealed]="isRevealed()">
+
+      <!-- Document Header -->
+      <div class="doc-header">
+        <div class="doc-badges">
+          <span class="doc-badge ai-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+            AI Generated
+          </span>
+          <span class="doc-badge type-badge">
+            @if (state.selectedGoal(); as goal) {
+              {{ goal.label }}
+            } @else {
+              Content
+            }
+          </span>
+        </div>
+        <h2 class="doc-title">{{ resultTitle }}</h2>
+      </div>
+
+      <!-- Document Body (rendered text) -->
+      <div class="doc-body">
+        <div class="markdown-content" [innerHTML]="resultContent | renderMarkdown"></div>
+      </div>
+
+      <!-- Document Footer -->
+      <div class="doc-footer">
+        <div class="doc-actions">
+          <button class="action-btn outline">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download
+          </button>
+          <button class="action-btn outline">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            Copy
+          </button>
+          <button class="action-btn outline">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+              <polyline points="16 6 12 2 8 6"/>
+              <line x1="12" y1="2" x2="12" y2="15"/>
+            </svg>
+            Export SCORM
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

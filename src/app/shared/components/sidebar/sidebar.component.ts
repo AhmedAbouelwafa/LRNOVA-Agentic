@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { PromptStateService } from '../../../core/services/prompt-state.service';
 import { LocalizationService } from '../../../core/services/localization.service';
 
@@ -13,4 +13,9 @@ import { LocalizationService } from '../../../core/services/localization.service
 export class SidebarComponent {
   protected state = inject(PromptStateService);
   protected i18n = inject(LocalizationService);
+  protected router = inject(Router);
+
+  isCompactMode(): boolean {
+    return this.router.url.startsWith('/results');
+  }
 }

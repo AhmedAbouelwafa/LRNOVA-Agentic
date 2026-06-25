@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, ElementRef, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, inject, signal, computed, ElementRef, ViewChild, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { PromptStateService } from '../../core/services/prompt-state.service';
 import { LocalizationService } from '../../core/services/localization.service';
@@ -205,8 +205,24 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     }
   ];
 
+  selectedFilterTool = signal<string>('All');
+  isFilterDropdownOpen = signal(false);
+
+  readonly availableFilters = computed(() => {
+    const tools = new Set(this.allHistory.map(h => h.tool));
+    return ['All', ...Array.from(tools).sort()];
+  });
+
+  readonly filteredHistory = computed(() => {
+    const filter = this.selectedFilterTool();
+    if (filter === 'All') {
+      return this.allHistory;
+    }
+    return this.allHistory.filter(h => h.tool === filter);
+  });
+
   readonly visibleHistory = computed(() => {
-    return this.allHistory.slice(0, this.visibleItemsCount());
+    return this.filteredHistory().slice(0, this.visibleItemsCount());
   });
 
   readonly hasMoreItems = computed(() => {
@@ -239,6 +255,23 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
       this.visibleItemsCount.update(c => c + this.itemsPerPage);
       this.isLoadingMore.set(false);
     }, 1500); // Simulate network delay to show the skeleton
+  }
+
+  toggleFilterDropdown(event: Event) {
+    event.stopPropagation();
+    this.isFilterDropdownOpen.update(v => !v);
+  }
+
+  selectFilter(filter: string, event: Event) {
+    event.stopPropagation();
+    this.selectedFilterTool.set(filter);
+    this.isFilterDropdownOpen.set(false);
+    this.visibleItemsCount.set(this.itemsPerPage); // Reset pagination on filter change
+  }
+
+  @HostListener('document:click')
+  closeDropdown() {
+    this.isFilterDropdownOpen.set(false);
   }
 
   private toolStyles: Record<string, { gradient: string; icon: string; accent: string }> = {

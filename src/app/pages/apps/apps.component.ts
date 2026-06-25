@@ -82,6 +82,15 @@ export class AppsComponent implements OnInit, OnDestroy {
       image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=600&q=80'
     },
     {
+      id: 'Slides', slug: 'slides',
+      label: 'Slides',
+      desc: 'Generate stunning presentation slides automatically.',
+      icon: 'M2 3h20v14H2z M2 7h20 M8 21h8 M12 17v4',
+      gradient: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)',
+      accentColor: '#fda085',
+      image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=600&q=80'
+    },
+    {
       id: 'Full Course Script', slug: 'course-script',
       label: 'Course Script',
       desc: 'Generate complete course scripts with structured lessons and modules',
@@ -133,6 +142,7 @@ export class AppsComponent implements OnInit, OnDestroy {
   private activateTool(tool: AppTool) {
     this.cleanupWriter();
     this.selectedTool.set(tool);
+    this.state.selectedGoal.set(null);
     this.state.selectedQuickTool.set(tool.id);
 
     // Create typewriter for the tool name

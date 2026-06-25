@@ -193,10 +193,10 @@
 
 .cancel-btn {
   padding: 10px 24px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-light);
   border-radius: 10px;
   background: transparent;
-  color: #64748b;
+  color: var(--text-body);
   font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
@@ -204,7 +204,7 @@
 }
 
 .cancel-btn:hover {
-  background: rgba(0, 0, 0, 0.03);
+  background: var(--surface-hover);
 }
 
 /* ===== Credits Section ===== */
@@ -222,7 +222,7 @@
   gap: 8px;
   padding: 20px 16px;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--surface-card);
   border: 1px solid var(--border-light);
   transition: all 0.2s ease;
 }
@@ -259,7 +259,7 @@
 .credit-label {
   font-size: 0.7rem;
   font-weight: 500;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .credit-amount {
@@ -307,7 +307,7 @@
 
 .plan-price {
   font-size: 0.72rem;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .upgrade-btn {
@@ -366,7 +366,7 @@
 .security-extra {
   margin-top: 28px;
   padding-top: 24px;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-top: 1px solid var(--border-light);
 }
 
 .security-extra h3 {
@@ -406,7 +406,7 @@
   width: 44px;
   height: 24px;
   border-radius: 12px;
-  background: rgba(0, 0, 0, 0.1);
+  background: var(--surface-input-disabled);
   position: relative;
   cursor: pointer;
   transition: background 0.2s ease;
@@ -421,7 +421,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: white;
+  background: var(--surface-primary);
   position: absolute;
   top: 2px;
   left: 2px;

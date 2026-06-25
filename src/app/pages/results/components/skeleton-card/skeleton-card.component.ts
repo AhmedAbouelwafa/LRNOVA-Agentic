@@ -49,14 +49,20 @@ import { Component } from '@angular/core';
     </div>
   `,
   styles: [`
-    :host { display: block; }
+    :host { 
+      display: flex; 
+      flex-direction: column; 
+      flex: 1; 
+      min-height: 0; 
+    }
 
     .canvas-workspace {
       display: flex;
       flex-direction: column;
+      flex: 1;
       gap: 10px;
-      background: #FFFFFF;
-      border: 1px solid rgba(0, 0, 0, 0.06);
+      background: var(--surface-primary);
+      border: 1px solid var(--border-light);
       border-top: none;
       border-radius: 0 0 14px 14px;
       padding: 14px;
@@ -71,8 +77,8 @@ import { Component } from '@angular/core';
     .pill-panel {
       height: 36px;
       border-radius: 18px;
-      background: #F3F4F6;
-      border: 1px solid rgba(0, 0, 0, 0.04);
+      background: var(--surface-hover);
+      border: 1px solid var(--border-light);
     }
     .pill-sm { flex: 1; }
     .pill-md { flex: 2; }
@@ -95,8 +101,8 @@ import { Component } from '@angular/core';
     }
     .sidebar-block {
       border-radius: 12px;
-      background: #F3F4F6;
-      border: 1px solid rgba(0, 0, 0, 0.04);
+      background: var(--surface-hover);
+      border: 1px solid var(--border-light);
     }
     .sidebar-block.tall { flex: 3; }
     .sidebar-block.short { flex: 1; }
@@ -105,8 +111,8 @@ import { Component } from '@angular/core';
     .central-canvas {
       flex: 1;
       border-radius: 14px;
-      background: #FAFBFC;
-      border: 1px solid rgba(0, 0, 0, 0.05);
+      background: var(--surface-body);
+      border: 1px solid var(--border-light);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -141,7 +147,7 @@ import { Component } from '@angular/core';
       position: absolute;
       inset: 0;
       border-radius: 50%;
-      border: 1.5px solid rgba(0, 0, 0, 0.06);
+      border: 1.5px solid var(--border-light);
       border-top-color: rgba(139, 92, 246, 0.5);
       animation: canvasSpin 2s linear infinite;
     }
@@ -152,12 +158,12 @@ import { Component } from '@angular/core';
       animation-direction: reverse;
     }
     .spinner-logo {
-      color: rgba(0, 0, 0, 0.15);
+      color: var(--text-muted);
       animation: logoPulse 3s ease-in-out infinite;
     }
     .loading-label {
       font-size: 0.78rem;
-      color: #9CA3AF;
+      color: var(--text-muted);
       font-weight: 500;
       letter-spacing: 0.02em;
       animation: labelPulse 2.5s ease-in-out infinite;
@@ -173,8 +179,8 @@ import { Component } from '@angular/core';
     }
     .right-block {
       border-radius: 12px;
-      background: #F3F4F6;
-      border: 1px solid rgba(0, 0, 0, 0.04);
+      background: var(--surface-hover);
+      border: 1px solid var(--border-light);
     }
     .right-block.square { flex: 1; }
     .right-block.rect { flex: 1.2; }

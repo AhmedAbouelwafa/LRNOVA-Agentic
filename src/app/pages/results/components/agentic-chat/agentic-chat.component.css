@@ -12,15 +12,15 @@
   width: 400px; min-width: 400px; max-width: 400px;
   height: 100vh;
   display: flex; flex-direction: column;
-  background: #FCFCFD;
-  border-right: 1px solid #F0F0F3;
+  background: var(--surface-primary);
+  border-right: 1px solid var(--border-light);
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
 }
 
 .chat-sidebar.collapsed {
   width: 36px; min-width: 36px; max-width: 36px;
-  background: #FAFAFE;
+  background: var(--surface-body);
   cursor: pointer;
 }
 
@@ -52,7 +52,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #64748B;
+  color: var(--text-subtle);
   transition: color 0.2s;
 }
 .chat-collapsed-strip:hover .strip-label {
@@ -60,7 +60,7 @@
 }
 .strip-arrow {
   flex-shrink: 0;
-  color: #94A3B8;
+  color: var(--text-muted);
   transition: all 0.2s;
 }
 .chat-collapsed-strip:hover .strip-arrow {
@@ -72,8 +72,8 @@
 .chat-header {
   padding: 14px 18px;
   flex-shrink: 0;
-  background: #FFFFFF;
-  border-bottom: 1px solid #F0F0F3;
+  background: var(--surface-primary);
+  border-bottom: 1px solid var(--border-light);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -105,7 +105,7 @@
 .agent-name {
   font-size: 0.82rem;
   font-weight: 700;
-  color: #1E293B;
+  color: var(--text-heading);
   letter-spacing: -0.01em;
 }
 
@@ -115,7 +115,7 @@
   gap: 5px;
   font-size: 0.68rem;
   font-weight: 500;
-  color: #94A3B8;
+  color: var(--text-muted);
 }
 
 .status-dot {
@@ -136,14 +136,14 @@
 
 .toggle-chat-btn {
   background: transparent; border: none; cursor: pointer;
-  color: #94A3B8;
+  color: var(--text-muted);
   display: flex; align-items: center; justify-content: center;
   width: 30px; height: 30px; border-radius: 8px;
   transition: all 0.2s; padding: 0;
 }
 .toggle-chat-btn:hover {
-  background: #F1F5F9;
-  color: #64748B;
+  background: var(--surface-hover);
+  color: var(--text-subtle);
 }
 
 /* ===== Conversation Thread ===== */
@@ -158,7 +158,7 @@
 .chat-thread::-webkit-scrollbar { width: 3px; }
 .chat-thread::-webkit-scrollbar-track { background: transparent; }
 .chat-thread::-webkit-scrollbar-thumb {
-  background: #E2E8F0;
+  background: var(--border-default);
   border-radius: 10px;
 }
 .chat-thread::-webkit-scrollbar-thumb:hover {
@@ -169,7 +169,7 @@
 .thread-message {
   padding: 16px 20px;
   animation: msgFadeIn 0.35s ease-out;
-  border-bottom: 1px solid #F5F5F7;
+  border-bottom: 1px solid var(--border-light);
 }
 @keyframes msgFadeIn {
   from { opacity: 0; transform: translateY(6px); }
@@ -200,13 +200,13 @@
   position: sticky;
   top: 0;
   z-index: 5;
-  background: #FFFFFF;
-  border-bottom: 1px solid #EEECF5;
+  background: var(--surface-primary);
+  border-bottom: 1px solid var(--border-light);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
 }
 .thread-message.is-first .msg-body p {
   font-weight: 600;
-  color: #1E293B;
+  color: var(--text-heading);
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
@@ -233,7 +233,7 @@
 }
 
 .user-badge {
-  color: #64748B;
+  color: var(--text-subtle);
 }
 
 .agent-badge {
@@ -244,7 +244,7 @@
 .msg-body {
   font-size: 0.86rem;
   line-height: 1.65;
-  color: #374151;
+  color: var(--text-body);
 }
 .msg-body p {
   margin: 0;
@@ -252,17 +252,17 @@
 }
 
 .role-user .msg-body {
-  background: #F1F5F9;
-  color: #1E293B;
+  background: var(--surface-hover);
+  color: var(--text-heading);
   padding: 10px 14px;
   border-radius: 16px 16px 2px 16px;
   max-width: 85%;
   font-weight: 500;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--border-default);
 }
 .role-user .msg-body p {
-  color: #1E293B;
+  color: var(--text-heading);
 }
 
 .user-msg-time {
@@ -270,7 +270,7 @@
   align-items: center;
   gap: 5px;
   font-size: 0.65rem;
-  color: #94A3B8;
+  color: var(--text-muted);
   margin-top: 6px;
   font-weight: 500;
 }
@@ -286,13 +286,13 @@
 
 /* ===== Thought Accordion (Matches Image) ===== */
 .thought-accordion {
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background: var(--surface-primary);
+  border: 1px solid var(--border-default);
   border-radius: 12px;
   margin-top: 4px;
   margin-bottom: 8px;
   width: 100%;
-  color: #334155;
+  color: var(--text-heading);
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   font-family: inherit;
@@ -314,7 +314,7 @@
   gap: 10px;
   font-size: 0.85rem;
   font-weight: 500;
-  color: #334155;
+  color: var(--text-heading);
 }
 
 .brain-icon-wrapper {
@@ -323,12 +323,12 @@
   justify-content: center;
   width: 26px; height: 26px;
   border-radius: 6px;
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background: var(--surface-hover);
+  border: 1px solid var(--border-default);
 }
 
 .brain-icon {
-  color: #64748B;
+  color: var(--text-subtle);
 }
 
 .brain-icon.pulse {
@@ -343,7 +343,7 @@
 }
 
 .chevron-icon {
-  color: #94A3B8;
+  color: var(--text-muted);
   transition: transform 0.2s ease;
 }
 
@@ -353,10 +353,10 @@
 
 .thought-body {
   padding: 12px 14px;
-  border-top: 1px solid #F1F5F9;
+  border-top: 1px solid var(--border-light);
   font-size: 0.8rem;
-  color: #475569;
-  background: #F8FAFC;
+  color: var(--text-body);
+  background: var(--surface-hover);
 }
 
 .thought-body p {
@@ -376,15 +376,15 @@
 .chat-input-area {
   flex-shrink: 0;
   padding: 12px 14px;
-  background: #FFFFFF;
-  border-top: 1px solid #F0F0F3;
+  background: var(--surface-primary);
+  border-top: 1px solid var(--border-light);
 }
 
 :host-context(html[dir="rtl"]) .chat-sidebar {
   left: auto;
   right: 60px;
   border-right: none;
-  border-left: 1px solid #F0F0F3;
+  border-left: 1px solid var(--border-light);
 }
 :host-context(html[dir="rtl"]) .msg-body {
   text-align: right;
@@ -420,7 +420,7 @@
     width: 100% !important; min-width: 100% !important; max-width: 100% !important;
     height: auto; max-height: 50vh;
     border-right: none;
-    border-bottom: 1px solid #F0F0F3;
+    border-bottom: 1px solid var(--border-light);
     border-radius: 0;
   }
   .chat-sidebar.collapsed {

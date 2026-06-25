@@ -7,6 +7,8 @@ import { ThinkingIndicatorComponent } from './components/thinking-indicator/thin
 import { SkeletonCardComponent } from './components/skeleton-card/skeleton-card.component';
 import { PromptFieldComponent } from '../home/components/prompt-field/prompt-field.component';
 import { VideoResultComponent } from './components/video-result/video-result.component';
+import { TextResultComponent } from './components/text-result/text-result.component';
+import { SlidesResultComponent } from './components/slides-result/slides-result.component';
 import { AgenticChatComponent } from './components/agentic-chat/agentic-chat.component';
 
 @Component({
@@ -19,6 +21,8 @@ import { AgenticChatComponent } from './components/agentic-chat/agentic-chat.com
     SkeletonCardComponent,
     PromptFieldComponent,
     VideoResultComponent,
+    TextResultComponent,
+    SlidesResultComponent,
     AgenticChatComponent
   ],
   templateUrl: './results.component.html',

@@ -50,57 +50,85 @@ export class PromptStateService {
 
   readonly suggestions = computed<Suggestion[]>(() => {
     const goal = this.selectedGoal();
+    const quickTool = this.selectedQuickTool();
     
+    if (quickTool === 'Activity' || (goal && goal.pipeline && goal.pipeline.some(p => p.toolId === 'Activity'))) {
+      return [
+        { id: 'act1', icon: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75', text: 'Ice Breakers', prompt: 'Create a fun ice breaker activity to get students introduced to each other.' },
+        { id: 'act2', icon: 'M13 10V3L4 14h7v7l9-11h-7z', text: 'Energizers', prompt: 'Design a quick 5-minute energizer activity to wake up the classroom.' },
+        { id: 'act3', icon: 'M9 11l3 3L22 4 M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11', text: 'Quizzes & Polls', prompt: 'Generate a short interactive poll or quiz to gauge student understanding.' },
+        { id: 'act4', icon: 'M11.5 21A9.5 9.5 0 1 0 2 11.5a9.5 9.5 0 0 0 9.5 9.5z M11.5 6v5.5l4.5 4.5', text: 'Game', prompt: 'Develop an educational game related to the core topic.' },
+        { id: 'act5', icon: 'M9 11l3 3L22 4 M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11', text: 'Tasks', prompt: 'Provide a set of clear, actionable tasks for students to complete independently.' },
+        { id: 'act6', icon: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75', text: 'Roleplay', prompt: 'Design a roleplay scenario where students act out a real-world situation.' },
+        { id: 'act7', icon: 'M9 18h6 M10 22h4 M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z', text: 'Experiment', prompt: 'Outline a hands-on experiment that students can perform to test the theory.' },
+        { id: 'act8', icon: 'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z', text: 'Group Discussions', prompt: 'Create guided discussion questions for small groups to debate.' },
+        { id: 'act9', icon: 'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z', text: 'Writing Exercises', prompt: 'Draft a creative writing exercise to help students reflect on the topic.' },
+        { id: 'act10', icon: 'M9 18h6 M10 22h4 M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z', text: 'Problem-solving Tasks', prompt: 'Formulate a complex problem-solving task for students to solve.' },
+        { id: 'act11', icon: 'M4 19.5A2.5 2.5 0 0 1 6.5 17H20 M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z', text: 'Case Studies', prompt: 'Write a detailed real-world case study for students to analyze.' },
+        { id: 'act12', icon: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75', text: 'Collaborative Projects', prompt: 'Design a collaborative project where students work together over a week.' },
+        { id: 'act13', icon: 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2 M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z', text: 'Individual Projects', prompt: 'Outline an individual research project for students to complete.' },
+        { id: 'act14', icon: 'M2 3h20v14H2z M2 7h20 M8 21h8 M12 17v4', text: 'Collaborative Presentations', prompt: 'Set up a task for students to create and deliver a group presentation.' },
+        { id: 'act15', icon: 'M2 3h20v14H2z M2 7h20 M8 21h8 M12 17v4', text: 'Individual Presentations', prompt: 'Provide guidelines for an individual student presentation.' },
+        { id: 'act16', icon: 'M9 11l3 3L22 4 M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11', text: 'Peer Reviews', prompt: 'Create a peer review rubric and activity for students to evaluate each other.' }
+      ];
+    }
+
     if (!goal) {
       return [
-        { id: 'def1', icon: 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14v-4z', text: 'Create an explainer video about DNA' },
-        { id: 'def2', icon: 'M12 2v20 M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6', text: 'Write a YouTube script for learning Python' },
-        { id: 'def3', icon: 'M4 4h16v16H4z M12 8v8 M8 12h8', text: 'Build an assessment quiz for Physics' }
+        { id: 'def1', icon: 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14v-4z', text: 'DNA Video', prompt: 'Create an explainer video about DNA' },
+        { id: 'def2', icon: 'M12 2v20 M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6', text: 'Python Script', prompt: 'Write a YouTube script for learning Python' },
+        { id: 'def3', icon: 'M4 4h16v16H4z M12 8v8 M8 12h8', text: 'Physics Quiz', prompt: 'Build an assessment quiz for Physics' }
       ];
     }
 
     switch (goal.id) {
       case 'explain-it':
         return [
-          { id: 'ex1', icon: 'M9 18h6 M10 22h4 M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z', text: 'Explain quantum entanglement' },
-          { id: 'ex2', icon: 'M9 18h6 M10 22h4 M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z', text: 'How does a combustion engine work?' },
-          { id: 'ex3', icon: 'M9 18h6 M10 22h4 M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z', text: 'Explain inflation to a 5-year-old' }
+          { id: 'ex1', icon: 'M9 18h6 M10 22h4 M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z', text: 'Quantum Entanglement', prompt: 'Explain quantum entanglement' },
+          { id: 'ex2', icon: 'M9 18h6 M10 22h4 M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z', text: 'Combustion Engine', prompt: 'How does a combustion engine work?' },
+          { id: 'ex3', icon: 'M9 18h6 M10 22h4 M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z', text: 'Inflation Basics', prompt: 'Explain inflation to a 5-year-old' }
         ];
       case 'script-it':
         return [
-          { id: 'sc1', icon: 'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z', text: 'Write a YouTube script for learning Python' },
-          { id: 'sc2', icon: 'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z', text: 'Draft a podcast script about history' },
-          { id: 'sc3', icon: 'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z', text: 'Create a short script for a commercial' }
+          { id: 'sc1', icon: 'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z', text: 'Python Script', prompt: 'Write a YouTube script for learning Python' },
+          { id: 'sc2', icon: 'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z', text: 'History Podcast', prompt: 'Draft a podcast script about history' },
+          { id: 'sc3', icon: 'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z', text: 'Commercial Script', prompt: 'Create a short script for a commercial' }
         ];
       case 'test-it':
         return [
-          { id: 'ts1', icon: 'M9 11l3 3L22 4 M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11', text: 'Build an assessment quiz for Physics' },
-          { id: 'ts2', icon: 'M9 11l3 3L22 4 M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11', text: 'Create a math test for 5th grade' },
-          { id: 'ts3', icon: 'M9 11l3 3L22 4 M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11', text: 'Generate multiple choice questions on biology' }
+          { id: 'ts1', icon: 'M9 11l3 3L22 4 M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11', text: 'Physics Quiz', prompt: 'Build an assessment quiz for Physics' },
+          { id: 'ts2', icon: 'M9 11l3 3L22 4 M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11', text: 'Math Test (5th Grade)', prompt: 'Create a math test for 5th grade' },
+          { id: 'ts3', icon: 'M9 11l3 3L22 4 M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11', text: 'Biology MCQ', prompt: 'Generate multiple choice questions on biology' }
+        ];
+      case 'slides':
+        return [
+          { id: 'sl1', icon: 'M2 3h20v14H2z M2 7h20 M8 21h8 M12 17v4', text: 'Marketing Pitch', prompt: 'Generate slides for a marketing pitch' },
+          { id: 'sl2', icon: 'M2 3h20v14H2z M2 7h20 M8 21h8 M12 17v4', text: 'Climate Change', prompt: 'Create a presentation on climate change' },
+          { id: 'sl3', icon: 'M2 3h20v14H2z M2 7h20 M8 21h8 M12 17v4', text: 'QBR Slides', prompt: 'Design slides for quarterly business review' }
         ];
       case 'video-clip':
         return [
-          { id: 'vc1', icon: 'M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14v-4z M4 6h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z', text: 'Create an explainer video about DNA' },
-          { id: 'vc2', icon: 'M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14v-4z M4 6h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z', text: 'Generate an AI Avatar presentation' },
-          { id: 'vc3', icon: 'M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14v-4z M4 6h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z', text: 'Convert my script into a video lesson' }
+          { id: 'vc1', icon: 'M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14v-4z M4 6h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z', text: 'DNA Video', prompt: 'Create an explainer video about DNA' },
+          { id: 'vc2', icon: 'M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14v-4z M4 6h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z', text: 'AI Avatar Presentation', prompt: 'Generate an AI Avatar presentation' },
+          { id: 'vc3', icon: 'M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14v-4z M4 6h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z', text: 'Script to Video', prompt: 'Convert my script into a video lesson' }
         ];
       case 'full-course':
         return [
-          { id: 'fc1', icon: 'M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5', text: 'Create a full course on Digital Marketing' },
-          { id: 'fc2', icon: 'M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5', text: 'Design a comprehensive Leadership training' },
-          { id: 'fc3', icon: 'M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5', text: 'Develop an introductory cooking class' }
+          { id: 'fc1', icon: 'M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5', text: 'Digital Marketing Course', prompt: 'Create a full course on Digital Marketing' },
+          { id: 'fc2', icon: 'M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5', text: 'Leadership Training', prompt: 'Design a comprehensive Leadership training' },
+          { id: 'fc3', icon: 'M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5', text: 'Cooking Class', prompt: 'Develop an introductory cooking class' }
         ];
       case 'video-course':
         return [
-          { id: 'vcrs1', icon: 'M19 2H5a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3z M2 7h20M2 17h20M7 2v5M17 2v5M7 17v5M17 17v5', text: 'Create a video course on personal finance' },
-          { id: 'vcrs2', icon: 'M19 2H5a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3z M2 7h20M2 17h20M7 2v5M17 2v5M7 17v5M17 17v5', text: 'Design a video tutorial series for Excel' },
-          { id: 'vcrs3', icon: 'M19 2H5a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3z M2 7h20M2 17h20M7 2v5M17 2v5M7 17v5M17 17v5', text: 'Develop a video masterclass on photography' }
+          { id: 'vcrs1', icon: 'M19 2H5a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3z M2 7h20M2 17h20M7 2v5M17 2v5M7 17v5M17 17v5', text: 'Finance Video Course', prompt: 'Create a video course on personal finance' },
+          { id: 'vcrs2', icon: 'M19 2H5a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3z M2 7h20M2 17h20M7 2v5M17 2v5M7 17v5M17 17v5', text: 'Excel Video Tutorials', prompt: 'Design a video tutorial series for Excel' },
+          { id: 'vcrs3', icon: 'M19 2H5a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3z M2 7h20M2 17h20M7 2v5M17 2v5M7 17v5M17 17v5', text: 'Photography Masterclass', prompt: 'Develop a video masterclass on photography' }
         ];
       case 'learn-kit':
         return [
-          { id: 'lk1', icon: 'M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z', text: 'Generate a learning kit for Spanish basics' },
-          { id: 'lk2', icon: 'M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z', text: 'Create a study guide for world geography' },
-          { id: 'lk3', icon: 'M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z', text: 'Compile a resource kit for learning guitar' }
+          { id: 'lk1', icon: 'M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z', text: 'Spanish Basics Kit', prompt: 'Generate a learning kit for Spanish basics' },
+          { id: 'lk2', icon: 'M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z', text: 'World Geography Guide', prompt: 'Create a study guide for world geography' },
+          { id: 'lk3', icon: 'M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z', text: 'Guitar Learning Kit', prompt: 'Compile a resource kit for learning guitar' }
         ];
       default:
         return [];
@@ -108,11 +136,39 @@ export class PromptStateService {
   });
 
 
-  readonly videoTools = ['Video Avatar', 'Scorm Video'];
-  readonly textTools = ['Course Content', 'Script', 'Assessment', 'Topic', 'Activity'];
+  readonly videoTools = ['Video', 'Text Video'];
+  readonly textTools = ['Script', 'Assessment', 'Activity', 'Topic', 'Course Script', 'Course Content'];
 
   readonly activeTools = computed(() => {
     return this.activeAgent() === 'video' ? this.videoTools : this.textTools;
+  });
+
+  /**
+   * Determines the type of result to display in the canvas.
+   * 'video' — video player, 'slides' — embedded slides, 'text' — generated text content
+   */
+  readonly resultType = computed<'video' | 'slides' | 'text'>(() => {
+    const agent = this.activeAgent();
+    const tool = this.selectedQuickTool();
+    const goal = this.selectedGoal();
+    const tabId = this.activeTabId();
+
+    // If we're in a multi-tool goal and looking at a specific tab
+    if (goal?.level === 2 && tabId && tabId !== 'main') {
+      if (tabId.includes('video')) return 'video';
+      if (tabId.includes('slides')) return 'slides';
+      return 'text'; // Default to text for script, assessment, content, activity
+    }
+
+    // Video agent or video-related tools/goals
+    if (agent === 'video' || tool === 'Video' || tool === 'Text Video') return 'video';
+    if (goal?.id === 'video-clip') return 'video';
+
+    // Slides agent, slides tool, or slides goal
+    if (agent === 'slides' || tool === 'Slides' || goal?.id === 'slides') return 'slides';
+
+    // Everything else is text (including 'main' tab of multi-tool goals)
+    return 'text';
   });
 
   constructor(private router: Router) {}
@@ -310,13 +366,13 @@ export class PromptStateService {
       } else {
         clearInterval(this.fakeLoadingInterval);
       }
-    }, 1500);
+    }, 800);
 
     setTimeout(() => {
       clearInterval(this.fakeLoadingInterval);
       this.isGenerationComplete.set(true);
       this.isGenerating.set(false);
-    }, 12000);
+    }, 4000);
   }
 
   addFollowUpMessage(content: string, role: 'user' | 'agent') {
@@ -341,6 +397,8 @@ export class PromptStateService {
     this.chatHistory.set([]);
     this.canvasTabs.set([]);
     this.activeTabId.set('main');
+    this.selectedGoal.set(null);
+    this.selectedQuickTool.set(null);
     this.router.navigate(['/']);
   }
 
@@ -372,6 +430,8 @@ export class PromptStateService {
     
     this.promptText.set(warning.newPrompt);
     this.selectedQuickTool.set(warning.newTool);
+    this.selectedGoal.set(null);
+    this.activeGoalLevel.set(1);
     this.toolSwitchWarning.set(null);
     this.submitPrompt();
   }

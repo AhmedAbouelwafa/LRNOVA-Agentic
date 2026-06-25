@@ -65,7 +65,7 @@
   z-index: 1000;
 }
 .tool-switch-modal {
-  background: #FFFFFF;
+  background: var(--surface-primary);
   border-radius: 16px;
   padding: 32px;
   max-width: 400px;
@@ -88,12 +88,12 @@
 .tool-switch-modal h3 {
   margin: 0 0 12px;
   font-size: 1.25rem;
-  color: #111827;
+  color: var(--text-heading);
 }
 .tool-switch-modal p {
   margin: 0 0 24px;
   font-size: 0.95rem;
-  color: #4B5563;
+  color: var(--text-body);
   line-height: 1.5;
 }
 .tool-switch-modal .modal-actions {
@@ -111,12 +111,12 @@
   border: none;
 }
 .tool-switch-modal .cancel-btn {
-  background: #F3F4F6;
-  color: #4B5563;
+  background: var(--surface-hover);
+  color: var(--text-body);
 }
 .tool-switch-modal .cancel-btn:hover {
-  background: #E5E7EB;
-  color: #111827;
+  background: var(--surface-secondary);
+  color: var(--text-heading);
 }
 .tool-switch-modal .confirm-btn {
   background: #EF4444;

@@ -18,6 +18,12 @@ export class SuggestionsComponent {
   }
 
   getTranslatedText(id: string, fallback: string): string {
+    const key = 'suggestion.' + id + '.short';
+    const translated = this.i18n.t(key);
+    return translated !== key ? translated : fallback;
+  }
+
+  getTranslatedPrompt(id: string, fallback: string): string {
     const key = 'suggestion.' + id;
     const translated = this.i18n.t(key);
     return translated !== key ? translated : fallback;

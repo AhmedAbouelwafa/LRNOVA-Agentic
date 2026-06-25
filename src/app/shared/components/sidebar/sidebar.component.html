@@ -1,5 +1,5 @@
 <aside class="agentic-sidebar" id="main-sidebar" [class.tour-glow]="state.tourStep() === 1"
-  [class.compact-mode]="state.isAnimatingOut() || state.submittedPrompt()">
+  [class.compact-mode]="isCompactMode()">
   <div class="sidebar-top">
     <!-- Home Wrapper to avoid routerLink click hijacking -->
     <div style="position: relative; width: 100%; display: flex; flex-direction: column; align-items: center;">

@@ -46,8 +46,8 @@ export class AgentSelectorComponent implements AfterViewInit {
     const container = this.scrollContainer?.nativeElement;
     if (!wrapper || !container) return;
 
-    // Step 5 targets idx 0 (first single-tool goal), step 6 targets idx 4 (first multi-tool goal)
-    const targetIdx = step === 5 ? 0 : 4;
+    // Step 5 targets idx 0 (first single-tool goal), step 6 targets idx 5 (first multi-tool goal)
+    const targetIdx = step === 5 ? 0 : 5;
     const buttons = container.querySelectorAll('.agent-btn');
     const btn = buttons[targetIdx] as HTMLElement;
     if (!btn) return;
@@ -157,6 +157,18 @@ export class AgentSelectorComponent implements AfterViewInit {
       estimatedTime: '~5 min'
     },
     {
+      id: 'slides',
+      slug: 'slides',
+      label: 'Slides',
+      description: 'Generate professional presentation slides instantly.',
+      icon: 'slides',
+      level: 1,
+      gradient: 'linear-gradient(135deg, #F59E0B, #D97706)',
+      accentColor: '#F59E0B',
+      pipeline: [{ toolId: 'Slides', tabLabel: 'Slides', order: 1 }],
+      estimatedTime: '~2 min'
+    },
+    {
       id: 'full-course',
       slug: 'full-course',
       label: 'Full Course',
@@ -213,6 +225,7 @@ export class AgentSelectorComponent implements AfterViewInit {
     'script-it': 'اكتب نصًا',
     'test-it': 'اختبر',
     'video-clip': 'مقطع فيديو',
+    'slides': 'شرائح',
     'full-course': 'دورة كاملة',
     'video-course': 'دورة فيديو',
     'learn-kit': 'حزمة تعلم'
@@ -223,7 +236,7 @@ export class AgentSelectorComponent implements AfterViewInit {
     this.activeGoalId.set(goal.id);
     this.state.activeGoalLevel.set(goal.level);
     this.state.selectedGoal.set(goal);
-    // Note: this sets selectedGoal but not selectedQuickTool
+    this.state.selectedQuickTool.set(null);
   }
 
   isGoalActive(goal: Goal): boolean {
