@@ -1,4 +1,5 @@
 import { Component, inject, ViewChild, ElementRef, effect, signal } from '@angular/core';
+import { CreditConsumptionComponent } from './components/credit-consumption/credit-consumption.component';
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { PromptStateService } from '../../core/services/prompt-state.service';
@@ -23,7 +24,8 @@ import { AgenticChatComponent } from './components/agentic-chat/agentic-chat.com
     VideoResultComponent,
     TextResultComponent,
     SlidesResultComponent,
-    AgenticChatComponent
+    AgenticChatComponent,
+    CreditConsumptionComponent
   ],
   templateUrl: './results.component.html',
   styleUrl: './results.component.css'

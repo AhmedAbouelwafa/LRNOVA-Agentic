@@ -8,7 +8,7 @@
   <!-- Right Side: Artifact Panel -->
   <div class="artifact-panel fade-in-up">
     <app-results-toolbar />
-    
+    <app-credit-consumption />
     @if (!state.isGenerationComplete()) {
       <app-skeleton-card [showThinking]="state.isGenerating()" />
     } @else {
