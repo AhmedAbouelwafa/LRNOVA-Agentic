@@ -24,18 +24,7 @@
 
     <!-- Tabs -->
     <div class="vad-tabs">
-      <button class="vad-tab" 
-              [class.active]="activeTab() === 'script'" 
-              (click)="setTab('script')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-        </svg>
-        Script
-        @if (scriptText().trim()) {
-          <span class="tab-check">✓</span>
-        }
-      </button>
+
       <button class="vad-tab" 
               [class.active]="activeTab() === 'avatars'" 
               (click)="setTab('avatars')">
@@ -66,23 +55,6 @@
 
     <!-- Tab Content -->
     <div class="vad-body">
-
-      <!-- Script Tab -->
-      @if (activeTab() === 'script') {
-        <div class="vad-tab-content script-tab">
-          <label class="tab-section-label">Write your script</label>
-          <p class="tab-section-hint">Enter the text your avatar will speak in the video.</p>
-          <textarea 
-            class="script-textarea" 
-            [ngModel]="scriptText()"
-            (ngModelChange)="scriptText.set($event)"
-            placeholder="Type or paste your video script here..."
-            rows="10"></textarea>
-          <div class="script-footer">
-            <span class="char-count">{{ scriptText().length }} characters</span>
-          </div>
-        </div>
-      }
 
       <!-- Avatars Tab -->
       @if (activeTab() === 'avatars') {
@@ -117,6 +89,14 @@
           <div class="avatar-section">
             <div class="section-header-row">
               <label class="tab-section-label">Video Avatars</label>
+              
+              <!-- Avatar Filter -->
+              <div class="filter-chips">
+                <button class="filter-chip" [class.active]="avatarFilter() === 'All'" (click)="avatarFilter.set('All')">All</button>
+                <button class="filter-chip" [class.active]="avatarFilter() === 'Male'" (click)="avatarFilter.set('Male')">Male</button>
+                <button class="filter-chip" [class.active]="avatarFilter() === 'Female'" (click)="avatarFilter.set('Female')">Female</button>
+              </div>
+
               <button class="upload-btn" (click)="avatarFileInput.click()">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
@@ -126,7 +106,7 @@
               <input #avatarFileInput type="file" accept="image/*" hidden (change)="onAvatarFileSelected($event)" />
             </div>
             <div class="avatar-grid">
-              @for (av of defaultAvatars; track av.id) {
+              @for (av of filteredAvatars(); track av.id) {
                 <button class="avatar-card" 
                         [class.selected]="selectedAvatar()?.id === av.id"
                         (click)="selectAvatar(av)">
@@ -185,6 +165,14 @@
           <div class="audio-section">
             <div class="section-header-row">
               <label class="tab-section-label">Voice Library</label>
+
+              <!-- Audio Filter -->
+              <div class="filter-chips">
+                <button class="filter-chip" [class.active]="audioFilter() === 'All'" (click)="audioFilter.set('All')">All</button>
+                <button class="filter-chip" [class.active]="audioFilter() === 'Male'" (click)="audioFilter.set('Male')">Male</button>
+                <button class="filter-chip" [class.active]="audioFilter() === 'Female'" (click)="audioFilter.set('Female')">Female</button>
+              </div>
+
               <button class="upload-btn" (click)="audioFileInput.click()">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
@@ -194,7 +182,7 @@
               <input #audioFileInput type="file" accept="audio/*" hidden (change)="onAudioFileSelected($event)" />
             </div>
             <div class="audio-list">
-              @for (au of defaultAudios; track au.id) {
+              @for (au of filteredAudios(); track au.id) {
                 <button class="audio-card"
                         [class.selected]="selectedAudio()?.id === au.id"
                         (click)="selectAudio(au)">
@@ -224,7 +212,6 @@
     <!-- Dialog Footer -->
     <div class="vad-footer">
       <div class="vad-progress-dots">
-        <span class="progress-dot" [class.done]="scriptText().trim()"></span>
         <span class="progress-dot" [class.done]="selectedAvatar()"></span>
         <span class="progress-dot" [class.done]="selectedAudio()"></span>
       </div>

@@ -240,9 +240,35 @@
   border-color: #8B5CF6;
 }
 
+.filter-chips {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.filter-chip {
+  padding: 4px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border-light);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-chip:hover {
+  background: var(--surface-hover);
+  color: var(--text-body);
+}
+.filter-chip.active {
+  background: rgba(139, 92, 246, 0.1);
+  border-color: #8B5CF6;
+  color: #8B5CF6;
+}
+
 .avatar-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
 }
 .avatar-card {
