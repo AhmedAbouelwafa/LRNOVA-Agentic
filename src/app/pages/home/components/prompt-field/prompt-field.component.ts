@@ -192,7 +192,13 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
         this.state.attachedFiles.set([]);
 
         this.state.addCanvasTab(text);
-        this.processFollowUp(currentTool);
+        
+        const hasVideoWord = lower.includes('video');
+        if (detectedTool === 'Video' || detectedTool === 'Text Video') {
+          this.processFollowUp(detectedTool, hasVideoWord);
+        } else {
+          this.processFollowUp(currentTool);
+        }
       } else {
         // Tool Scenario: Different tool keyword detected -> Show Warning
         // Use loose matching to avoid false positives on same tool
@@ -204,7 +210,8 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
           this.state.addFollowUpMessage(text || 'Attached files', 'user');
           this.state.promptText.set('');
           this.state.attachedFiles.set([]);
-          this.processFollowUp(currentTool);
+          const hasVideoWord = lower.includes('video');
+          this.processFollowUp(currentTool, hasVideoWord);
         }
       }
     } else {
@@ -216,9 +223,9 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
     }
   }
 
-  private processFollowUp(tool: string | null) {
+  private processFollowUp(tool: string | null, hasVideoWord: boolean = false) {
     if (tool === 'Video' || tool === 'Text Video') {
-      this.state.startFollowUp('video');
+      this.state.startFollowUp('video', hasVideoWord);
       return;
     }
 

@@ -1,0 +1,131 @@
+<div class="vad-overlay" (click)="close()">
+  <div class="vad-dialog" (click)="$event.stopPropagation()">
+
+    <!-- Dialog Header -->
+    <div class="vad-header">
+      <div class="vad-header-left">
+        <div class="vad-icon-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14v-4z"/>
+            <rect x="2" y="6" width="13" height="12" rx="2"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="vad-title">Create Text Video</h2>
+          <p class="vad-subtitle">Configure your text-to-video presentation</p>
+        </div>
+      </div>
+      <button class="vad-close-btn" (click)="close()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="vad-tabs">
+
+      <button class="vad-tab" 
+              [class.active]="activeTab() === 'style'" 
+              (click)="setTab('style')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+        Style
+        @if (selectedStyle()) {
+          <span class="tab-check">✓</span>
+        }
+      </button>
+      <button class="vad-tab" 
+              [class.active]="activeTab() === 'duration'" 
+              (click)="setTab('duration')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        Duration
+        @if (selectedDuration()) {
+          <span class="tab-check">✓</span>
+        }
+      </button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="vad-body">
+
+
+
+      <!-- Style Tab -->
+      @if (activeTab() === 'style') {
+        <div class="vad-tab-content style-tab">
+          <div class="avatar-section">
+            <div class="section-header-row">
+              <label class="tab-section-label">Choose a Video Style</label>
+            </div>
+            <div class="avatar-grid">
+              @for (st of defaultStyles; track st.id) {
+                <button class="avatar-card" 
+                        [class.selected]="selectedStyle()?.id === st.id"
+                        (click)="selectStyle(st)">
+                  <div class="avatar-img-wrap style-img-wrap">
+                    <img [src]="st.image" [alt]="st.label" />
+                  </div>
+                  <span class="avatar-label">{{ st.label }}</span>
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Duration Tab -->
+      @if (activeTab() === 'duration') {
+        <div class="vad-tab-content duration-tab">
+          <div class="duration-section">
+            <label class="tab-section-label">Estimated Video Duration</label>
+            <p class="tab-section-hint">Select the approximate duration for your text video.</p>
+            
+            <div class="duration-grid">
+              @for (dur of durations; track dur) {
+                <button class="duration-card" 
+                        [class.selected]="selectedDuration() === dur"
+                        (click)="selectedDuration.set(dur)">
+                  <div class="duration-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"/>
+                      <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                  </div>
+                  <span class="duration-label">{{ dur }}</span>
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Dialog Footer -->
+    <div class="vad-footer">
+      <div class="vad-progress-dots">
+        <span class="progress-dot" [class.done]="selectedStyle()"></span>
+        <span class="progress-dot" [class.done]="selectedDuration()"></span>
+      </div>
+      <div class="vad-footer-actions">
+        <button class="vad-cancel-btn" (click)="close()">Cancel</button>
+        <button class="vad-generate-btn" 
+                [class.active]="canGenerate" 
+                [disabled]="!canGenerate" 
+                (click)="generate()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          Generate Video
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

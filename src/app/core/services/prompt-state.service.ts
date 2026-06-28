@@ -24,6 +24,8 @@ export class PromptStateService {
   readonly canvasTabs = signal<CanvasTab[]>([]);
   readonly activeTabId = signal<string>('main');
   readonly toolSwitchWarning = signal<{ newTool: string, newPrompt: string } | null>(null);
+  readonly showVideoAvatarDialog = signal(false);
+  readonly showTextVideoDialog = signal(false);
 
   /** The currently active (unanswered) questionnaire message, or null */
   readonly activeQuestion = computed(() => {
@@ -286,8 +288,24 @@ export class PromptStateService {
     }
 
     const tool = this.selectedQuickTool();
-    const isVideo = tool === 'Video' || tool === 'Text Video' || this.activeAgent() === 'video';
-    this.activeQuestionnaire = isVideo ? this.videoFollowUpQuestions : this.defaultQuestions;
+    const hasVideoWord = !tool && !goal && text.toLowerCase().includes('video');
+    const isVideo = tool === 'Video' || tool === 'Text Video' || this.activeAgent() === 'video' || hasVideoWord;
+
+    if (hasVideoWord) {
+      this.activeQuestionnaire = [
+        {
+          title: 'What video do you want?',
+          options: [
+            { id: 1, label: 'Video Avatar' },
+            { id: 2, label: 'Text Video' },
+            { id: 3, label: '2D Animation' }
+          ]
+        },
+        ...this.videoFollowUpQuestions
+      ];
+    } else {
+      this.activeQuestionnaire = isVideo ? this.videoFollowUpQuestions : this.defaultQuestions;
+    }
 
     // Add initial prompt to chat history
     if (text.trim()) {
@@ -342,6 +360,16 @@ export class PromptStateService {
       )
     );
 
+    if (answerLabel === 'Video Avatar') {
+      this.showVideoAvatarDialog.set(true);
+      return;
+    }
+    
+    if (answerLabel === 'Text Video') {
+      this.showTextVideoDialog.set(true);
+      return;
+    }
+
     this.currentQuestionIndex++;
 
     if (this.currentQuestionIndex < this.activeQuestionnaire.length) {
@@ -351,6 +379,28 @@ export class PromptStateService {
       // Finished all questions, now start the generation
       this.startGenerationProcess();
     }
+  }
+
+  confirmVideoAvatarDialog(data: any) {
+    this.showVideoAvatarDialog.set(false);
+    this.addFollowUpMessage('Configured Video Avatar: ' + data.avatar.label + ', ' + data.audio.label, 'user');
+    this.startGenerationProcess();
+  }
+
+  cancelVideoAvatarDialog() {
+    this.showVideoAvatarDialog.set(false);
+    this.startGenerationProcess();
+  }
+
+  confirmTextVideoDialog(data: any) {
+    this.showTextVideoDialog.set(false);
+    this.addFollowUpMessage(`Configured Text Video: Style ${data.style.label}, Duration ${data.duration}`, 'user');
+    this.startGenerationProcess();
+  }
+
+  cancelTextVideoDialog() {
+    this.showTextVideoDialog.set(false);
+    this.startGenerationProcess();
   }
 
   private startGenerationProcess() {
@@ -440,9 +490,28 @@ export class PromptStateService {
     this.toolSwitchWarning.set(null);
   }
 
-  startFollowUp(type: 'video' | 'text') {
+  startFollowUp(type: 'video' | 'text', hasVideoWord: boolean = false) {
     this.currentQuestionIndex = 0;
-    this.activeQuestionnaire = type === 'video' ? this.videoFollowUpQuestions : [];
+    
+    if (type === 'video') {
+      if (hasVideoWord) {
+        this.activeQuestionnaire = [
+          {
+            title: 'What video do you want?',
+            options: [
+              { id: 1, label: 'Video Avatar' },
+              { id: 2, label: 'Text Video' },
+              { id: 3, label: '2D Animation' }
+            ]
+          },
+          ...this.videoFollowUpQuestions
+        ];
+      } else {
+        this.activeQuestionnaire = this.videoFollowUpQuestions;
+      }
+    } else {
+      this.activeQuestionnaire = [];
+    }
     
     if (this.activeQuestionnaire.length > 0) {
       this.askNextQuestion(true);

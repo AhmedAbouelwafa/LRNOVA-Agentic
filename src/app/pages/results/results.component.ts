@@ -11,6 +11,8 @@ import { VideoResultComponent } from './components/video-result/video-result.com
 import { TextResultComponent } from './components/text-result/text-result.component';
 import { SlidesResultComponent } from './components/slides-result/slides-result.component';
 import { AgenticChatComponent } from './components/agentic-chat/agentic-chat.component';
+import { VideoAvatarDialogComponent } from './components/video-avatar-dialog/video-avatar-dialog.component';
+import { TextVideoDialogComponent } from './components/text-video-dialog/text-video-dialog.component';
 
 @Component({
   selector: 'app-results',
@@ -25,7 +27,9 @@ import { AgenticChatComponent } from './components/agentic-chat/agentic-chat.com
     TextResultComponent,
     SlidesResultComponent,
     AgenticChatComponent,
-    CreditConsumptionComponent
+    CreditConsumptionComponent,
+    VideoAvatarDialogComponent,
+    TextVideoDialogComponent
   ],
   templateUrl: './results.component.html',
   styleUrl: './results.component.css'

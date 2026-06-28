@@ -16,6 +16,7 @@ export class App {
   protected state = inject(PromptStateService);
   private router = inject(Router);
   isFullWidthPage = signal(false);
+  isLoginPage = signal(false);
 
   constructor() {
     this.router.events.pipe(
@@ -24,6 +25,7 @@ export class App {
       const url = e.urlAfterRedirects;
       const isAppsGrid = url === '/apps' || url.startsWith('/apps?');
       this.isFullWidthPage.set(url.startsWith('/projects') || url.startsWith('/settings') || url.startsWith('/results') || isAppsGrid);
+      this.isLoginPage.set(url.startsWith('/login') || url.startsWith('/register'));
     });
   }
 }

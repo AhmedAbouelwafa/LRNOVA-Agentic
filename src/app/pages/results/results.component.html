@@ -56,3 +56,17 @@
     </div>
   </div>
 }
+
+<!-- Video Avatar Dialog -->
+@if (state.showVideoAvatarDialog()) {
+  <app-video-avatar-dialog 
+    (closed)="state.cancelVideoAvatarDialog()" 
+    (confirmed)="state.confirmVideoAvatarDialog($event)" />
+}
+
+<!-- Text Video Dialog -->
+@if (state.showTextVideoDialog()) {
+  <app-text-video-dialog 
+    (closed)="state.cancelTextVideoDialog()" 
+    (confirmed)="state.confirmTextVideoDialog($event)" />
+}

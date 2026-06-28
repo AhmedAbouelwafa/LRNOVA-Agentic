@@ -1,36 +1,41 @@
 
-<!-- Background Effects -->
-<div class="bg-gradient-overlay" [class.show-bg]="state.isAnimatingOut()"></div>
+@if (isLoginPage()) {
+  <!-- Login page renders standalone — no sidebar, no prompt -->
+  <router-outlet />
+} @else {
+  <!-- Background Effects -->
+  <div class="bg-gradient-overlay" [class.show-bg]="state.isAnimatingOut()"></div>
 
-<!-- Ambient Glow Orbs -->
-<div class="ambient-orb orb-1" [class.show-bg]="state.isAnimatingOut()"></div>
-<div class="ambient-orb orb-2" [class.show-bg]="state.isAnimatingOut()"></div>
-<div class="ambient-orb orb-3" [class.show-bg]="state.isAnimatingOut()"></div>
+  <!-- Ambient Glow Orbs -->
+  <div class="ambient-orb orb-1" [class.show-bg]="state.isAnimatingOut()"></div>
+  <div class="ambient-orb orb-2" [class.show-bg]="state.isAnimatingOut()"></div>
+  <div class="ambient-orb orb-3" [class.show-bg]="state.isAnimatingOut()"></div>
 
-<!-- Blurred Logo Background -->
-<div class="bg-logo-blur" [class.fade-out]="state.isAnimatingOut() || isFullWidthPage()"></div>
+  <!-- Blurred Logo Background -->
+  <div class="bg-logo-blur" [class.fade-out]="state.isAnimatingOut() || isFullWidthPage()"></div>
 
-<!-- Tour Overlay -->
-@if (state.tourStep() > 0) {
-  <div class="tour-backdrop"></div>
-}
+  <!-- Tour Overlay -->
+  @if (state.tourStep() > 0) {
+    <div class="tour-backdrop"></div>
+  }
 
-<!-- Main Layout Shell -->
-<section class="main-layout" [class.tour-mode]="state.tourStep() > 0">
-  <app-sidebar [class.tour-glow]="state.tourStep() === 1" style="z-index: 101" />
+  <!-- Main Layout Shell -->
+  <section class="main-layout" [class.tour-mode]="state.tourStep() > 0">
+    <app-sidebar [class.tour-glow]="state.tourStep() === 1" style="z-index: 101" />
 
-  <div class="content-wrapper" [class.animating-out]="state.isAnimatingOut()" [class.projects-page]="isFullWidthPage()">
-    @if (!isFullWidthPage()) {
-      <app-prompt-field 
-        [class.tour-glow]="state.tourStep() === 2" 
-        [style.z-index]="state.tourStep() >= 2 && state.tourStep() <= 4 ? 99998 : 10"
-        [style.position]="state.tourStep() >= 2 && state.tourStep() <= 4 ? 'relative' : 'static'"
-        style="order: 2; width: 100%; display: flex; justify-content: center;" />
-    }
-    
-    <!-- Routed Pages (Home / Results / Projects) -->
-    <div style="display: contents;">
-      <router-outlet />
+    <div class="content-wrapper" [class.animating-out]="state.isAnimatingOut()" [class.projects-page]="isFullWidthPage()">
+      @if (!isFullWidthPage()) {
+        <app-prompt-field 
+          [class.tour-glow]="state.tourStep() === 2" 
+          [style.z-index]="state.tourStep() >= 2 && state.tourStep() <= 4 ? 99998 : 10"
+          [style.position]="state.tourStep() >= 2 && state.tourStep() <= 4 ? 'relative' : 'static'"
+          style="order: 2; width: 100%; display: flex; justify-content: center;" />
+      }
+      
+      <!-- Routed Pages (Home / Results / Projects) -->
+      <div style="display: contents;">
+        <router-outlet />
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+}

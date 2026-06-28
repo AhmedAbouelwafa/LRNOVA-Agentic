@@ -1,0 +1,246 @@
+<div class="vad-overlay" (click)="close()">
+  <div class="vad-dialog" (click)="$event.stopPropagation()">
+
+    <!-- Dialog Header -->
+    <div class="vad-header">
+      <div class="vad-header-left">
+        <div class="vad-icon-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14v-4z"/>
+            <rect x="2" y="6" width="13" height="12" rx="2"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="vad-title">Create Video Avatar</h2>
+          <p class="vad-subtitle">Configure your AI avatar video</p>
+        </div>
+      </div>
+      <button class="vad-close-btn" (click)="close()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="vad-tabs">
+      <button class="vad-tab" 
+              [class.active]="activeTab() === 'script'" 
+              (click)="setTab('script')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+        Script
+        @if (scriptText().trim()) {
+          <span class="tab-check">✓</span>
+        }
+      </button>
+      <button class="vad-tab" 
+              [class.active]="activeTab() === 'avatars'" 
+              (click)="setTab('avatars')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        Avatars
+        @if (selectedAvatar()) {
+          <span class="tab-check">✓</span>
+        }
+      </button>
+      <button class="vad-tab" 
+              [class.active]="activeTab() === 'audio'" 
+              (click)="setTab('audio')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="23"/>
+          <line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+        Audio
+        @if (selectedAudio()) {
+          <span class="tab-check">✓</span>
+        }
+      </button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="vad-body">
+
+      <!-- Script Tab -->
+      @if (activeTab() === 'script') {
+        <div class="vad-tab-content script-tab">
+          <label class="tab-section-label">Write your script</label>
+          <p class="tab-section-hint">Enter the text your avatar will speak in the video.</p>
+          <textarea 
+            class="script-textarea" 
+            [ngModel]="scriptText()"
+            (ngModelChange)="scriptText.set($event)"
+            placeholder="Type or paste your video script here..."
+            rows="10"></textarea>
+          <div class="script-footer">
+            <span class="char-count">{{ scriptText().length }} characters</span>
+          </div>
+        </div>
+      }
+
+      <!-- Avatars Tab -->
+      @if (activeTab() === 'avatars') {
+        <div class="vad-tab-content avatars-tab">
+
+          <!-- Own Avatars Section -->
+          @if (customAvatars().length > 0) {
+            <div class="avatar-section">
+              <label class="tab-section-label">Own Avatar</label>
+              <div class="avatar-grid">
+                @for (av of customAvatars(); track av.id) {
+                  <button class="avatar-card" 
+                          [class.selected]="selectedAvatar()?.id === av.id"
+                          (click)="selectAvatar(av)">
+                    <div class="avatar-img-wrap">
+                      <img [src]="av.image" [alt]="av.label" />
+                      <button class="avatar-remove-btn" (click)="removeCustomAvatar(av, $event)" title="Remove">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                      </button>
+                    </div>
+                    <span class="avatar-label">{{ av.label }}</span>
+                    <span class="avatar-badge custom-badge">Custom</span>
+                  </button>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Default Video Avatars Section -->
+          <div class="avatar-section">
+            <div class="section-header-row">
+              <label class="tab-section-label">Video Avatars</label>
+              <button class="upload-btn" (click)="avatarFileInput.click()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Upload your own
+              </button>
+              <input #avatarFileInput type="file" accept="image/*" hidden (change)="onAvatarFileSelected($event)" />
+            </div>
+            <div class="avatar-grid">
+              @for (av of defaultAvatars; track av.id) {
+                <button class="avatar-card" 
+                        [class.selected]="selectedAvatar()?.id === av.id"
+                        (click)="selectAvatar(av)">
+                  <div class="avatar-img-wrap">
+                    <img [src]="av.image" [alt]="av.label" />
+                  </div>
+                  <span class="avatar-label">{{ av.label }}</span>
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Audio Tab -->
+      @if (activeTab() === 'audio') {
+        <div class="vad-tab-content audio-tab">
+
+          <!-- Own Audio Section -->
+          @if (customAudios().length > 0) {
+            <div class="audio-section">
+              <label class="tab-section-label">Own Audio</label>
+              <div class="audio-list">
+                @for (au of customAudios(); track au.id) {
+                  <button class="audio-card"
+                          [class.selected]="selectedAudio()?.id === au.id"
+                          (click)="selectAudio(au)">
+                    <div class="audio-play-btn" (click)="playAudio(au.audio, $event)">
+                      @if (activeAudioUrl() === au.audio) {
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                          <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+                        </svg>
+                      } @else {
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                          <polygon points="5 3 19 12 5 21 5 3"/>
+                        </svg>
+                      }
+                    </div>
+                    <div class="audio-info">
+                      <span class="audio-label">{{ au.label }}</span>
+                      <span class="audio-badge custom-badge">Custom</span>
+                    </div>
+                    <span class="audio-radio" [class.checked]="selectedAudio()?.id === au.id"></span>
+                    <button class="audio-remove-btn" (click)="removeCustomAudio(au, $event)" title="Remove">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                      </svg>
+                    </button>
+                  </button>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Default Audio Section -->
+          <div class="audio-section">
+            <div class="section-header-row">
+              <label class="tab-section-label">Voice Library</label>
+              <button class="upload-btn" (click)="audioFileInput.click()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Upload your own
+              </button>
+              <input #audioFileInput type="file" accept="audio/*" hidden (change)="onAudioFileSelected($event)" />
+            </div>
+            <div class="audio-list">
+              @for (au of defaultAudios; track au.id) {
+                <button class="audio-card"
+                        [class.selected]="selectedAudio()?.id === au.id"
+                        (click)="selectAudio(au)">
+                  <div class="audio-play-btn" (click)="playAudio(au.audio, $event)">
+                    @if (activeAudioUrl() === au.audio) {
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+                      </svg>
+                    } @else {
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="5 3 19 12 5 21 5 3"/>
+                      </svg>
+                    }
+                  </div>
+                  <div class="audio-info">
+                    <span class="audio-label">{{ au.label }}</span>
+                  </div>
+                  <span class="audio-radio" [class.checked]="selectedAudio()?.id === au.id"></span>
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Dialog Footer -->
+    <div class="vad-footer">
+      <div class="vad-progress-dots">
+        <span class="progress-dot" [class.done]="scriptText().trim()"></span>
+        <span class="progress-dot" [class.done]="selectedAvatar()"></span>
+        <span class="progress-dot" [class.done]="selectedAudio()"></span>
+      </div>
+      <div class="vad-footer-actions">
+        <button class="vad-cancel-btn" (click)="close()">Cancel</button>
+        <button class="vad-generate-btn" 
+                [class.active]="canGenerate" 
+                [disabled]="!canGenerate" 
+                (click)="generate()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          Generate Video
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
