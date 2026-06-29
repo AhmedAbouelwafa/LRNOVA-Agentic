@@ -116,7 +116,7 @@
   padding-bottom: 0;
 }
 .content-wrapper.animating-out > app-prompt-field {
-  display: none;
+  display: none !important;
 }
 
 .content-wrapper.projects-page {
