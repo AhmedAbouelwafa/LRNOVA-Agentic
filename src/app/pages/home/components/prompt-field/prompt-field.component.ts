@@ -141,6 +141,27 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
     }
   }
 
+  handleEnter(event: Event) {
+    const keyboardEvent = event as KeyboardEvent;
+    if (!keyboardEvent.shiftKey) {
+      keyboardEvent.preventDefault();
+      this.onSubmit();
+    }
+  }
+
+  adjustTextareaHeight(event: Event) {
+    const textarea = event.target as HTMLTextAreaElement;
+    textarea.style.height = 'auto';
+    const newHeight = Math.min(textarea.scrollHeight, 120);
+    textarea.style.height = `${newHeight}px`;
+    
+    if (textarea.scrollHeight > 120) {
+      textarea.style.overflowY = 'auto';
+    } else {
+      textarea.style.overflowY = 'hidden';
+    }
+  }
+
   confirmGenerate() {
     this.showCreditPreviewModal = false;
     this.state.submitPrompt();

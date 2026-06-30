@@ -93,15 +93,18 @@
       <!-- Removed inline credit preview -->
 
       <div class="prompt-input-row">
-        <input type="text" class="prompt-input"
+        <textarea class="prompt-input"
           [placeholder]="typedPlaceholder.output()"
           [ngModel]="state.promptText()"
           (ngModelChange)="state.promptText.set($event)"
           (focus)="state.isPromptFocused.set(true)"
           (blur)="state.isPromptFocused.set(false)"
-          (keydown.enter)="onSubmit()"
+          (keydown.enter)="handleEnter($event)"
+          (input)="adjustTextareaHeight($event)"
           [readonly]="state.isGenerating() || (state.isAnimatingOut() && mode !== 'chat')"
-          id="prompt-input" />
+          id="prompt-input"
+          rows="1"
+          style="height: 28px;"></textarea>
       </div>
       <div class="prompt-actions-row">
         <!-- Hidden file input -->
