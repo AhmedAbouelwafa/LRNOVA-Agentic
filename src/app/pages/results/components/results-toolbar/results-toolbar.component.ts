@@ -1,12 +1,12 @@
 import { Component, inject } from '@angular/core';
-import { SlicePipe } from '@angular/common';
+
 import { PromptStateService } from '../../../../core/services/prompt-state.service';
 import { LocalizationService } from '../../../../core/services/localization.service';
 
 @Component({
   selector: 'app-results-toolbar',
   standalone: true,
-  imports: [SlicePipe],
+  imports: [],
   templateUrl: './results-toolbar.component.html',
   styleUrl: './results-toolbar.component.css'
 })

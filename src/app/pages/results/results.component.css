@@ -46,8 +46,8 @@
     padding: 0 16px;
   }
 }
-:host-context(html[dir="rtl"]) @media (max-width: 900px) {
-  .results-layout-wrapper {
+@media (max-width: 900px) {
+  :host-context(html[dir="rtl"]) .results-layout-wrapper {
     padding-right: 0 !important;
   }
 }

@@ -1,12 +1,12 @@
 import { Component, inject, ViewChild, ElementRef, effect, signal } from '@angular/core';
 import { CreditConsumptionComponent } from './components/credit-consumption/credit-consumption.component';
 import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
+
 import { PromptStateService } from '../../core/services/prompt-state.service';
 import { ResultsToolbarComponent } from './components/results-toolbar/results-toolbar.component';
 
 import { SkeletonCardComponent } from './components/skeleton-card/skeleton-card.component';
-import { PromptFieldComponent } from '../home/components/prompt-field/prompt-field.component';
+
 import { VideoResultComponent } from './components/video-result/video-result.component';
 import { TextResultComponent } from './components/text-result/text-result.component';
 import { SlidesResultComponent } from './components/slides-result/slides-result.component';
@@ -18,11 +18,8 @@ import { TextVideoDialogComponent } from './components/text-video-dialog/text-vi
   selector: 'app-results',
   standalone: true,
   imports: [
-    DatePipe,
     ResultsToolbarComponent,
-
     SkeletonCardComponent,
-    PromptFieldComponent,
     VideoResultComponent,
     TextResultComponent,
     SlidesResultComponent,
@@ -30,7 +27,7 @@ import { TextVideoDialogComponent } from './components/text-video-dialog/text-vi
     CreditConsumptionComponent,
     VideoAvatarDialogComponent,
     TextVideoDialogComponent
-  ],
+],
   templateUrl: './results.component.html',
   styleUrl: './results.component.css'
 })
