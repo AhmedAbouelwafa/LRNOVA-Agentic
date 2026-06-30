@@ -158,7 +158,7 @@
 
         <div class="prompt-actions-right">
 
-          @if (mode !== 'chat' && (state.activeAgent() === 'video' || state.selectedQuickTool() === 'Video' || state.selectedQuickTool() === 'Text Video' || (state.selectedGoal() && state.selectedGoal()!.id.includes('video')))) {
+          @if (mode !== 'chat' && (state.activeAgent() === 'video' || state.selectedQuickTool() === 'Video Avatar' || state.selectedQuickTool() === 'Text Video' || (state.selectedGoal() && state.selectedGoal()!.id.includes('video')))) {
             <div class="plan-toggle" (click)="onTogglePlan($event)">
               <div class="toggle-slider" [class.is-pro]="state.selectedPlan() === 'pro'"></div>
               <span class="toggle-label" [class.active]="state.selectedPlan() === 'flash'">{{ i18n.t('prompt.flash') }}</span>

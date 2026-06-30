@@ -13,6 +13,7 @@ export interface Suggestion {
   icon: string;
   text: string;
   prompt: string;
+  videoSubType?: 'avatar' | 'text-video' | '2d-animation';
 }
 
 export interface PipelineStep {

@@ -34,11 +34,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/settings/settings.component').then(m => m.SettingsComponent)
   },
   {
-    path: 'apps',
+    path: 'agents',
     loadComponent: () => import('./pages/apps/apps.component').then(m => m.AppsComponent)
   },
   {
-    path: 'apps/:toolId',
+    path: 'agents/:toolId',
     loadComponent: () => import('./pages/apps/apps.component').then(m => m.AppsComponent)
   },
   {

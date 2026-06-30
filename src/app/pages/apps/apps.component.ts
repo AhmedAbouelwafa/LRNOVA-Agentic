@@ -28,8 +28,8 @@ export class AppsComponent implements OnInit, OnDestroy {
 
   tools: AppTool[] = [
     {
-      id: 'Video', slug: 'video',
-      label: 'Video',
+      id: 'Video Avatar', slug: 'video-avatar',
+      label: 'Video Avatar',
       desc: 'Generate stunning AI-powered video presentations with avatars and animations',
       icon: 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14v-4z M4 6h10a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2z',
       gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -124,7 +124,7 @@ export class AppsComponent implements OnInit, OnDestroy {
           this.activateTool(tool);
         } else {
           // Invalid tool slug, redirect to apps grid
-          this.router.navigate(['/apps']);
+          this.router.navigate(['/agents']);
         }
       } else {
         // No tool selected, show grid
@@ -136,7 +136,7 @@ export class AppsComponent implements OnInit, OnDestroy {
   }
 
   selectTool(tool: AppTool) {
-    this.router.navigate(['/apps', tool.slug]);
+    this.router.navigate(['/agents', tool.slug]);
   }
 
   private activateTool(tool: AppTool) {
@@ -160,7 +160,7 @@ export class AppsComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.router.navigate(['/apps']);
+    this.router.navigate(['/agents']);
   }
 
   private cleanupWriter() {

@@ -180,7 +180,7 @@
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
-  padding: 1.5rem 1.5rem 3rem;
+  padding: 0 1.5rem 3rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -363,7 +363,7 @@
   }
 
   .tool-detail-bottom {
-    padding: 1.5rem 1rem 3rem;
+    padding: 0 1rem 3rem;
   }
 }
 

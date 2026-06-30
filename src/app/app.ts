@@ -23,7 +23,7 @@ export class App {
       filter((e): e is NavigationEnd => e instanceof NavigationEnd)
     ).subscribe(e => {
       const url = e.urlAfterRedirects;
-      const isAppsGrid = url === '/apps' || url.startsWith('/apps?');
+      const isAppsGrid = url === '/agents' || url.startsWith('/agents?');
       this.isFullWidthPage.set(url.startsWith('/projects') || url.startsWith('/settings') || url.startsWith('/results') || isAppsGrid);
       this.isLoginPage.set(url.startsWith('/login') || url.startsWith('/register'));
     });

@@ -23,7 +23,7 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
   private placeholderWriter!: ReturnType<TypewriterService['create']>;
 
   get canRemoveTool(): boolean {
-    return this.mode !== 'chat' && !this.router.url.startsWith('/apps');
+    return this.mode !== 'chat' && !this.router.url.startsWith('/agents');
   }
 
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
@@ -31,13 +31,13 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
   protected typedPlaceholder!: ReturnType<TypewriterService['create']>;
 
   get showDropdown(): boolean {
-    return this.router.url.startsWith('/apps');
+    return this.router.url.startsWith('/agents');
   }
 
   isAppDropdownOpen = false;
 
   availableTools = [
-    { id: 'Video', slug: 'video', label: 'Video' },
+    { id: 'Video Avatar', slug: 'video-avatar', label: 'Video Avatar' },
     { id: 'Text Video', slug: 'text-video', label: 'Text Video' },
     { id: 'Script', slug: 'script', label: 'Script' },
     { id: 'Assessment', slug: 'assessment', label: 'Assessment' },
@@ -62,7 +62,7 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
 
   switchTool(tool: any) {
     this.isAppDropdownOpen = false;
-    this.router.navigate(['/apps', tool.slug]);
+    this.router.navigate(['/agents', tool.slug]);
   }
 
 
@@ -172,7 +172,7 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
     const toolKeywords: Record<string, string> = {
       'slides': 'Slides',
       'course': 'Course Content',
-      'video': 'Video',
+      'video': 'Video Avatar',
       'activity': 'Activity',
       'assessment': 'Assessment',
       'script': 'Script',
@@ -194,7 +194,7 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
         this.state.addCanvasTab(text);
         
         const hasVideoWord = lower.includes('video');
-        if (detectedTool === 'Video' || detectedTool === 'Text Video') {
+        if (detectedTool === 'Video Avatar' || detectedTool === 'Text Video') {
           this.processFollowUp(detectedTool, hasVideoWord);
         } else {
           this.processFollowUp(currentTool);
@@ -224,7 +224,7 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
   }
 
   private processFollowUp(tool: string | null, hasVideoWord: boolean = false) {
-    if (tool === 'Video' || tool === 'Text Video') {
+    if (tool === 'Video Avatar' || tool === 'Text Video') {
       this.state.startFollowUp('video', hasVideoWord);
       return;
     }
