@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ViewChild, ElementRef, AfterViewInit, OnDestroy, NgZone } from '@angular/core';
 import { PromptStateService } from '../../../../core/services/prompt-state.service';
 import { LocalizationService } from '../../../../core/services/localization.service';
 
@@ -11,6 +11,24 @@ import { LocalizationService } from '../../../../core/services/localization.serv
 export class VideoResultComponent {
   protected state = inject(PromptStateService);
   protected i18n = inject(LocalizationService);
+  private ngZone = inject(NgZone);
+
+  @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
+  @ViewChild('videoContainer') videoContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('progressFill') progressFill!: ElementRef<HTMLDivElement>;
+  @ViewChild('currentTimeDisplay') currentTimeDisplay!: ElementRef<HTMLSpanElement>;
+  @ViewChild('durationDisplay') durationDisplay!: ElementRef<HTMLSpanElement>;
+
+  // Video Player State
+  isPlaying = signal(false);
+  isMuted = signal(false);
+  volume = signal(1);
+  isFullscreen = signal(false);
+
+  private timeUpdateHandler!: () => void;
+  private durationChangeHandler!: () => void;
+  private endHandler!: () => void;
+  private fullscreenChangeHandler!: () => void;
 
   // Avatar selection
   readonly avatars = [
@@ -94,5 +112,153 @@ export class VideoResultComponent {
         this.state.isGenerationComplete.set(true);
       }
     }, 1800);
+  }
+
+  ngAfterViewInit() {
+    const video = this.videoPlayer.nativeElement;
+    
+    this.timeUpdateHandler = () => {
+      if (this.currentTimeDisplay) {
+        this.currentTimeDisplay.nativeElement.innerText = this.formatTime(video.currentTime);
+      }
+      if (video.duration && this.progressFill) {
+        const percent = (video.currentTime / video.duration) * 100;
+        this.progressFill.nativeElement.style.width = `${percent}%`;
+      }
+    };
+    
+    this.durationChangeHandler = () => {
+      if (this.durationDisplay) {
+        this.durationDisplay.nativeElement.innerText = this.formatTime(video.duration);
+      }
+    };
+
+    this.endHandler = () => {
+      this.isPlaying.set(false);
+    };
+
+    const playHandler = () => this.ngZone.run(() => this.isPlaying.set(true));
+    const pauseHandler = () => this.ngZone.run(() => this.isPlaying.set(false));
+    
+    this.fullscreenChangeHandler = () => {
+      this.ngZone.run(() => {
+        this.isFullscreen.set(!!document.fullscreenElement || !!(document as any).webkitFullscreenElement);
+      });
+    };
+
+    this.ngZone.runOutsideAngular(() => {
+      video.addEventListener('timeupdate', this.timeUpdateHandler);
+      video.addEventListener('loadedmetadata', this.durationChangeHandler);
+      video.addEventListener('ended', this.endHandler);
+      video.addEventListener('play', playHandler);
+      video.addEventListener('pause', pauseHandler);
+      document.addEventListener('fullscreenchange', this.fullscreenChangeHandler);
+      document.addEventListener('webkitfullscreenchange', this.fullscreenChangeHandler);
+    });
+    
+    // Cleanup handlers will need to remove these too
+    (this as any)._playHandler = playHandler;
+    (this as any)._pauseHandler = pauseHandler;
+
+    // Check initial mute state if browser muted autoplay
+    this.isMuted.set(video.muted);
+  }
+
+  ngOnDestroy() {
+    if (this.videoPlayer) {
+      const video = this.videoPlayer.nativeElement;
+      video.removeEventListener('timeupdate', this.timeUpdateHandler);
+      video.removeEventListener('loadedmetadata', this.durationChangeHandler);
+      video.removeEventListener('ended', this.endHandler);
+      if ((this as any)._playHandler) {
+        video.removeEventListener('play', (this as any)._playHandler);
+        video.removeEventListener('pause', (this as any)._pauseHandler);
+      }
+      document.removeEventListener('fullscreenchange', this.fullscreenChangeHandler);
+      document.removeEventListener('webkitfullscreenchange', this.fullscreenChangeHandler);
+    }
+  }
+
+  togglePlay() {
+    const video = this.videoPlayer.nativeElement;
+    if (video.paused) {
+      video.play();
+      this.isPlaying.set(true);
+    } else {
+      video.pause();
+      this.isPlaying.set(false);
+    }
+  }
+
+  skip(seconds: number) {
+    const video = this.videoPlayer.nativeElement;
+    video.currentTime = Math.min(Math.max(video.currentTime + seconds, 0), video.duration || 0);
+  }
+
+  togglePiP() {
+    const video = this.videoPlayer.nativeElement;
+    if (document.pictureInPictureElement) {
+      document.exitPictureInPicture().catch(console.error);
+    } else if (document.pictureInPictureEnabled) {
+      video.requestPictureInPicture().catch(console.error);
+    }
+  }
+
+  toggleMute() {
+    const video = this.videoPlayer.nativeElement;
+    video.muted = !video.muted;
+    this.isMuted.set(video.muted);
+    if (!video.muted && video.volume === 0) {
+      video.volume = 1;
+      this.volume.set(1);
+    }
+  }
+
+  setVolume(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const val = parseFloat(input.value);
+    const video = this.videoPlayer.nativeElement;
+    video.volume = val;
+    this.volume.set(val);
+    if (val === 0) {
+      video.muted = true;
+      this.isMuted.set(true);
+    } else {
+      video.muted = false;
+      this.isMuted.set(false);
+    }
+  }
+
+  seekVideo(event: MouseEvent, progressBar: HTMLElement) {
+    const rect = progressBar.getBoundingClientRect();
+    const pos = (event.clientX - rect.left) / rect.width;
+    const video = this.videoPlayer.nativeElement;
+    if (video.duration) {
+      video.currentTime = pos * video.duration;
+    }
+  }
+
+  toggleFullscreen() {
+    const container = this.videoContainer.nativeElement as any;
+    if (!document.fullscreenElement && !(document as any).webkitFullscreenElement) {
+      if (container.requestFullscreen) {
+        container.requestFullscreen().catch((err: any) => console.log(err));
+      } else if (container.webkitRequestFullscreen) {
+        container.webkitRequestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if ((document as any).webkitExitFullscreen) {
+        (document as any).webkitExitFullscreen();
+      }
+    }
+  }
+
+  formatTime(seconds: number): string {
+    if (isNaN(seconds)) return '0:00';
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m}:${s < 10 ? '0' + s : s}`;
   }
 }

@@ -22,6 +22,8 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
   private observer: IntersectionObserver | null = null;
   isLoadingMore = signal(false);
 
+  viewMode = signal<'list' | 'grid'>('list');
+
   readonly itemsPerPage = 8;
   visibleItemsCount = signal(this.itemsPerPage);
 
@@ -277,6 +279,10 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     this.selectedFilterGoal.set(filterId);
     this.isFilterDropdownOpen.set(false);
     this.visibleItemsCount.set(this.itemsPerPage); // Reset pagination on filter change
+  }
+
+  setViewMode(mode: 'list' | 'grid') {
+    this.viewMode.set(mode);
   }
 
   @HostListener('document:click')
