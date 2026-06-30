@@ -1,7 +1,7 @@
 :host { display: block; width: 100%; display: flex; justify-content: center; }
 
 .prompt-wrapper {
-  width: 100%; max-width: 680px; display: flex; flex-direction: column; gap: 12px; margin-bottom: 0.5rem;
+  width: 100%; max-width: 680px; display: flex; flex-direction: column; gap: 12px; margin-bottom: 1.2rem;
   padding: 0 16px;
 }
 .prompt-container { width: 100%; position: relative; }
