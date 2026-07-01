@@ -26,7 +26,9 @@
   padding: 12px 14px 0 14px;
 }
 .q-panel-label {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-size: 0.68rem;
   font-weight: 700;
   color: #8B5CF6;
@@ -35,6 +37,18 @@
   border-radius: 6px;
   letter-spacing: 0.03em;
   text-transform: uppercase;
+}
+.q-panel-label.script-label {
+  color: #3B82F6;
+  background: rgba(59, 130, 246, 0.08);
+}
+.q-panel-label.review-label {
+  color: #10B981;
+  background: rgba(16, 185, 129, 0.08);
+}
+.q-panel-label.upload-label {
+  color: #F59E0B;
+  background: rgba(245, 158, 11, 0.08);
 }
 .q-panel-close {
   display: flex; align-items: center; justify-content: center;
@@ -57,7 +71,7 @@
   line-height: 1.4;
 }
 
-/* ===== Options ===== */
+/* ===== Standard Options ===== */
 .q-panel-options {
   display: flex;
   flex-direction: column;
@@ -230,4 +244,190 @@
 .q-panel-option.selected .opt-audio-btn {
   background: #8B5CF6;
   color: white;
+}
+
+/* ===================================== */
+/* Script Input Mode (User-Written)      */
+/* ===================================== */
+.q-script-input-area {
+  padding: 0 14px 14px;
+  animation: qPanelSlideUp 0.3s ease-out;
+}
+
+.q-script-textarea {
+  width: 100%;
+  min-height: 140px;
+  max-height: 240px;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 0.84rem;
+  font-family: inherit;
+  color: var(--text-body);
+  background: var(--surface-primary);
+  resize: vertical;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  line-height: 1.65;
+}
+.q-script-textarea::placeholder {
+  color: var(--text-muted);
+}
+.q-script-textarea:focus {
+  outline: none;
+  border-color: #8B5CF6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.08);
+}
+
+.q-script-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.q-char-count {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ===================================== */
+/* Script Review Mode (AI-Generated)     */
+/* ===================================== */
+.q-script-review-area {
+  padding: 0 14px 14px;
+  animation: qPanelSlideUp 0.3s ease-out;
+}
+
+.script-review-card {
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--surface-primary);
+}
+
+.script-review-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.06), rgba(59, 130, 246, 0.06));
+  border-bottom: 1px solid var(--border-light);
+}
+
+.script-review-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #10B981;
+  letter-spacing: 0.02em;
+}
+
+.script-edit-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-light);
+  background: var(--surface-card);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.script-edit-toggle:hover {
+  border-color: #8B5CF6;
+  color: #8B5CF6;
+  background: rgba(139, 92, 246, 0.04);
+}
+
+.script-preview-content {
+  padding: 14px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.script-preview-content::-webkit-scrollbar { width: 3px; }
+.script-preview-content::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.15); border-radius: 10px; }
+
+.script-preview-content p {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: var(--text-body);
+  white-space: pre-wrap;
+}
+
+.q-script-textarea.review-edit-mode {
+  border: none;
+  border-radius: 0;
+  min-height: 180px;
+  max-height: 260px;
+}
+.q-script-textarea.review-edit-mode:focus {
+  box-shadow: none;
+}
+
+.script-review-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+/* ===================================== */
+/* File Upload Mode                      */
+/* ===================================== */
+.q-file-upload-area {
+  padding: 0 14px 14px;
+  animation: qPanelSlideUp 0.3s ease-out;
+}
+
+.upload-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 28px 20px;
+  border: 2px dashed rgba(245, 158, 11, 0.3);
+  border-radius: 14px;
+  background: rgba(245, 158, 11, 0.03);
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.upload-dropzone:hover {
+  border-color: #F59E0B;
+  background: rgba(245, 158, 11, 0.06);
+  transform: translateY(-1px);
+}
+
+.upload-icon-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(245, 158, 11, 0.1);
+  color: #F59E0B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+  transition: transform 0.25s;
+}
+.upload-dropzone:hover .upload-icon-circle {
+  transform: scale(1.08);
+}
+
+.upload-label {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-heading);
+}
+
+.upload-hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 500;
 }

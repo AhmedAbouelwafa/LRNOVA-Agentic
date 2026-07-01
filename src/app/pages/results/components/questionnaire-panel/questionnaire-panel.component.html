@@ -2,7 +2,36 @@
   <div class="q-panel">
     <!-- Header: Label + Close -->
     <div class="q-panel-header">
-      <span class="q-panel-label">Question {{ q.questionnaire!.step }}/{{ q.questionnaire!.totalSteps }}</span>
+      @if (!q.questionnaire!.isScriptInput && !q.questionnaire!.isScriptReview && !q.questionnaire!.isFileUpload) {
+        <span class="q-panel-label">Question {{ q.questionnaire!.step }}/{{ q.questionnaire!.totalSteps }}</span>
+      } @else if (q.questionnaire!.isScriptInput) {
+        <span class="q-panel-label script-label">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          {{ i18n.currentLang() === 'ar' ? 'كتابة النص' : 'Script Editor' }}
+        </span>
+      } @else if (q.questionnaire!.isScriptReview) {
+        <span class="q-panel-label review-label">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+          {{ i18n.currentLang() === 'ar' ? 'مراجعة النص' : 'Script Review' }}
+        </span>
+      } @else if (q.questionnaire!.isFileUpload) {
+        <span class="q-panel-label upload-label">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          {{ i18n.currentLang() === 'ar' ? 'رفع ملف' : 'File Upload' }}
+        </span>
+      }
       <button class="q-panel-close" (click)="skipQuestion()" title="Skip">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
@@ -10,57 +39,165 @@
       </button>
     </div>
 
-    <!-- Question -->
+    <!-- Question Title -->
     <h4 class="q-panel-question">{{ displayedTitle() }}</h4>
 
-    <!-- Options (radio select) -->
-    <div class="q-panel-options" [class.has-images]="q.questionnaire!.options[0]?.image" [class.has-audio]="q.questionnaire!.options[0]?.audio">
-      @for (opt of q.questionnaire!.options; track opt.id) {
-        <button class="q-panel-option" 
-                [class.selected]="selectedOption() === opt.label"
-                (click)="selectOption(opt.label)">
-          
-          @if (opt.image) {
-            <div class="opt-image-wrapper">
-              <img [src]="opt.image" [alt]="opt.label" class="opt-image" />
+    <!-- ======================== -->
+    <!-- MODE: Script Input (User-Written) -->
+    <!-- ======================== -->
+    @if (q.questionnaire!.isScriptInput) {
+      <div class="q-script-input-area">
+        <textarea 
+          class="q-script-textarea"
+          [ngModel]="userScriptText()"
+          (ngModelChange)="userScriptText.set($event)"
+          [placeholder]="i18n.currentLang() === 'ar' ? 'اكتب النص الخاص بك هنا...' : 'Type your script here...'"
+          rows="8"></textarea>
+        <div class="q-script-footer">
+          <span class="q-char-count">{{ userScriptText().length }} {{ i18n.currentLang() === 'ar' ? 'حرف' : 'characters' }}</span>
+          <button class="q-submit-btn active" 
+                  [disabled]="!userScriptText().trim()"
+                  [class.active]="userScriptText().trim()"
+                  (click)="submitUserScript()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="22" y1="2" x2="11" y2="13" />
+              <polygon points="22 2 15 22 11 13 2 9 22 2" />
+            </svg>
+            {{ i18n.currentLang() === 'ar' ? 'إرسال النص' : 'Submit Script' }}
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- ======================== -->
+    <!-- MODE: Script Review (AI-Generated) -->
+    <!-- ======================== -->
+    @else if (q.questionnaire!.isScriptReview) {
+      <div class="q-script-review-area">
+        <div class="script-review-card">
+          <div class="script-review-header">
+            <div class="script-review-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 16v-4"/>
+                <path d="M12 8h.01"/>
+              </svg>
+              {{ i18n.currentLang() === 'ar' ? 'تم إنشاء النص بواسطة الذكاء الاصطناعي' : 'AI-Generated Script' }}
             </div>
-          }
-          
-          @if (opt.audio) {
-            <div class="opt-audio-btn" (click)="playAudio(opt.audio, $event)">
-              @if (activeAudioUrl() === opt.audio) {
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                  <rect x="6" y="4" width="4" height="16" />
-                  <rect x="14" y="4" width="4" height="16" />
+            <button class="script-edit-toggle" (click)="toggleScriptEdit()">
+              @if (isEditingScript()) {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
                 </svg>
+                {{ i18n.currentLang() === 'ar' ? 'معاينة' : 'Preview' }}
               } @else {
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                  <polygon points="5 3 19 12 5 21 5 3" />
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                 </svg>
+                {{ i18n.currentLang() === 'ar' ? 'تعديل' : 'Edit' }}
               }
+            </button>
+          </div>
+
+          @if (isEditingScript()) {
+            <textarea 
+              class="q-script-textarea review-edit-mode"
+              [ngModel]="editableScript()"
+              (ngModelChange)="editableScript.set($event)"
+              rows="10"></textarea>
+          } @else {
+            <div class="script-preview-content">
+              <p>{{ editableScript() }}</p>
             </div>
           }
+        </div>
 
-          <div class="opt-text-content">
-            <span class="q-radio" [class.checked]="selectedOption() === opt.label"></span>
-            <span class="q-option-text">{{ opt.label }}</span>
+        <div class="script-review-actions">
+          <button class="q-submit-btn active" (click)="approveScript()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+            {{ i18n.currentLang() === 'ar' ? 'اعتماد النص وإنشاء الفيديو' : 'Approve & Continue' }}
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- ======================== -->
+    <!-- MODE: File Upload (Audio) -->
+    <!-- ======================== -->
+    @else if (q.questionnaire!.isFileUpload) {
+      <div class="q-file-upload-area">
+        <input #audioUploadInput type="file" [accept]="q.questionnaire!.acceptFileTypes || '*'" hidden (change)="onAudioFileSelected($event)" />
+        <div class="upload-dropzone" (click)="triggerAudioUpload()">
+          <div class="upload-icon-circle">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
           </div>
-        </button>
-      }
-    </div>
+          <span class="upload-label">{{ i18n.currentLang() === 'ar' ? 'اضغط لرفع ملف صوتي' : 'Click to upload an audio file' }}</span>
+          <span class="upload-hint">{{ i18n.currentLang() === 'ar' ? 'MP3, WAV, WEBM — حتى 50 ميجا' : 'MP3, WAV, WEBM — up to 50 MB' }}</span>
+        </div>
+      </div>
+    }
 
-    <!-- Footer: Submit -->
-    <div class="q-panel-footer">
-      <button class="q-submit-btn" 
-              [class.active]="selectedOption()"
-              [disabled]="!selectedOption()"
-              (click)="submitAnswer()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <polyline points="20 6 9 17 4 12" />
-        </svg>
-        {{ i18n.currentLang() === 'ar' ? 'التالي' : 'Next' }}
-      </button>
-      <span class="q-panel-esc" (click)="skipQuestion()">{{ i18n.currentLang() === 'ar' ? 'تخطي (Esc)' : 'Esc to skip' }}</span>
-    </div>
+    <!-- ======================== -->
+    <!-- MODE: Standard Radio Options -->
+    <!-- ======================== -->
+    @else {
+      <!-- Options (radio select) -->
+      <div class="q-panel-options" [class.has-images]="q.questionnaire!.options[0]?.image" [class.has-audio]="q.questionnaire!.options[0]?.audio">
+        @for (opt of q.questionnaire!.options; track opt.id) {
+          <button class="q-panel-option" 
+                  [class.selected]="selectedOption() === opt.label"
+                  (click)="selectOption(opt.label)">
+            
+            @if (opt.image) {
+              <div class="opt-image-wrapper">
+                <img [src]="opt.image" [alt]="opt.label" class="opt-image" />
+              </div>
+            }
+            
+            @if (opt.audio) {
+              <div class="opt-audio-btn" (click)="playAudio(opt.audio, $event)">
+                @if (activeAudioUrl() === opt.audio) {
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <rect x="6" y="4" width="4" height="16" />
+                    <rect x="14" y="4" width="4" height="16" />
+                  </svg>
+                } @else {
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                }
+              </div>
+            }
+
+            <div class="opt-text-content">
+              <span class="q-radio" [class.checked]="selectedOption() === opt.label"></span>
+              <span class="q-option-text">{{ opt.label }}</span>
+            </div>
+          </button>
+        }
+      </div>
+
+      <!-- Footer: Submit -->
+      <div class="q-panel-footer">
+        <button class="q-submit-btn" 
+                [class.active]="selectedOption()"
+                [disabled]="!selectedOption()"
+                (click)="submitAnswer()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+          {{ i18n.currentLang() === 'ar' ? 'التالي' : 'Next' }}
+        </button>
+        <span class="q-panel-esc" (click)="skipQuestion()">{{ i18n.currentLang() === 'ar' ? 'تخطي (Esc)' : 'Esc to skip' }}</span>
+      </div>
+    }
   </div>
 }

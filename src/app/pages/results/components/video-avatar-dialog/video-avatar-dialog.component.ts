@@ -30,10 +30,13 @@ export class VideoAvatarDialogComponent {
   @Output() closed = new EventEmitter<void>();
   @Output() confirmed = new EventEmitter<{
     avatar: AvatarOption;
-    audio: AudioOption;
+    audio: AudioOption | null;
   }>();
 
-  activeTab = signal<'avatars' | 'audio'>('avatars');
+  activeTab = signal<'avatars' | 'voice'>('avatars');
+  avatarSubTab = signal<'my-avatar' | 'avatar-library'>('avatar-library');
+  voiceSubTab = signal<'my-voice' | 'voice-library'>('voice-library');
+  videoMode = signal<'rapid' | 'pro'>('rapid');
 
   selectedAvatar = signal<AvatarOption | null>(null);
   selectedAudio = signal<AudioOption | null>(null);
@@ -85,8 +88,12 @@ export class VideoAvatarDialogComponent {
     return this.defaultAudios.filter(a => a.gender === filter);
   });
 
-  setTab(tab: 'avatars' | 'audio') {
+  setTab(tab: 'avatars' | 'voice') {
     this.activeTab.set(tab);
+  }
+
+  toggleVideoMode() {
+    this.videoMode.update(m => m === 'rapid' ? 'pro' : 'rapid');
   }
 
   selectAvatar(avatar: AvatarOption) {
@@ -181,7 +188,7 @@ export class VideoAvatarDialogComponent {
       this.stopAudio();
       this.confirmed.emit({
         avatar: this.selectedAvatar()!,
-        audio: this.selectedAudio()!
+        audio: this.selectedAudio()
       });
     }
   }
@@ -195,6 +202,9 @@ export class VideoAvatarDialogComponent {
   }
 
   get canGenerate(): boolean {
+    if (this.state.hideVoiceInDialog()) {
+      return this.selectedAvatar() !== null;
+    }
     return this.selectedAvatar() !== null && this.selectedAudio() !== null;
   }
 }

@@ -47,6 +47,16 @@ export interface ChatMessage {
     answered?: boolean;
     step?: number;
     totalSteps?: number;
+    /** When true, show a textarea for user to write their own script */
+    isScriptInput?: boolean;
+    /** When true, show a script review panel with approve/edit actions */
+    isScriptReview?: boolean;
+    /** The script content (AI-generated or user-written) */
+    scriptContent?: string;
+    /** When true, show a file upload input instead of radio options */
+    isFileUpload?: boolean;
+    /** Accepted file types for upload (e.g. 'audio/*') */
+    acceptFileTypes?: string;
   };
 }
 

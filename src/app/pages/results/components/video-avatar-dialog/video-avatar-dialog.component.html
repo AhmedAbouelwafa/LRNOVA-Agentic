@@ -22,115 +22,256 @@
       </button>
     </div>
 
-    <!-- Tabs -->
-    <div class="vad-tabs">
+    <!-- Primary Tabs + Mode Toggle -->
+    <div class="vad-tabs-row">
+      <div class="vad-tabs">
+        <button class="vad-tab" 
+                [class.active]="activeTab() === 'avatars'" 
+                (click)="setTab('avatars')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          Avatars
+          @if (selectedAvatar()) {
+            <span class="tab-check">✓</span>
+          }
+        </button>
+        @if (!state.hideVoiceInDialog()) {
+          <button class="vad-tab" 
+                  [class.active]="activeTab() === 'voice'" 
+                  (click)="setTab('voice')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" y1="19" x2="12" y2="23"/>
+              <line x1="8" y1="23" x2="16" y2="23"/>
+            </svg>
+            Voice
+            @if (selectedAudio()) {
+              <span class="tab-check">✓</span>
+            }
+          </button>
+        }
+      </div>
 
-      <button class="vad-tab" 
-              [class.active]="activeTab() === 'avatars'" 
-              (click)="setTab('avatars')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
-        </svg>
-        Avatars
-        @if (selectedAvatar()) {
-          <span class="tab-check">✓</span>
-        }
-      </button>
-      <button class="vad-tab" 
-              [class.active]="activeTab() === 'audio'" 
-              (click)="setTab('audio')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-          <line x1="12" y1="19" x2="12" y2="23"/>
-          <line x1="8" y1="23" x2="16" y2="23"/>
-        </svg>
-        Audio
-        @if (selectedAudio()) {
-          <span class="tab-check">✓</span>
-        }
-      </button>
+      <!-- Rapid / Pro Mode Toggle -->
+      <div class="mode-toggle" (click)="toggleVideoMode()">
+        <div class="mode-slider" [class.is-pro]="videoMode() === 'pro'"></div>
+        <span class="mode-label" [class.active]="videoMode() === 'rapid'">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+          Rapid
+        </span>
+        <span class="mode-label" [class.active]="videoMode() === 'pro'">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z"/>
+          </svg>
+          Pro
+        </span>
+      </div>
     </div>
 
     <!-- Tab Content -->
     <div class="vad-body">
 
-      <!-- Avatars Tab -->
+      <!-- ======================== -->
+      <!-- AVATARS TAB              -->
+      <!-- ======================== -->
       @if (activeTab() === 'avatars') {
         <div class="vad-tab-content avatars-tab">
 
-          <!-- Own Avatars Section -->
-          @if (customAvatars().length > 0) {
+          <!-- Sub-tabs: My Avatar / Avatar Library -->
+          <div class="sub-tabs">
+            <button class="sub-tab" 
+                    [class.active]="avatarSubTab() === 'my-avatar'" 
+                    (click)="avatarSubTab.set('my-avatar')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              My Avatar
+            </button>
+            <button class="sub-tab" 
+                    [class.active]="avatarSubTab() === 'avatar-library'" 
+                    (click)="avatarSubTab.set('avatar-library')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+              Avatar Library
+            </button>
+          </div>
+
+          <!-- Sub-Tab: My Avatar -->
+          @if (avatarSubTab() === 'my-avatar') {
             <div class="avatar-section">
-              <label class="tab-section-label">Own Avatar</label>
+              <!-- Upload area -->
+              <div class="my-upload-zone" (click)="avatarFileInput.click()">
+                <div class="upload-zone-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                </div>
+                <span class="upload-zone-title">Upload Your Avatar</span>
+                <span class="upload-zone-hint">Drag & drop or click to browse — PNG, JPG up to 10 MB</span>
+              </div>
+              <input #avatarFileInput type="file" accept="image/*" hidden (change)="onAvatarFileSelected($event)" />
+
+              <!-- Custom Avatars Grid -->
+              @if (customAvatars().length > 0) {
+                <label class="tab-section-label" style="margin-top: 20px;">Uploaded Avatars</label>
+                <div class="avatar-grid">
+                  @for (av of customAvatars(); track av.id) {
+                    <button class="avatar-card" 
+                            [class.selected]="selectedAvatar()?.id === av.id"
+                            (click)="selectAvatar(av)">
+                      <div class="avatar-img-wrap">
+                        <img [src]="av.image" [alt]="av.label" />
+                        <button class="avatar-remove-btn" (click)="removeCustomAvatar(av, $event)" title="Remove">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                          </svg>
+                        </button>
+                      </div>
+                      <span class="avatar-label">{{ av.label }}</span>
+                      <span class="avatar-badge custom-badge">Custom</span>
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Sub-Tab: Avatar Library -->
+          @if (avatarSubTab() === 'avatar-library') {
+            <div class="avatar-section">
+              <div class="section-header-row">
+                <label class="tab-section-label">Video Avatars</label>
+                <div class="filter-chips">
+                  <button class="filter-chip" [class.active]="avatarFilter() === 'All'" (click)="avatarFilter.set('All')">All</button>
+                  <button class="filter-chip" [class.active]="avatarFilter() === 'Male'" (click)="avatarFilter.set('Male')">Male</button>
+                  <button class="filter-chip" [class.active]="avatarFilter() === 'Female'" (click)="avatarFilter.set('Female')">Female</button>
+                </div>
+              </div>
               <div class="avatar-grid">
-                @for (av of customAvatars(); track av.id) {
+                @for (av of filteredAvatars(); track av.id) {
                   <button class="avatar-card" 
                           [class.selected]="selectedAvatar()?.id === av.id"
                           (click)="selectAvatar(av)">
                     <div class="avatar-img-wrap">
                       <img [src]="av.image" [alt]="av.label" />
-                      <button class="avatar-remove-btn" (click)="removeCustomAvatar(av, $event)" title="Remove">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                        </svg>
-                      </button>
                     </div>
                     <span class="avatar-label">{{ av.label }}</span>
-                    <span class="avatar-badge custom-badge">Custom</span>
                   </button>
                 }
               </div>
             </div>
           }
-
-          <!-- Default Video Avatars Section -->
-          <div class="avatar-section">
-            <div class="section-header-row">
-              <label class="tab-section-label">Video Avatars</label>
-              
-              <!-- Avatar Filter -->
-              <div class="filter-chips">
-                <button class="filter-chip" [class.active]="avatarFilter() === 'All'" (click)="avatarFilter.set('All')">All</button>
-                <button class="filter-chip" [class.active]="avatarFilter() === 'Male'" (click)="avatarFilter.set('Male')">Male</button>
-                <button class="filter-chip" [class.active]="avatarFilter() === 'Female'" (click)="avatarFilter.set('Female')">Female</button>
-              </div>
-
-              <button class="upload-btn" (click)="avatarFileInput.click()">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
-                Upload your own
-              </button>
-              <input #avatarFileInput type="file" accept="image/*" hidden (change)="onAvatarFileSelected($event)" />
-            </div>
-            <div class="avatar-grid">
-              @for (av of filteredAvatars(); track av.id) {
-                <button class="avatar-card" 
-                        [class.selected]="selectedAvatar()?.id === av.id"
-                        (click)="selectAvatar(av)">
-                  <div class="avatar-img-wrap">
-                    <img [src]="av.image" [alt]="av.label" />
-                  </div>
-                  <span class="avatar-label">{{ av.label }}</span>
-                </button>
-              }
-            </div>
-          </div>
         </div>
       }
 
-      <!-- Audio Tab -->
-      @if (activeTab() === 'audio') {
+      <!-- ======================== -->
+      <!-- VOICE TAB                -->
+      <!-- ======================== -->
+      @if (activeTab() === 'voice') {
         <div class="vad-tab-content audio-tab">
 
-          <!-- Own Audio Section -->
-          @if (customAudios().length > 0) {
+          <!-- Sub-tabs: My Voice / Voice Library -->
+          <div class="sub-tabs">
+            <button class="sub-tab" 
+                    [class.active]="voiceSubTab() === 'my-voice'" 
+                    (click)="voiceSubTab.set('my-voice')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              </svg>
+              My Voice
+            </button>
+            <button class="sub-tab" 
+                    [class.active]="voiceSubTab() === 'voice-library'" 
+                    (click)="voiceSubTab.set('voice-library')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="5.5" cy="17.5" r="2.5"/>
+                <circle cx="17.5" cy="15.5" r="2.5"/>
+                <path d="M8 17V5l12-2v12"/>
+              </svg>
+              Voice Library
+            </button>
+          </div>
+
+          <!-- Sub-Tab: My Voice -->
+          @if (voiceSubTab() === 'my-voice') {
             <div class="audio-section">
-              <label class="tab-section-label">Own Audio</label>
+              <!-- Upload area -->
+              <div class="my-upload-zone" (click)="audioFileInput.click()">
+                <div class="upload-zone-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                    <line x1="12" y1="19" x2="12" y2="23"/>
+                    <line x1="8" y1="23" x2="16" y2="23"/>
+                  </svg>
+                </div>
+                <span class="upload-zone-title">Upload Your Voice</span>
+                <span class="upload-zone-hint">MP3, WAV, WEBM — up to 50 MB</span>
+              </div>
+              <input #audioFileInput type="file" accept="audio/*" hidden (change)="onAudioFileSelected($event)" />
+
+              <!-- Custom Voices List -->
+              @if (customAudios().length > 0) {
+                <label class="tab-section-label" style="margin-top: 20px;">Uploaded Voices</label>
+                <div class="audio-list">
+                  @for (au of customAudios(); track au.id) {
+                    <button class="audio-card"
+                            [class.selected]="selectedAudio()?.id === au.id"
+                            (click)="selectAudio(au)">
+                      <div class="audio-play-btn" (click)="playAudio(au.audio, $event)">
+                        @if (activeAudioUrl() === au.audio) {
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+                          </svg>
+                        } @else {
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                          </svg>
+                        }
+                      </div>
+                      <div class="audio-info">
+                        <span class="audio-label">{{ au.label }}</span>
+                        <span class="audio-badge custom-badge">Custom</span>
+                      </div>
+                      <span class="audio-radio" [class.checked]="selectedAudio()?.id === au.id"></span>
+                      <button class="audio-remove-btn" (click)="removeCustomAudio(au, $event)" title="Remove">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                      </button>
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Sub-Tab: Voice Library -->
+          @if (voiceSubTab() === 'voice-library') {
+            <div class="audio-section">
+              <div class="section-header-row">
+                <label class="tab-section-label">Voice Library</label>
+                <div class="filter-chips">
+                  <button class="filter-chip" [class.active]="audioFilter() === 'All'" (click)="audioFilter.set('All')">All</button>
+                  <button class="filter-chip" [class.active]="audioFilter() === 'Male'" (click)="audioFilter.set('Male')">Male</button>
+                  <button class="filter-chip" [class.active]="audioFilter() === 'Female'" (click)="audioFilter.set('Female')">Female</button>
+                </div>
+              </div>
               <div class="audio-list">
-                @for (au of customAudios(); track au.id) {
+                @for (au of filteredAudios(); track au.id) {
                   <button class="audio-card"
                           [class.selected]="selectedAudio()?.id === au.id"
                           (click)="selectAudio(au)">
@@ -147,64 +288,13 @@
                     </div>
                     <div class="audio-info">
                       <span class="audio-label">{{ au.label }}</span>
-                      <span class="audio-badge custom-badge">Custom</span>
                     </div>
                     <span class="audio-radio" [class.checked]="selectedAudio()?.id === au.id"></span>
-                    <button class="audio-remove-btn" (click)="removeCustomAudio(au, $event)" title="Remove">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                      </svg>
-                    </button>
                   </button>
                 }
               </div>
             </div>
           }
-
-          <!-- Default Audio Section -->
-          <div class="audio-section">
-            <div class="section-header-row">
-              <label class="tab-section-label">Voice Library</label>
-
-              <!-- Audio Filter -->
-              <div class="filter-chips">
-                <button class="filter-chip" [class.active]="audioFilter() === 'All'" (click)="audioFilter.set('All')">All</button>
-                <button class="filter-chip" [class.active]="audioFilter() === 'Male'" (click)="audioFilter.set('Male')">Male</button>
-                <button class="filter-chip" [class.active]="audioFilter() === 'Female'" (click)="audioFilter.set('Female')">Female</button>
-              </div>
-
-              <button class="upload-btn" (click)="audioFileInput.click()">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
-                Upload your own
-              </button>
-              <input #audioFileInput type="file" accept="audio/*" hidden (change)="onAudioFileSelected($event)" />
-            </div>
-            <div class="audio-list">
-              @for (au of filteredAudios(); track au.id) {
-                <button class="audio-card"
-                        [class.selected]="selectedAudio()?.id === au.id"
-                        (click)="selectAudio(au)">
-                  <div class="audio-play-btn" (click)="playAudio(au.audio, $event)">
-                    @if (activeAudioUrl() === au.audio) {
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
-                      </svg>
-                    } @else {
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <polygon points="5 3 19 12 5 21 5 3"/>
-                      </svg>
-                    }
-                  </div>
-                  <div class="audio-info">
-                    <span class="audio-label">{{ au.label }}</span>
-                  </div>
-                  <span class="audio-radio" [class.checked]="selectedAudio()?.id === au.id"></span>
-                </button>
-              }
-            </div>
-          </div>
         </div>
       }
     </div>
@@ -213,7 +303,9 @@
     <div class="vad-footer">
       <div class="vad-progress-dots">
         <span class="progress-dot" [class.done]="selectedAvatar()"></span>
-        <span class="progress-dot" [class.done]="selectedAudio()"></span>
+        @if (!state.hideVoiceInDialog()) {
+          <span class="progress-dot" [class.done]="selectedAudio()"></span>
+        }
       </div>
       <div class="vad-footer-actions">
         <button class="vad-cancel-btn" (click)="close()">Cancel</button>

@@ -26,7 +26,14 @@ export class PromptStateService {
   readonly toolSwitchWarning = signal<{ newTool: string, newPrompt: string } | null>(null);
   readonly showVideoAvatarDialog = signal(false);
   readonly showTextVideoDialog = signal(false);
+  /** When true, hide the Voice tab in the video avatar dialog (user already uploaded audio) */
+  readonly hideVoiceInDialog = signal(false);
   readonly pendingVideoSubType = signal<'avatar' | 'text-video' | '2d-animation' | null>(null);
+
+  /** Track which sub-workflow is active for the video avatar script flow */
+  readonly videoScriptMode = signal<'ai' | 'user' | 'upload' | null>(null);
+  /** Store the approved script text for video generation */
+  readonly approvedScript = signal<string>('');
 
   /** The currently active (unanswered) questionnaire message, or null */
   readonly activeQuestion = computed(() => {
@@ -298,6 +305,65 @@ export class PromptStateService {
     }
   ];
 
+  /** Questions about the script (used by AI-generated and user-written flows) */
+  private scriptClarificationQuestions = [
+    {
+      title: 'Who is the target audience for this video?',
+      options: [
+        { id: 1, label: 'Students (K-12)' },
+        { id: 2, label: 'University learners' },
+        { id: 3, label: 'Corporate professionals' },
+        { id: 4, label: 'General audience' }
+      ]
+    },
+    {
+      title: 'What tone should the script convey?',
+      options: [
+        { id: 1, label: 'Friendly and conversational' },
+        { id: 2, label: 'Professional and formal' },
+        { id: 3, label: 'Energetic and inspiring' }
+      ]
+    },
+    {
+      title: 'How long should the video be?',
+      options: [
+        { id: 1, label: 'Short (1–2 minutes)' },
+        { id: 2, label: 'Standard (3–5 minutes)' },
+        { id: 3, label: 'In-depth (8+ minutes)' }
+      ]
+    }
+  ];
+
+  /** Script source selection question for Video Avatar */
+  private scriptSourceQuestion = {
+    title: 'How would you like to create your script?',
+    options: [
+      { id: 1, label: 'Generate Script with AI' },
+      { id: 2, label: 'Write Your Own Script' },
+      { id: 3, label: 'Upload Audio File' }
+    ]
+  };
+
+  /** Post-script questions for user-written flow */
+  private postScriptQuestions = [
+    {
+      title: 'What tone best fits your script?',
+      options: [
+        { id: 1, label: 'Friendly and conversational' },
+        { id: 2, label: 'Professional and formal' },
+        { id: 3, label: 'Energetic and inspiring' }
+      ]
+    },
+    {
+      title: 'Preferred video length?',
+      options: [
+        { id: 1, label: 'Short (1–2 minutes)' },
+        { id: 2, label: 'Standard (3–5 minutes)' },
+        { id: 3, label: 'In-depth (8+ minutes)' }
+      ]
+    }
+  ];
+
   private videoFollowUpQuestions = [
     {
       title: 'Select Avatar',
@@ -398,27 +464,23 @@ export class PromptStateService {
     if (hasVideoWord) {
       this.activeQuestionnaire = [
         {
-          title: 'What video do you want?',
+          title: 'What type of video would you like to create?',
           options: [
             { id: 1, label: 'Video Avatar' },
-            { id: 2, label: 'Text Video' },
-            { id: 3, label: '2D Animation' }
+            { id: 2, label: 'Explainer Video' }
           ]
-        },
-        ...this.videoFollowUpQuestions
+        }
       ];
     } else if (isVideoClipGoal) {
       // Video clip goal without a specific sub-type: ask what kind of video
       this.activeQuestionnaire = [
         {
-          title: 'What video do you want?',
+          title: 'What type of video would you like to create?',
           options: [
             { id: 1, label: 'Video Avatar' },
-            { id: 2, label: 'Text Video' },
-            { id: 3, label: '2D Animation' }
+            { id: 2, label: 'Explainer Video' }
           ]
-        },
-        ...this.videoFollowUpQuestions
+        }
       ];
     } else {
       this.activeQuestionnaire = isVideo ? this.videoFollowUpQuestions : this.defaultQuestions;
@@ -477,13 +539,47 @@ export class PromptStateService {
       )
     );
 
+    // --- Video Avatar: selected from video type question ---
     if (answerLabel === 'Video Avatar') {
-      this.showVideoAvatarDialog.set(true);
+      // Instead of opening dialog directly, ask how to create the script
+      this.currentQuestionIndex = 0;
+      this.activeQuestionnaire = [this.scriptSourceQuestion];
+      this.addFollowUpMessage('Great choice! Let\'s set up your AI Avatar video.', 'agent');
+      setTimeout(() => this.askNextQuestion(), 300);
       return;
     }
     
-    if (answerLabel === 'Text Video') {
+    if (answerLabel === 'Explainer Video' || answerLabel === 'Text Video') {
       this.showTextVideoDialog.set(true);
+      return;
+    }
+
+    // --- Script source selection handlers ---
+    if (answerLabel === 'Generate Script with AI') {
+      this.videoScriptMode.set('ai');
+      this.currentQuestionIndex = 0;
+      this.activeQuestionnaire = this.scriptClarificationQuestions;
+      this.addFollowUpMessage('I\'ll generate a professional script for you. Let me ask a few details first.', 'agent');
+      setTimeout(() => this.askNextQuestion(), 300);
+      return;
+    }
+
+    if (answerLabel === 'Write Your Own Script') {
+      this.videoScriptMode.set('user');
+      this.currentQuestionIndex = 0;
+      this.activeQuestionnaire = [];
+      // Show the script input textarea as a special questionnaire step
+      this.addFollowUpMessage('Write your script below. Take your time — you can edit before proceeding.', 'agent');
+      setTimeout(() => this.showScriptInputQuestion(), 300);
+      return;
+    }
+
+    if (answerLabel === 'Upload Audio File') {
+      this.videoScriptMode.set('upload');
+      this.currentQuestionIndex = 0;
+      this.activeQuestionnaire = [];
+      this.addFollowUpMessage('Upload your audio file and we\'ll sync it with your chosen avatar.', 'agent');
+      setTimeout(() => this.showAudioUploadQuestion(), 300);
       return;
     }
 
@@ -493,19 +589,162 @@ export class PromptStateService {
       // Ask next question
       this.askNextQuestion();
     } else {
+      // Check if we just finished script clarification questions for AI mode
+      if (this.videoScriptMode() === 'ai') {
+        this.showAIGeneratedScript();
+        return;
+      }
+      // Check if we just finished post-script questions for user-written mode
+      if (this.videoScriptMode() === 'user') {
+        this.showVideoAvatarDialog.set(true);
+        this.videoScriptMode.set(null);
+        return;
+      }
       // Finished all questions, now start the generation
       this.startGenerationProcess();
     }
   }
 
+  /** Show a textarea for the user to write their own script */
+  private showScriptInputQuestion() {
+    this.chatHistory.update(history => [...history, {
+      id: Date.now().toString() + '-script-input',
+      role: 'agent',
+      content: '',
+      type: 'questionnaire',
+      questionnaire: {
+        title: 'Write your script',
+        options: [],
+        answered: false,
+        step: 1,
+        totalSteps: 1,
+        isScriptInput: true
+      },
+      timestamp: new Date()
+    }]);
+  }
+
+  /** Submit user-written script, then ask follow-up questions */
+  submitUserScript(messageId: string, scriptText: string) {
+    // Mark the script input question as answered
+    this.chatHistory.update(history =>
+      history.map(msg =>
+        msg.id === messageId && msg.questionnaire
+          ? { ...msg, questionnaire: { ...msg.questionnaire, answered: true, scriptContent: scriptText } }
+          : msg
+      )
+    );
+
+    this.approvedScript.set(scriptText);
+    this.addFollowUpMessage('Script received! Let me ask a couple more questions to finalize your video.', 'agent');
+
+    // Now ask post-script questions
+    this.currentQuestionIndex = 0;
+    this.activeQuestionnaire = this.postScriptQuestions;
+    setTimeout(() => this.askNextQuestion(), 300);
+  }
+
+  /** Show file upload question for audio */
+  private showAudioUploadQuestion() {
+    this.chatHistory.update(history => [...history, {
+      id: Date.now().toString() + '-audio-upload',
+      role: 'agent',
+      content: '',
+      type: 'questionnaire',
+      questionnaire: {
+        title: 'Upload your audio file',
+        options: [],
+        answered: false,
+        step: 1,
+        totalSteps: 1,
+        isFileUpload: true,
+        acceptFileTypes: 'audio/*'
+      },
+      timestamp: new Date()
+    }]);
+  }
+
+  /** Submit uploaded audio, then open avatar dialog */
+  submitAudioUpload(messageId: string, fileName: string) {
+    this.chatHistory.update(history =>
+      history.map(msg =>
+        msg.id === messageId && msg.questionnaire
+          ? { ...msg, questionnaire: { ...msg.questionnaire, answered: true } }
+          : msg
+      )
+    );
+
+    this.addFollowUpMessage(`Audio file "${fileName}" uploaded successfully.`, 'agent');
+    this.addFollowUpMessage('Now let\'s choose your avatar to pair with the audio.', 'agent');
+
+    setTimeout(() => {
+      this.hideVoiceInDialog.set(true);
+      this.showVideoAvatarDialog.set(true);
+      this.videoScriptMode.set(null);
+    }, 500);
+  }
+
+  /** Simulate AI script generation and show for review */
+  private showAIGeneratedScript() {
+    this.addFollowUpMessage('Generating your script based on the details provided...', 'agent');
+    this.isGenerating.set(true);
+    this.loadingText.set('Crafting your script...');
+
+    // Simulate AI generation delay
+    setTimeout(() => {
+      this.isGenerating.set(false);
+
+      const fakeScript = `Welcome to today's lesson! In this video, we'll explore the fascinating topic of "${this.submittedPrompt()}".\n\nLet's start with the basics. This subject has been a cornerstone of modern understanding, and by the end of this video, you'll have a solid grasp of the key concepts.\n\nFirst, let's look at the fundamental principles...\n\nWe'll break this down into three main sections:\n1. Core Concepts — the building blocks you need to know\n2. Real-World Applications — how this applies in practice\n3. Key Takeaways — what to remember going forward\n\nLet's dive in!\n\nThank you for watching. If you found this helpful, make sure to check out our other lessons.`;
+
+      this.chatHistory.update(history => [...history, {
+        id: Date.now().toString() + '-script-review',
+        role: 'agent',
+        content: '',
+        type: 'questionnaire',
+        questionnaire: {
+          title: 'Review Your Script',
+          options: [],
+          answered: false,
+          step: 1,
+          totalSteps: 1,
+          isScriptReview: true,
+          scriptContent: fakeScript
+        },
+        timestamp: new Date()
+      }]);
+    }, 2500);
+  }
+
+  /** Approve the AI-generated or edited script, then open the video avatar dialog */
+  approveScript(messageId: string, finalScript: string) {
+    this.chatHistory.update(history =>
+      history.map(msg =>
+        msg.id === messageId && msg.questionnaire
+          ? { ...msg, questionnaire: { ...msg.questionnaire, answered: true, scriptContent: finalScript } }
+          : msg
+      )
+    );
+
+    this.approvedScript.set(finalScript);
+    this.addFollowUpMessage('Script approved! Now let\'s configure your video avatar.', 'agent');
+
+    setTimeout(() => {
+      this.showVideoAvatarDialog.set(true);
+      this.videoScriptMode.set(null);
+    }, 500);
+  }
+
   confirmVideoAvatarDialog(data: any) {
     this.showVideoAvatarDialog.set(false);
-    this.addFollowUpMessage('Configured Video Avatar: ' + data.avatar.label + ', ' + data.audio.label, 'user');
+    this.hideVoiceInDialog.set(false);
+    const audioLabel = data.audio ? ', ' + data.audio.label : ' (Audio Uploaded)';
+    this.addFollowUpMessage('Configured Video Avatar: ' + data.avatar.label + audioLabel, 'user');
     this.startGenerationProcess();
   }
 
   cancelVideoAvatarDialog() {
     this.showVideoAvatarDialog.set(false);
+    this.hideVoiceInDialog.set(false);
     this.startGenerationProcess();
   }
 
@@ -567,6 +806,9 @@ export class PromptStateService {
     this.selectedGoal.set(null);
     this.selectedQuickTool.set(null);
     this.pendingVideoSubType.set(null);
+    this.videoScriptMode.set(null);
+    this.approvedScript.set('');
+    this.hideVoiceInDialog.set(false);
     this.router.navigate(['/']);
   }
 
@@ -615,14 +857,12 @@ export class PromptStateService {
       if (hasVideoWord) {
         this.activeQuestionnaire = [
           {
-            title: 'What video do you want?',
+            title: 'What type of video would you like to create?',
             options: [
               { id: 1, label: 'Video Avatar' },
-              { id: 2, label: 'Text Video' },
-              { id: 3, label: '2D Animation' }
+              { id: 2, label: 'Explainer Video' }
             ]
-          },
-          ...this.videoFollowUpQuestions
+          }
         ];
       } else {
         this.activeQuestionnaire = this.videoFollowUpQuestions;
