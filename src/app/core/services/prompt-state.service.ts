@@ -269,6 +269,7 @@ export class PromptStateService {
 
   private currentQuestionIndex = 0;
   private activeQuestionnaire: any[] = [];
+  private collectedAnswers: { question: string, answer: string }[] = [];
   private defaultQuestions = [
     {
       title: 'Who is this lesson for?',
@@ -393,6 +394,7 @@ export class PromptStateService {
     this.submittedPrompt.set(text);
     this.isAnimatingOut.set(true);
     this.currentQuestionIndex = 0;
+    this.collectedAnswers = [];
 
     // Initialize canvas tabs with the first tab or the project pipeline
     const goal = this.selectedGoal();
@@ -578,9 +580,16 @@ export class PromptStateService {
       this.videoScriptMode.set('upload');
       this.currentQuestionIndex = 0;
       this.activeQuestionnaire = [];
+      this.collectedAnswers = [];
       this.addFollowUpMessage('Upload your audio file and we\'ll sync it with your chosen avatar.', 'agent');
       setTimeout(() => this.showAudioUploadQuestion(), 300);
       return;
+    }
+
+    // Record answer if it's a standard question
+    const currentQ = this.activeQuestionnaire[this.currentQuestionIndex];
+    if (currentQ && answerLabel) {
+      this.collectedAnswers.push({ question: currentQ.title, answer: answerLabel });
     }
 
     this.currentQuestionIndex++;
@@ -591,18 +600,33 @@ export class PromptStateService {
     } else {
       // Check if we just finished script clarification questions for AI mode
       if (this.videoScriptMode() === 'ai') {
+        this.submitCollectedAnswers();
         this.showAIGeneratedScript();
         return;
       }
       // Check if we just finished post-script questions for user-written mode
       if (this.videoScriptMode() === 'user') {
+        this.submitCollectedAnswers();
         this.showVideoAvatarDialog.set(true);
         this.videoScriptMode.set(null);
         return;
       }
       // Finished all questions, now start the generation
+      this.submitCollectedAnswers();
       this.startGenerationProcess();
     }
+  }
+
+  private submitCollectedAnswers() {
+    if (this.collectedAnswers.length === 0) return;
+    
+    let content = 'My preferences:\n';
+    this.collectedAnswers.forEach(ans => {
+      content += `• ${ans.question} -> ${ans.answer}\n`;
+    });
+    
+    this.addFollowUpMessage(content.trim(), 'user');
+    this.collectedAnswers = [];
   }
 
   /** Show a textarea for the user to write their own script */

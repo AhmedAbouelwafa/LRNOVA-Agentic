@@ -251,7 +251,7 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
     }
 
     // Simulate agent response for non-video workflows
-    this.state.isGenerationComplete.set(false);
+    this.state.isGenerating.set(true);
     this.state.loadingText.set('Acknowledging dashboard visibility...');
 
     let msgIndex = 0;
@@ -267,7 +267,7 @@ export class PromptFieldComponent implements OnInit, OnDestroy {
         msgIndex++;
       } else {
         clearInterval(interval);
-        this.state.isGenerationComplete.set(true);
+        this.state.isGenerating.set(false);
         this.state.addFollowUpMessage('[ThoughtProcess] Acknowledging dashboard visibility | Analyzed your request and executed the necessary changes to the dashboard components.', 'agent');
         this.state.addFollowUpMessage('I have updated the result based on your instructions. Let me know if there is anything else you need!', 'agent');
       }

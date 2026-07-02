@@ -1,31 +1,34 @@
-<div class="results-layout-wrapper" [class.chat-collapsed]="isChatCollapsed()">
+<div class="results-layout-wrapper" 
+     [class.chat-collapsed]="isChatCollapsed()" 
+     [class.pre-result-mode]="!state.isGenerationComplete()">
   
   <!-- Left Side: Chat Sidebar Panel -->
   <app-agentic-chat 
     [isCollapsed]="isChatCollapsed()" 
+    [centered]="!state.isGenerationComplete()"
     (isCollapsedChange)="isChatCollapsed.set($event)" />
 
-  <!-- Right Side: Artifact Panel -->
-  <div class="artifact-panel fade-in-up">
-    <app-results-toolbar />
-    <app-credit-consumption />
-    @if (!state.isGenerationComplete()) {
-      <app-skeleton-card [showThinking]="state.isGenerating()" />
-    } @else {
-      <!-- Route to correct result component based on resultType -->
-      @switch (state.resultType()) {
-        @case ('video') {
-          <app-video-result />
+  <!-- Right Side: Artifact Panel (hidden in pre-result, slides in on result) -->
+  @if (state.isGenerationComplete()) {
+    <div class="artifact-panel canvas-enter">
+      <app-results-toolbar />
+      <div class="artifact-content">
+        <app-credit-consumption />
+        <!-- Route to correct result component based on resultType -->
+        @switch (state.resultType()) {
+          @case ('video') {
+            <app-video-result />
+          }
+          @case ('slides') {
+            <app-slides-result />
+          }
+          @case ('text') {
+            <app-text-result />
+          }
         }
-        @case ('slides') {
-          <app-slides-result />
-        }
-        @case ('text') {
-          <app-text-result />
-        }
-      }
-    }
-  </div>
+      </div>
+    </div>
+  }
 
 </div>
 

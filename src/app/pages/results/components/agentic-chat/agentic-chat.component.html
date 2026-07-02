@@ -1,7 +1,7 @@
-<div class="chat-sidebar" [class.collapsed]="isCollapsed">
+<div class="chat-sidebar" [class.collapsed]="isCollapsed" [class.centered]="centered">
   
-  <!-- Collapsed: Vertical tab strip -->
-  @if (isCollapsed) {
+  <!-- Collapsed: Vertical tab strip (only in sidebar mode) -->
+  @if (isCollapsed && !centered) {
     <div class="chat-collapsed-strip" (click)="toggleCollapse(false)" title="Open Chat">
       <svg class="strip-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
@@ -13,29 +13,32 @@
     </div>
   }
 
-  <!-- Chat Panel Content (hidden when collapsed) -->
-  @if (!isCollapsed) {
-    <div class="chat-header">
-      <div class="agent-identity">
-        <div class="agent-logo">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+  <!-- Chat Panel Content -->
+  @if (!isCollapsed || centered) {
+    
+    @if (!centered) {
+      <div class="chat-header">
+        <div class="agent-identity">
+          <div class="agent-logo">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <div class="agent-meta">
+            <span class="agent-name">LRNOVA Agent</span>
+            <span class="agent-status">
+              <span class="status-dot" [class.active]="!state.isGenerating()"></span>
+              {{ state.isGenerating() ? 'Processing...' : 'Ready' }}
+            </span>
+          </div>
+        </div>
+        <button class="toggle-chat-btn" (click)="toggleCollapse(true)" title="Collapse Chat">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6" />
           </svg>
-        </div>
-        <div class="agent-meta">
-          <span class="agent-name">LRNOVA Agent</span>
-          <span class="agent-status">
-            <span class="status-dot" [class.active]="!state.isGenerating()"></span>
-            {{ state.isGenerating() ? 'Processing...' : 'Ready' }}
-          </span>
-        </div>
+        </button>
       </div>
-      <button class="toggle-chat-btn" (click)="toggleCollapse(true)" title="Collapse Chat">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 18 9 12 15 6" />
-        </svg>
-      </button>
-    </div>
+    }
     
     <div class="chat-thread" #chatScroll>
       @for (msg of state.chatHistory(); track msg.id; let i = $index) {
@@ -84,9 +87,24 @@
                 </div>
               </details>
             } @else {
-              <div class="msg-body">
-                <p>{{ msg.content }}</p>
-              </div>
+              @if (msg.role === 'agent' && centered) {
+                <div class="agent-msg-card">
+                  <div class="agent-msg-avatar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                  </div>
+                  <div class="agent-msg-content">
+                    <div class="msg-body">
+                      <p>{{ msg.content }}</p>
+                    </div>
+                  </div>
+                </div>
+              } @else {
+                <div class="msg-body">
+                  <p>{{ msg.content }}</p>
+                </div>
+              }
             }
 
             @if (msg.role === 'user') {
@@ -105,7 +123,7 @@
       }
 
       <!-- Thinking State (Active Workflow) -->
-      @if (!state.isGenerationComplete()) {
+      @if (state.isGenerating()) {
         <div class="thread-message role-agent thinking-state">
           <div class="thought-accordion active-thinking">
             <div class="thought-summary">

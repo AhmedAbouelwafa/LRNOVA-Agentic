@@ -15,10 +15,11 @@ import { QuestionnairePanelComponent } from '../questionnaire-panel/questionnair
   templateUrl: './agentic-chat.component.html',
   styleUrl: './agentic-chat.component.css'
 })
-export class AgenticChatComponent {
+export class AgenticChatComponent { // two-state layout
   protected state = inject(PromptStateService);
   
   @Input() isCollapsed = false;
+  @Input() centered = false;
   @Output() isCollapsedChange = new EventEmitter<boolean>();
   
   @ViewChild('chatScroll') private chatScrollContainer!: ElementRef;
