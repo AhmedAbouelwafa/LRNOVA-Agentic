@@ -16,9 +16,10 @@
   border: 1px solid var(--border-light);
   border-top: none;
   border-radius: 0 0 14px 14px;
-  padding: 14px;
   min-height: 520px;
   animation: fadeInUp 0.5s ease-out;
+  text-align: left;
+  direction: ltr;
 }
 
 /* Top & Bottom Pill Rows */

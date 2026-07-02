@@ -1,5 +1,6 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { PromptStateService } from '../../../../core/services/prompt-state.service';
+import { LocalizationService } from '../../../../core/services/localization.service';
 import { RenderMarkdownPipe } from '../../../../shared/pipes/render-markdown.pipe';
 
 @Component({
@@ -11,6 +12,7 @@ import { RenderMarkdownPipe } from '../../../../shared/pipes/render-markdown.pip
 })
 export class TextResultComponent implements OnInit {
   protected state = inject(PromptStateService);
+  protected i18n = inject(LocalizationService);
   protected isRevealed = signal(false);
 
   /** Returns a display title from the selected goal or submitted prompt */

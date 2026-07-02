@@ -1,0 +1,129 @@
+<div class="canvas-workspace fade-in-up" [attr.dir]="i18n.dir()">
+  <div class="workspace-main">
+    <div class="script-review-canvas" [class.revealed]="isRevealed()">
+
+      <!-- Header -->
+      <div class="review-header">
+        <div class="review-badges">
+          <span class="review-badge ai-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+            {{ i18n.currentLang() === 'ar' ? 'تم إنشاءه بالذكاء الاصطناعي' : 'AI Generated' }}
+          </span>
+          @if (isApproved()) {
+            <span class="review-badge approved-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              {{ i18n.currentLang() === 'ar' ? 'تم الاعتماد' : 'Approved' }}
+            </span>
+          } @else {
+            <span class="review-badge type-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+              {{ i18n.currentLang() === 'ar' ? 'مراجعة النص' : 'Script Review' }}
+            </span>
+          }
+        </div>
+        <h2 class="review-title">{{ state.submittedPrompt() || (i18n.currentLang() === 'ar' ? 'نص تم إنشاءه' : 'Generated Script') }}</h2>
+      </div>
+
+      <!-- Script Content Area -->
+      <div class="review-body">
+        <!-- Toolbar (only when NOT approved, i.e. active review) -->
+        @if (!isApproved()) {
+          <div class="review-toolbar">
+            <div class="review-info">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 16v-4"/>
+                <path d="M12 8h.01"/>
+              </svg>
+              <span>{{ i18n.currentLang() === 'ar' ? 'راجع النص أدناه. يمكنك التعديل أو الاعتماد مباشرة.' : 'Review the script below. You can edit or approve as-is.' }}</span>
+            </div>
+            <button class="edit-toggle-btn" (click)="toggleScriptEdit()">
+              @if (isEditingScript()) {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                {{ i18n.currentLang() === 'ar' ? 'معاينة' : 'Preview' }}
+              } @else {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                {{ i18n.currentLang() === 'ar' ? 'تعديل' : 'Edit' }}
+              }
+            </button>
+          </div>
+        }
+
+        <!-- Approved state toolbar -->
+        @if (isApproved()) {
+          <div class="review-toolbar approved-toolbar">
+            <div class="review-info approved-info">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span>{{ i18n.currentLang() === 'ar' ? 'تم اعتماد النص بنجاح. جاري إكمال الخطوات المتبقية...' : 'Script approved successfully. Completing remaining steps...' }}</span>
+            </div>
+          </div>
+        }
+
+        @if (isEditingScript() && !isApproved()) {
+          <textarea 
+            class="script-edit-textarea"
+            [ngModel]="editableScript()"
+            (ngModelChange)="editableScript.set($event)"
+            rows="16"></textarea>
+        } @else {
+          <div class="script-preview">
+            <p>{{ editableScript() }}</p>
+          </div>
+        }
+      </div>
+
+      <!-- Footer -->
+      <div class="review-footer">
+        <div class="review-meta">
+          <span class="meta-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            {{ editableScript().length }} {{ i18n.currentLang() === 'ar' ? 'حرف' : 'characters' }}
+          </span>
+          <span class="meta-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            ~{{ Math.ceil(editableScript().split(/\s+/).length / 150) }} {{ i18n.currentLang() === 'ar' ? 'دقائق قراءة' : 'min read' }}
+          </span>
+        </div>
+        <div class="review-actions">
+          @if (!isApproved()) {
+            <button class="action-btn primary" (click)="approveScript()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              {{ i18n.currentLang() === 'ar' ? 'اعتماد النص والمتابعة' : 'Approve & Continue' }}
+            </button>
+          } @else {
+            <span class="approved-status-badge">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              {{ i18n.currentLang() === 'ar' ? 'تم الاعتماد ✓' : 'Approved ✓' }}
+            </span>
+          }
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -120,15 +120,15 @@ import { LocalizationService } from '../../../../core/services/localization.serv
       align-items: center;
       gap: 5px;
       font-size: 0.7rem;
-      color: #10B981;
+      color: #00C2FF;
       font-weight: 600;
     }
     .status-dot {
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: #10B981;
-      box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+      background: #00C2FF;
+      box-shadow: 0 0 6px rgba(0, 194, 255, 0.4);
     }
 
     /* Responsive */

@@ -1,6 +1,7 @@
 import { Component, inject, ViewChild, ElementRef, effect, Input, Output, EventEmitter } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { PromptStateService } from '../../../../core/services/prompt-state.service';
+import { LocalizationService } from '../../../../core/services/localization.service';
 import { PromptFieldComponent } from '../../../home/components/prompt-field/prompt-field.component';
 import { QuestionnairePanelComponent } from '../questionnaire-panel/questionnaire-panel.component';
 
@@ -17,6 +18,7 @@ import { QuestionnairePanelComponent } from '../questionnaire-panel/questionnair
 })
 export class AgenticChatComponent { // two-state layout
   protected state = inject(PromptStateService);
+  protected i18n = inject(LocalizationService);
   
   @Input() isCollapsed = false;
   @Input() centered = false;

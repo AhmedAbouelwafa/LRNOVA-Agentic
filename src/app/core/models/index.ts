@@ -41,22 +41,29 @@ export interface ChatMessage {
   content: string;
   timestamp: Date;
   type?: 'text' | 'questionnaire';
+  isPreferences?: boolean;
   questionnaire?: {
     title: string;
-    options: { id: number; label: string; image?: string; audio?: string }[];
+    options: { id: number; label: string; image?: string; audio?: string; description?: string }[];
     answered?: boolean;
+    /** The answer the user selected or typed */
+    selectedAnswer?: string;
     step?: number;
     totalSteps?: number;
     /** When true, show a textarea for user to write their own script */
     isScriptInput?: boolean;
     /** When true, show a script review panel with approve/edit actions */
     isScriptReview?: boolean;
+    /** When true, render the script review in the canvas panel instead of chat */
+    showInCanvas?: boolean;
     /** The script content (AI-generated or user-written) */
     scriptContent?: string;
     /** When true, show a file upload input instead of radio options */
     isFileUpload?: boolean;
     /** Accepted file types for upload (e.g. 'audio/*') */
     acceptFileTypes?: string;
+    /** Disable the "Type your own answer" option */
+    disableManualInput?: boolean;
   };
 }
 

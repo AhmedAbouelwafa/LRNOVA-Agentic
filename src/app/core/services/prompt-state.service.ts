@@ -35,12 +35,29 @@ export class PromptStateService {
   /** Store the approved script text for video generation */
   readonly approvedScript = signal<string>('');
 
+  /** Once the canvas panel has been activated (e.g. script review), it stays visible */
+  readonly canvasActivated = signal(false);
+
   /** The currently active (unanswered) questionnaire message, or null */
   readonly activeQuestion = computed(() => {
     const history = this.chatHistory();
     for (let i = history.length - 1; i >= 0; i--) {
       const msg = history[i];
       if (msg.type === 'questionnaire' && msg.questionnaire && !msg.questionnaire.answered) {
+        // Skip canvas-only items (script review) from the chat panel
+        if (msg.questionnaire.showInCanvas) continue;
+        return msg;
+      }
+    }
+    return null;
+  });
+
+  /** The currently active script review that should be rendered in the canvas panel */
+  readonly activeScriptReview = computed(() => {
+    const history = this.chatHistory();
+    for (let i = history.length - 1; i >= 0; i--) {
+      const msg = history[i];
+      if (msg.type === 'questionnaire' && msg.questionnaire && !msg.questionnaire.answered && msg.questionnaire.isScriptReview && msg.questionnaire.showInCanvas) {
         return msg;
       }
     }
@@ -338,10 +355,11 @@ export class PromptStateService {
   /** Script source selection question for Video Avatar */
   private scriptSourceQuestion = {
     title: 'How would you like to create your script?',
+    disableManualInput: true,
     options: [
-      { id: 1, label: 'Generate Script with AI' },
-      { id: 2, label: 'Write Your Own Script' },
-      { id: 3, label: 'Upload Audio File' }
+      { id: 1, label: 'Generate Script with AI', description: 'Let our AI craft a professional script based on your topic and preferences' },
+      { id: 2, label: 'Write Your Own Script', description: 'Write or paste your own script directly into the editor' },
+      { id: 3, label: 'Upload Audio File', description: 'Upload a pre-recorded audio file for the avatar to sync with' }
     ]
   };
 
@@ -392,6 +410,7 @@ export class PromptStateService {
     if (!text.trim() && this.attachedFiles().length === 0) return;
 
     this.submittedPrompt.set(text);
+    this.promptText.set('');
     this.isAnimatingOut.set(true);
     this.currentQuestionIndex = 0;
     this.collectedAnswers = [];
@@ -467,9 +486,10 @@ export class PromptStateService {
       this.activeQuestionnaire = [
         {
           title: 'What type of video would you like to create?',
+          disableManualInput: true,
           options: [
-            { id: 1, label: 'Video Avatar' },
-            { id: 2, label: 'Explainer Video' }
+            { id: 1, label: 'Video Avatar', description: 'AI-powered talking head presenter that delivers your script with natural expressions' },
+            { id: 2, label: 'Explainer Video', description: 'Text-based animated video with visuals, transitions, and background music' }
           ]
         }
       ];
@@ -478,9 +498,10 @@ export class PromptStateService {
       this.activeQuestionnaire = [
         {
           title: 'What type of video would you like to create?',
+          disableManualInput: true,
           options: [
-            { id: 1, label: 'Video Avatar' },
-            { id: 2, label: 'Explainer Video' }
+            { id: 1, label: 'Video Avatar', description: 'AI-powered talking head presenter that delivers your script with natural expressions' },
+            { id: 2, label: 'Explainer Video', description: 'Text-based animated video with visuals, transitions, and background music' }
           ]
         }
       ];
@@ -523,6 +544,7 @@ export class PromptStateService {
       questionnaire: {
         title: q.title,
         options: q.options,
+        disableManualInput: q.disableManualInput,
         answered: false,
         step: this.currentQuestionIndex + 1,
         totalSteps: total
@@ -532,11 +554,11 @@ export class PromptStateService {
   }
 
   answerQuestionnaire(messageId: string, answerLabel?: string) {
-    // Mark questionnaire as answered
+    // Mark questionnaire as answered and store the selected answer
     this.chatHistory.update(history => 
       history.map(msg => 
         msg.id === messageId && msg.questionnaire 
-          ? { ...msg, questionnaire: { ...msg.questionnaire, answered: true } }
+          ? { ...msg, questionnaire: { ...msg.questionnaire, answered: true, selectedAnswer: answerLabel } }
           : msg
       )
     );
@@ -620,12 +642,18 @@ export class PromptStateService {
   private submitCollectedAnswers() {
     if (this.collectedAnswers.length === 0) return;
     
-    let content = 'My preferences:\n';
+    let content = '<div class="pref-title">My Preferences</div><div class="pref-list">';
     this.collectedAnswers.forEach(ans => {
-      content += `• ${ans.question} -> ${ans.answer}\n`;
+      content += `
+        <div class="pref-item">
+          <div class="pref-q"><span class="pref-label">Q:</span> ${ans.question}</div>
+          <div class="pref-a"><span class="pref-label">A:</span> ${ans.answer}</div>
+        </div>
+      `;
     });
+    content += '</div>';
     
-    this.addFollowUpMessage(content.trim(), 'user');
+    this.addFollowUpMessage(content, 'user', true);
     this.collectedAnswers = [];
   }
 
@@ -732,10 +760,13 @@ export class PromptStateService {
           step: 1,
           totalSteps: 1,
           isScriptReview: true,
+          showInCanvas: true,
           scriptContent: fakeScript
         },
         timestamp: new Date()
       }]);
+      // Activate the canvas panel permanently
+      this.canvasActivated.set(true);
     }, 2500);
   }
 
@@ -785,6 +816,16 @@ export class PromptStateService {
 
   private startGenerationProcess() {
     this.isGenerating.set(true);
+
+    // If we have an approved script (e.g. Video Avatar workflow), ensure both tabs exist
+    if (this.approvedScript()) {
+      this.canvasTabs.set([
+        { id: 'main', label: 'Final Video' },
+        { id: 'script', label: 'Script' }
+      ]);
+      // Ensure we switch back to the main tab to show the loading/final result
+      this.activeTabId.set('main');
+    }
     
     // Cycle through fake loading messages
     let msgIndex = 0;
@@ -805,13 +846,14 @@ export class PromptStateService {
     }, 4000);
   }
 
-  addFollowUpMessage(content: string, role: 'user' | 'agent') {
+  addFollowUpMessage(content: string, role: 'user' | 'agent', isPreferences?: boolean) {
     this.chatHistory.update(history => [
       ...history,
       {
         id: Date.now().toString() + Math.random().toString(36).substring(7),
         role,
         content,
+        isPreferences,
         timestamp: new Date()
       }
     ]);
@@ -833,6 +875,7 @@ export class PromptStateService {
     this.videoScriptMode.set(null);
     this.approvedScript.set('');
     this.hideVoiceInDialog.set(false);
+    this.canvasActivated.set(false);
     this.router.navigate(['/']);
   }
 

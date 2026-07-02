@@ -1,6 +1,7 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { PromptStateService } from '../../../../core/services/prompt-state.service';
+import { LocalizationService } from '../../../../core/services/localization.service';
 
 @Component({
   selector: 'app-slides-result',
@@ -10,6 +11,7 @@ import { PromptStateService } from '../../../../core/services/prompt-state.servi
 })
 export class SlidesResultComponent implements OnInit {
   protected state = inject(PromptStateService);
+  protected i18n = inject(LocalizationService);
   private sanitizer = inject(DomSanitizer);
   protected isRevealed = signal(false);
 

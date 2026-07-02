@@ -1,11 +1,11 @@
 <div class="results-layout-wrapper" 
      [class.chat-collapsed]="isChatCollapsed()" 
-     [class.pre-result-mode]="!state.isGenerationComplete()">
+     [class.pre-result-mode]="!state.isGenerationComplete() && !state.canvasActivated()">
   
   <!-- Left Side: Chat Sidebar Panel -->
   <app-agentic-chat 
     [isCollapsed]="isChatCollapsed()" 
-    [centered]="!state.isGenerationComplete()"
+    [centered]="!state.isGenerationComplete() && !state.canvasActivated()"
     (isCollapsedChange)="isChatCollapsed.set($event)" />
 
   <!-- Right Side: Artifact Panel (hidden in pre-result, slides in on result) -->
@@ -14,18 +14,32 @@
       <app-results-toolbar />
       <div class="artifact-content">
         <app-credit-consumption />
-        <!-- Route to correct result component based on resultType -->
-        @switch (state.resultType()) {
-          @case ('video') {
-            <app-video-result />
-          }
-          @case ('slides') {
-            <app-slides-result />
-          }
-          @case ('text') {
-            <app-text-result />
+        @if (state.activeTabId() === 'script') {
+          <app-script-review-canvas />
+        } @else {
+          <!-- Route to correct result component based on resultType -->
+          @switch (state.resultType()) {
+            @case ('video') {
+              <app-video-result />
+            }
+            @case ('slides') {
+              <app-slides-result />
+            }
+            @case ('text') {
+              <app-text-result />
+            }
           }
         }
+      </div>
+    </div>
+  }
+
+  <!-- Script Review Canvas (stays visible once activated, until final result replaces it) -->
+  @if (state.canvasActivated() && !state.isGenerationComplete()) {
+    <div class="artifact-panel canvas-enter">
+      <app-results-toolbar />
+      <div class="artifact-content">
+        <app-script-review-canvas />
       </div>
     </div>
   }

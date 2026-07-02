@@ -34,6 +34,8 @@
 .text-result-canvas.revealed {
   opacity: 1;
   transform: translateY(0);
+  text-align: left;
+  direction: ltr;
 }
 
 /* ── Document Header ── */
@@ -244,4 +246,31 @@
   .doc-header, .doc-body, .doc-footer { padding-left: 16px; padding-right: 16px; }
   .doc-title { font-size: 1.1rem; }
   .doc-actions { flex-wrap: wrap; }
+}
+
+/* ── RTL Support ── */
+:host-context([dir="rtl"]) .doc-header,
+.canvas-workspace[dir="rtl"] .doc-header {
+  text-align: right;
+}
+:host-context([dir="rtl"]) .doc-body,
+.canvas-workspace[dir="rtl"] .doc-body {
+  text-align: right;
+}
+:host-context([dir="rtl"]) .doc-actions,
+.canvas-workspace[dir="rtl"] .doc-actions {
+  justify-content: flex-start;
+}
+:host-context([dir="rtl"]) ::ng-deep .md-blockquote,
+.canvas-workspace[dir="rtl"] ::ng-deep .md-blockquote {
+  border-left: none;
+  border-right: 3px solid #8B5CF6;
+  border-radius: 8px 0 0 8px;
+}
+:host-context([dir="rtl"]) ::ng-deep .md-ul,
+:host-context([dir="rtl"]) ::ng-deep .md-ol,
+.canvas-workspace[dir="rtl"] ::ng-deep .md-ul,
+.canvas-workspace[dir="rtl"] ::ng-deep .md-ol {
+  padding-left: 0;
+  padding-right: 22px;
 }

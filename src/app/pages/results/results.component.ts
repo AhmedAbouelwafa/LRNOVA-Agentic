@@ -13,6 +13,7 @@ import { SlidesResultComponent } from './components/slides-result/slides-result.
 import { AgenticChatComponent } from './components/agentic-chat/agentic-chat.component';
 import { VideoAvatarDialogComponent } from './components/video-avatar-dialog/video-avatar-dialog.component';
 import { TextVideoDialogComponent } from './components/text-video-dialog/text-video-dialog.component';
+import { ScriptReviewCanvasComponent } from './components/script-review-canvas/script-review-canvas.component';
 
 @Component({
   selector: 'app-results',
@@ -26,7 +27,8 @@ import { TextVideoDialogComponent } from './components/text-video-dialog/text-vi
     AgenticChatComponent,
     CreditConsumptionComponent,
     VideoAvatarDialogComponent,
-    TextVideoDialogComponent
+    TextVideoDialogComponent,
+    ScriptReviewCanvasComponent
 ],
   templateUrl: './results.component.html',
   styleUrl: './results.component.css'

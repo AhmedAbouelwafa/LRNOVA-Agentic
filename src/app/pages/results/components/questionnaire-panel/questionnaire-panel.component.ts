@@ -1,7 +1,8 @@
-import { Component, inject, signal, OnDestroy, effect, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, signal, OnDestroy, effect, ViewChild, ElementRef, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PromptStateService } from '../../../../core/services/prompt-state.service';
 import { LocalizationService } from '../../../../core/services/localization.service';
+import { ChatMessage } from '../../../../core/models';
 
 @Component({
   selector: 'app-questionnaire-panel',
@@ -13,6 +14,11 @@ import { LocalizationService } from '../../../../core/services/localization.serv
 export class QuestionnairePanelComponent implements OnDestroy {
   protected state = inject(PromptStateService);
   protected i18n = inject(LocalizationService);
+
+  /** When true, render as inline chat bubble (inside the chat thread) */
+  @Input() inline = false;
+  /** When in inline mode, this is the specific question message to render */
+  @Input() question: ChatMessage | null = null;
 
   /** The currently selected option label (before submitting) */
   selectedOption = signal<string | null>(null);
@@ -33,11 +39,17 @@ export class QuestionnairePanelComponent implements OnDestroy {
   /** Whether the user is in edit mode for the AI-generated script */
   isEditingScript = signal<boolean>(false);
 
+  /** Whether the manual "write your own" input is active */
+  isManualInput = signal<boolean>(false);
+
+  /** The manually typed answer text */
+  manualAnswerText = signal<string>('');
+
   @ViewChild('audioUploadInput') audioUploadInput!: ElementRef<HTMLInputElement>;
 
   constructor() {
     effect(() => {
-      const q = this.state.activeQuestion();
+      const q = this.getActiveQuestion();
       if (q && q.questionnaire) {
         // Populate editable script if in review modee
         if (q.questionnaire.isScriptReview && q.questionnaire.scriptContent) {
@@ -53,6 +65,14 @@ export class QuestionnairePanelComponent implements OnDestroy {
         }, 0);
       }
     });
+  }
+
+  /** Get the question to render — either the input question (inline) or the active question (panel) */
+  getActiveQuestion(): ChatMessage | null {
+    if (this.inline && this.question) {
+      return this.question;
+    }
+    return this.state.activeQuestion();
   }
 
   private startTypewriter(fullText: string) {
@@ -84,6 +104,10 @@ export class QuestionnairePanelComponent implements OnDestroy {
   selectAndAdvance(label: string) {
     if (this.isAutoAdvancing()) return; // prevent double-click
 
+    // If manual mode is on, turn it off
+    this.isManualInput.set(false);
+    this.manualAnswerText.set('');
+
     this.selectedOption.set(label);
     this.isAutoAdvancing.set(true);
 
@@ -96,6 +120,31 @@ export class QuestionnairePanelComponent implements OnDestroy {
       this.submitAnswer();
       this.isAutoAdvancing.set(false);
     }, 500);
+  }
+
+  /** Activate manual input mode */
+  activateManualInput() {
+    this.isManualInput.set(true);
+    this.selectedOption.set(null);
+  }
+
+  /** Submit the manual text answer */
+  submitManualAnswer() {
+    const text = this.manualAnswerText().trim();
+    if (!text) return;
+
+    const q = this.getActiveQuestion();
+    if (!q) return;
+
+    if (this.audioPlayer) {
+      this.audioPlayer.pause();
+      this.activeAudioUrl.set(null);
+    }
+
+    this.state.answerQuestionnaire(q.id, text);
+    this.selectedOption.set(null);
+    this.isManualInput.set(false);
+    this.manualAnswerText.set('');
   }
 
   playAudio(url: string, event: Event) {
@@ -121,7 +170,7 @@ export class QuestionnairePanelComponent implements OnDestroy {
   }
 
   submitAnswer() {
-    const q = this.state.activeQuestion();
+    const q = this.getActiveQuestion();
     if (!q) return;
 
     if (this.audioPlayer) {
@@ -132,10 +181,12 @@ export class QuestionnairePanelComponent implements OnDestroy {
     const selected = this.selectedOption();
     this.state.answerQuestionnaire(q.id, selected ?? undefined);
     this.selectedOption.set(null);
+    this.isManualInput.set(false);
+    this.manualAnswerText.set('');
   }
 
   skipQuestion() {
-    const q = this.state.activeQuestion();
+    const q = this.getActiveQuestion();
     if (!q) return;
 
     if (this.audioPlayer) {
@@ -145,11 +196,13 @@ export class QuestionnairePanelComponent implements OnDestroy {
 
     this.state.answerQuestionnaire(q.id);
     this.selectedOption.set(null);
+    this.isManualInput.set(false);
+    this.manualAnswerText.set('');
   }
 
   /** Submit the user-written script */
   submitUserScript() {
-    const q = this.state.activeQuestion();
+    const q = this.getActiveQuestion();
     if (!q) return;
     const text = this.userScriptText().trim();
     if (!text) return;
@@ -165,7 +218,7 @@ export class QuestionnairePanelComponent implements OnDestroy {
 
   /** Approve the script (AI-generated or after editing) */
   approveScript() {
-    const q = this.state.activeQuestion();
+    const q = this.getActiveQuestion();
     if (!q) return;
 
     const finalScript = this.editableScript().trim();
@@ -187,7 +240,7 @@ export class QuestionnairePanelComponent implements OnDestroy {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      const q = this.state.activeQuestion();
+      const q = this.getActiveQuestion();
       if (q) {
         this.state.submitAudioUpload(q.id, file.name);
       }

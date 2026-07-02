@@ -42,52 +42,98 @@
     
     <div class="chat-thread" #chatScroll>
       @for (msg of state.chatHistory(); track msg.id; let i = $index) {
-        @if (msg.content) {
-          <div class="thread-message" 
-               [class.role-user]="msg.role === 'user'" 
-               [class.role-agent]="msg.role === 'agent'"
-               [class.is-first]="i === 0">
-            
-            <div class="msg-header">
-              @if (msg.role === 'user') {
-                <span class="role-badge user-badge">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                  </svg>
-                  You
-                </span>
-              } @else {
-                <span class="role-badge agent-badge">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                  </svg>
-                  Agent
-                </span>
-              }
-            </div>
-            
-            @if (msg.role === 'agent' && msg.content.startsWith('[ThoughtProcess]')) {
-              <details class="thought-accordion">
-                <summary class="thought-summary">
-                  <div class="thought-header-left">
-                    <div class="brain-icon-wrapper">
-                      <svg class="brain-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/>
-                        <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/>
-                        <path d="M12 5v13"/>
+        @if (msg.content || msg.type === 'questionnaire') {
+
+          <!-- Regular text messages -->
+          @if (msg.type !== 'questionnaire' || (msg.questionnaire && msg.questionnaire.showInCanvas)) {
+            @if (msg.content) {
+              <div class="thread-message" 
+                   [class.role-user]="msg.role === 'user'" 
+                   [class.role-agent]="msg.role === 'agent'"
+                   [class.is-first]="i === 0">
+                
+                <div class="msg-header">
+                  @if (msg.role === 'user') {
+                    <span class="role-badge user-badge">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
                       </svg>
-                    </div>
-                    <span>{{ msg.content.substring(16).split('|')[0]?.trim() || 'Acknowledging context' }}</span>
-                  </div>
-                  <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </summary>
-                <div class="thought-body">
-                  <p>{{ msg.content.split('|')[1]?.trim() || 'No additional details.' }}</p>
+                      You
+                    </span>
+                  } @else {
+                    <span class="role-badge agent-badge">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                      </svg>
+                      Agent
+                    </span>
+                  }
                 </div>
-              </details>
-            } @else {
-              @if (msg.role === 'agent' && centered) {
+                
+                @if (msg.role === 'agent' && msg.content.startsWith('[ThoughtProcess]')) {
+                  <details class="thought-accordion">
+                    <summary class="thought-summary">
+                      <div class="thought-header-left">
+                        <div class="brain-icon-wrapper">
+                          <svg class="brain-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/>
+                            <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/>
+                            <path d="M12 5v13"/>
+                          </svg>
+                        </div>
+                        <span>{{ msg.content.substring(16).split('|')[0]?.trim() || 'Acknowledging context' }}</span>
+                      </div>
+                      <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </summary>
+                    <div class="thought-body">
+                      <p>{{ msg.content.split('|')[1]?.trim() || 'No additional details.' }}</p>
+                    </div>
+                  </details>
+                } @else {
+                  @if (msg.role === 'agent' && centered) {
+                    <div class="agent-msg-card">
+                      <div class="agent-msg-avatar">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                      </div>
+                      <div class="agent-msg-content">
+                        <div class="msg-body">
+                          <p>{{ msg.content }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  } @else {
+                    <div class="msg-body" [class.preferences-msg]="msg.isPreferences">
+                      @if (msg.isPreferences) {
+                        <div [innerHTML]="msg.content"></div>
+                      } @else {
+                        <p>{{ msg.content }}</p>
+                      }
+                    </div>
+                  }
+                }
+
+                @if (msg.role === 'user') {
+                  <div class="user-msg-time">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <rect x="3" y="3" width="7" height="7" />
+                      <rect x="14" y="3" width="7" height="7" />
+                      <rect x="14" y="14" width="7" height="7" />
+                      <rect x="3" y="14" width="7" height="7" />
+                    </svg>
+                    {{ msg.timestamp | date:'shortTime' }}
+                  </div>
+                }
+              </div>
+            }
+          }
+
+          <!-- Questionnaire messages rendered INLINE in the chat thread -->
+          @if (msg.type === 'questionnaire' && msg.questionnaire && !msg.questionnaire.showInCanvas) {
+            <div class="thread-message role-agent questionnaire-inline-msg">
+              @if (msg.content) {
                 <div class="agent-msg-card">
                   <div class="agent-msg-avatar">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -100,25 +146,10 @@
                     </div>
                   </div>
                 </div>
-              } @else {
-                <div class="msg-body">
-                  <p>{{ msg.content }}</p>
-                </div>
               }
-            }
-
-            @if (msg.role === 'user') {
-              <div class="user-msg-time">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <rect x="3" y="3" width="7" height="7" />
-                  <rect x="14" y="3" width="7" height="7" />
-                  <rect x="14" y="14" width="7" height="7" />
-                  <rect x="3" y="14" width="7" height="7" />
-                </svg>
-                {{ msg.timestamp | date:'shortTime' }}
-              </div>
-            }
-          </div>
+              <app-questionnaire-panel [inline]="true" [question]="msg" />
+            </div>
+          }
         }
       }
 
@@ -141,15 +172,35 @@
           </div>
         </div>
       }
+
+      <!-- Script Review in Canvas Indicator (when script review is active) -->
+      @if (state.activeScriptReview()) {
+        <div class="thread-message role-agent">
+          <div class="agent-msg-card">
+            <div class="agent-msg-avatar">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+            </div>
+            <div class="agent-msg-content">
+              <div class="msg-body">
+                <p class="canvas-review-hint">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                  {{ i18n.currentLang() === 'ar' ? 'راجع النص في لوحة الكانفاس على اليمين. يمكنك كتابة التعديلات هنا في المحادثة ثم الضغط على "اعتماد والمتابعة".' : 'Review the script in the canvas panel. You can write your edits here in the chat, then click "Approve & Continue" in the canvas.' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
     </div>
     
-    <!-- Bottom: Questionnaire replaces text field when a question is active -->
+    <!-- Bottom: Prompt field (always shown now — questions are inline) -->
     <div class="chat-input-area">
-      @if (state.activeQuestion()) {
-        <app-questionnaire-panel />
-      } @else {
-        <app-prompt-field [mode]="'chat'" />
-      }
+      <app-prompt-field [mode]="'chat'" />
     </div>
   }
 </div>

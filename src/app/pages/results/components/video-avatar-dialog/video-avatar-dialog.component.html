@@ -12,7 +12,7 @@
         </div>
         <div>
           <h2 class="vad-title">Create Video Avatar</h2>
-          <p class="vad-subtitle">Configure your AI avatar video</p>
+          <p class="vad-subtitle">Step {{ currentStep }} of {{ totalSteps }} — {{ activeTab() === 'avatars' ? 'Choose Avatar' : 'Select Voice' }}</p>
         </div>
       </div>
       <button class="vad-close-btn" (click)="close()">
@@ -27,6 +27,7 @@
       <div class="vad-tabs">
         <button class="vad-tab" 
                 [class.active]="activeTab() === 'avatars'" 
+                [class.done]="selectedAvatar() && activeTab() !== 'avatars'"
                 (click)="setTab('avatars')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -40,7 +41,8 @@
         @if (!state.hideVoiceInDialog()) {
           <button class="vad-tab" 
                   [class.active]="activeTab() === 'voice'" 
-                  (click)="setTab('voice')">
+                  [class.disabled]="activeTab() === 'avatars'"
+                  (click)="null">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
               <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
@@ -53,23 +55,6 @@
             }
           </button>
         }
-      </div>
-
-      <!-- Rapid / Pro Mode Toggle -->
-      <div class="mode-toggle" (click)="toggleVideoMode()">
-        <div class="mode-slider" [class.is-pro]="videoMode() === 'pro'"></div>
-        <span class="mode-label" [class.active]="videoMode() === 'rapid'">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-          </svg>
-          Rapid
-        </span>
-        <span class="mode-label" [class.active]="videoMode() === 'pro'">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z"/>
-          </svg>
-          Pro
-        </span>
       </div>
     </div>
 
@@ -110,22 +95,24 @@
           @if (avatarSubTab() === 'my-avatar') {
             <div class="avatar-section">
               <!-- Upload area -->
-              <div class="my-upload-zone" (click)="avatarFileInput.click()">
-                <div class="upload-zone-icon">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                    <polyline points="17 8 12 3 7 8"/>
-                    <line x1="12" y1="3" x2="12" y2="15"/>
-                  </svg>
+              @if (customAvatars().length === 0) {
+                <div class="my-upload-zone" (click)="avatarFileInput.click()">
+                  <div class="upload-zone-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="17 8 12 3 7 8"/>
+                      <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                  </div>
+                  <span class="upload-zone-title">Upload Your Avatar</span>
+                  <span class="upload-zone-hint">Drag & drop or click to browse — PNG, JPG up to 10 MB</span>
                 </div>
-                <span class="upload-zone-title">Upload Your Avatar</span>
-                <span class="upload-zone-hint">Drag & drop or click to browse — PNG, JPG up to 10 MB</span>
-              </div>
+              }
               <input #avatarFileInput type="file" accept="image/*" hidden (change)="onAvatarFileSelected($event)" />
 
               <!-- Custom Avatars Grid -->
               @if (customAvatars().length > 0) {
-                <label class="tab-section-label" style="margin-top: 20px;">Uploaded Avatars</label>
+                <label class="tab-section-label" style="margin-top: 0;">Uploaded Avatar</label>
                 <div class="avatar-grid">
                   @for (av of customAvatars(); track av.id) {
                     <button class="avatar-card" 
@@ -166,6 +153,14 @@
                           (click)="selectAvatar(av)">
                     <div class="avatar-img-wrap">
                       <img [src]="av.image" [alt]="av.label" />
+                      @if (av.isPro) {
+                        <span class="pro-ribbon">
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                          </svg>
+                          PRO
+                        </span>
+                      }
                     </div>
                     <span class="avatar-label">{{ av.label }}</span>
                   </button>
@@ -209,23 +204,25 @@
           @if (voiceSubTab() === 'my-voice') {
             <div class="audio-section">
               <!-- Upload area -->
-              <div class="my-upload-zone" (click)="audioFileInput.click()">
-                <div class="upload-zone-icon">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                    <line x1="12" y1="19" x2="12" y2="23"/>
-                    <line x1="8" y1="23" x2="16" y2="23"/>
-                  </svg>
+              @if (customAudios().length === 0) {
+                <div class="my-upload-zone" (click)="audioFileInput.click()">
+                  <div class="upload-zone-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                      <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                      <line x1="12" y1="19" x2="12" y2="23"/>
+                      <line x1="8" y1="23" x2="16" y2="23"/>
+                    </svg>
+                  </div>
+                  <span class="upload-zone-title">Upload Your Voice</span>
+                  <span class="upload-zone-hint">MP3, WAV, WEBM — up to 50 MB</span>
                 </div>
-                <span class="upload-zone-title">Upload Your Voice</span>
-                <span class="upload-zone-hint">MP3, WAV, WEBM — up to 50 MB</span>
-              </div>
+              }
               <input #audioFileInput type="file" accept="audio/*" hidden (change)="onAudioFileSelected($event)" />
 
               <!-- Custom Voices List -->
               @if (customAudios().length > 0) {
-                <label class="tab-section-label" style="margin-top: 20px;">Uploaded Voices</label>
+                <label class="tab-section-label" style="margin-top: 0;">Uploaded Voice</label>
                 <div class="audio-list">
                   @for (au of customAudios(); track au.id) {
                     <button class="audio-card"
@@ -262,12 +259,52 @@
           <!-- Sub-Tab: Voice Library -->
           @if (voiceSubTab() === 'voice-library') {
             <div class="audio-section">
-              <div class="section-header-row">
-                <label class="tab-section-label">Voice Library</label>
-                <div class="filter-chips">
-                  <button class="filter-chip" [class.active]="audioFilter() === 'All'" (click)="audioFilter.set('All')">All</button>
-                  <button class="filter-chip" [class.active]="audioFilter() === 'Male'" (click)="audioFilter.set('Male')">Male</button>
-                  <button class="filter-chip" [class.active]="audioFilter() === 'Female'" (click)="audioFilter.set('Female')">Female</button>
+              <div class="filters-row">
+                <div class="filter-dropdown-container">
+                  <button class="filter-dropdown-btn" [class.active]="showLangDropdown()" (click)="toggleLangDropdown()">
+                    <span class="btn-text">
+                      Language: 
+                      <strong>{{ audioLangFilter() }}</strong>
+                    </span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                  </button>
+
+                  @if (showLangDropdown()) {
+                    <div class="lang-split-dropdown fade-in">
+                      <!-- Left: Languages -->
+                      <div class="lang-col">
+                        <button class="lang-opt" [class.selected]="audioLangFilter() === 'Arabic'" (click)="selectLanguage('Arabic')">
+                          <span class="flag-label-wrap"><img src="https://flagcdn.com/w20/sa.png" alt="SA" class="lang-flag" /> Arabic</span>
+                          @if (audioLangFilter() === 'Arabic') { <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg> }
+                        </button>
+                        <button class="lang-opt" [class.selected]="audioLangFilter() === 'English'" (click)="selectLanguage('English')">
+                          <span class="flag-label-wrap"><img src="https://flagcdn.com/w20/us.png" alt="US" class="lang-flag" /> English</span>
+                          @if (audioLangFilter() === 'English') { <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg> }
+                        </button>
+                      </div>
+                      
+                      <!-- Right: Dialects -->
+                      <div class="dialect-col">
+                        <button class="dialect-opt" [class.selected]="audioDialectFilter() === 'All'" (click)="selectDialect('All')">
+                           <span class="flag-label-wrap" style="color: #8B5CF6; font-weight: 700;">All</span>
+                        </button>
+                        @for (d of dialectsForLanguage(); track d.dialect) {
+                          <button class="dialect-opt" [class.selected]="audioDialectFilter() === d.dialect" (click)="selectDialect(d.dialect)">
+                            <span class="flag-label-wrap"><img [src]="d.flag" [alt]="d.dialect" class="lang-flag" /> {{ d.dialect }}</span>
+                          </button>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+
+                <div class="filter-dropdown-container">
+                  <div class="filter-chips gender-chips">
+                    <span class="gender-label">Gender:</span>
+                    <button class="filter-chip" [class.active]="audioGenderFilter() === 'All'" (click)="audioGenderFilter.set('All')">All</button>
+                    <button class="filter-chip" [class.active]="audioGenderFilter() === 'Male'" (click)="audioGenderFilter.set('Male')">Male</button>
+                    <button class="filter-chip" [class.active]="audioGenderFilter() === 'Female'" (click)="audioGenderFilter.set('Female')">Female</button>
+                  </div>
                 </div>
               </div>
               <div class="audio-list">
@@ -302,24 +339,72 @@
     <!-- Dialog Footer -->
     <div class="vad-footer">
       <div class="vad-progress-dots">
-        <span class="progress-dot" [class.done]="selectedAvatar()"></span>
+        <span class="progress-dot" [class.done]="selectedAvatar()" [class.active]="activeTab() === 'avatars'"></span>
         @if (!state.hideVoiceInDialog()) {
-          <span class="progress-dot" [class.done]="selectedAudio()"></span>
+          <span class="progress-dot" [class.done]="selectedAudio()" [class.active]="activeTab() === 'voice'"></span>
         }
       </div>
       <div class="vad-footer-actions">
-        <button class="vad-cancel-btn" (click)="close()">Cancel</button>
-        <button class="vad-generate-btn" 
-                [class.active]="canGenerate" 
-                [disabled]="!canGenerate" 
-                (click)="generate()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polygon points="5 3 19 12 5 21 5 3"/>
-          </svg>
-          Generate Video
-        </button>
+        @if (activeTab() === 'voice') {
+          <button class="vad-back-btn" (click)="goToPrevStep()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+            Back
+          </button>
+        } @else {
+          <button class="vad-cancel-btn" (click)="close()">Cancel</button>
+        }
+        
+        @if (activeTab() === 'avatars') {
+          <!-- Next button from avatar step -->
+          <button class="vad-next-btn" 
+                  [class.active]="canProceed" 
+                  [disabled]="!canProceed" 
+                  (click)="goToNextStep()">
+            Next
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+        } @else {
+          <!-- Generate button from voice step -->
+          <button class="vad-generate-btn" 
+                  [class.active]="canGenerate" 
+                  [disabled]="!canGenerate" 
+                  (click)="generate()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            Generate Video
+          </button>
+        }
       </div>
     </div>
 
   </div>
 </div>
+
+<!-- PRO Subscription Popup -->
+@if (showProPopup()) {
+  <div class="pro-popup-overlay" (click)="dismissProPopup()">
+    <div class="pro-popup" (click)="$event.stopPropagation()">
+      <div class="pro-popup-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+      </div>
+      <h3 class="pro-popup-title">PRO Avatar</h3>
+      <p class="pro-popup-desc">This avatar is available exclusively for PRO subscribers. Upgrade your plan to unlock all premium avatars and features.</p>
+      <div class="pro-popup-actions">
+        <button class="pro-popup-cancel" (click)="dismissProPopup()">Choose Another</button>
+        <button class="pro-popup-upgrade">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+          Upgrade to PRO
+        </button>
+      </div>
+    </div>
+  </div>
+}

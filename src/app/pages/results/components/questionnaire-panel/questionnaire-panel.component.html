@@ -1,9 +1,9 @@
-@if (state.activeQuestion(); as q) {
-  <div class="q-panel">
+@if (getActiveQuestion(); as q) {
+  <div class="q-panel" [class.q-inline]="inline" [class.q-answered]="q.questionnaire!.answered" [attr.dir]="i18n.dir()">
     <!-- Header: Label + Close -->
     <div class="q-panel-header">
       @if (!q.questionnaire!.isScriptInput && !q.questionnaire!.isScriptReview && !q.questionnaire!.isFileUpload) {
-        <span class="q-panel-label">Question {{ q.questionnaire!.step }}/{{ q.questionnaire!.totalSteps }}</span>
+        <span class="q-panel-label">{{ i18n.currentLang() === 'ar' ? 'سؤال' : 'Question' }} {{ q.questionnaire!.step }}/{{ q.questionnaire!.totalSteps }}</span>
       } @else if (q.questionnaire!.isScriptInput) {
         <span class="q-panel-label script-label">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -11,16 +11,6 @@
             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
           </svg>
           {{ i18n.currentLang() === 'ar' ? 'كتابة النص' : 'Script Editor' }}
-        </span>
-      } @else if (q.questionnaire!.isScriptReview) {
-        <span class="q-panel-label review-label">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-            <line x1="16" y1="13" x2="8" y2="13"/>
-            <line x1="16" y1="17" x2="8" y2="17"/>
-          </svg>
-          {{ i18n.currentLang() === 'ar' ? 'مراجعة النص' : 'Script Review' }}
         </span>
       } @else if (q.questionnaire!.isFileUpload) {
         <span class="q-panel-label upload-label">
@@ -32,11 +22,13 @@
           {{ i18n.currentLang() === 'ar' ? 'رفع ملف' : 'File Upload' }}
         </span>
       }
-      <button class="q-panel-close" (click)="skipQuestion()" title="Skip">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-        </svg>
-      </button>
+      @if (!inline) {
+        <button class="q-panel-close" (click)="skipQuestion()" title="Skip">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      }
     </div>
 
     <!-- Question Title -->
@@ -45,7 +37,7 @@
     <!-- ======================== -->
     <!-- MODE: Script Input (User-Written) -->
     <!-- ======================== -->
-    @if (q.questionnaire!.isScriptInput) {
+    @if (q.questionnaire!.isScriptInput && !q.questionnaire!.answered) {
       <div class="q-script-input-area">
         <textarea 
           class="q-script-textarea"
@@ -70,65 +62,9 @@
     }
 
     <!-- ======================== -->
-    <!-- MODE: Script Review (AI-Generated) -->
-    <!-- ======================== -->
-    @else if (q.questionnaire!.isScriptReview) {
-      <div class="q-script-review-area">
-        <div class="script-review-card">
-          <div class="script-review-header">
-            <div class="script-review-badge">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M12 16v-4"/>
-                <path d="M12 8h.01"/>
-              </svg>
-              {{ i18n.currentLang() === 'ar' ? 'تم إنشاء النص بواسطة الذكاء الاصطناعي' : 'AI-Generated Script' }}
-            </div>
-            <button class="script-edit-toggle" (click)="toggleScriptEdit()">
-              @if (isEditingScript()) {
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                  <circle cx="12" cy="12" r="3"/>
-                </svg>
-                {{ i18n.currentLang() === 'ar' ? 'معاينة' : 'Preview' }}
-              } @else {
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                </svg>
-                {{ i18n.currentLang() === 'ar' ? 'تعديل' : 'Edit' }}
-              }
-            </button>
-          </div>
-
-          @if (isEditingScript()) {
-            <textarea 
-              class="q-script-textarea review-edit-mode"
-              [ngModel]="editableScript()"
-              (ngModelChange)="editableScript.set($event)"
-              rows="10"></textarea>
-          } @else {
-            <div class="script-preview-content">
-              <p>{{ editableScript() }}</p>
-            </div>
-          }
-        </div>
-
-        <div class="script-review-actions">
-          <button class="q-submit-btn active" (click)="approveScript()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-            {{ i18n.currentLang() === 'ar' ? 'اعتماد النص وإنشاء الفيديو' : 'Approve & Continue' }}
-          </button>
-        </div>
-      </div>
-    }
-
-    <!-- ======================== -->
     <!-- MODE: File Upload (Audio) -->
     <!-- ======================== -->
-    @else if (q.questionnaire!.isFileUpload) {
+    @else if (q.questionnaire!.isFileUpload && !q.questionnaire!.answered) {
       <div class="q-file-upload-area">
         <input #audioUploadInput type="file" [accept]="q.questionnaire!.acceptFileTypes || '*'" hidden (change)="onAudioFileSelected($event)" />
         <div class="upload-dropzone" (click)="triggerAudioUpload()">
@@ -148,13 +84,14 @@
     <!-- ======================== -->
     <!-- MODE: Standard Options (Card Pills) -->
     <!-- ======================== -->
-    @else {
+    @else if (!q.questionnaire!.answered) {
       <!-- Options (card-pill select with auto-advance) -->
       <div class="q-panel-options" [class.has-images]="q.questionnaire!.options[0]?.image" [class.has-audio]="q.questionnaire!.options[0]?.audio">
         @for (opt of q.questionnaire!.options; track opt.id; let idx = $index) {
           <button class="q-panel-option" 
                   [class.selected]="selectedOption() === opt.label"
                   [class.locked]="isAutoAdvancing()"
+                  [class.dimmed]="isManualInput()"
                   (click)="selectAndAdvance(opt.label)">
             
             @if (opt.image) {
@@ -182,7 +119,12 @@
               <span class="q-letter-badge" [class.checked]="selectedOption() === opt.label">
                 {{ optionLetter(idx) }}
               </span>
-              <span class="q-option-text">{{ opt.label }}</span>
+              <div class="opt-label-group">
+                <span class="q-option-text">{{ opt.label }}</span>
+                @if (opt.description) {
+                  <span class="q-option-desc">{{ opt.description }}</span>
+                }
+              </div>
               @if (selectedOption() === opt.label) {
                 <svg class="q-check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="20 6 9 17 4 12" />
@@ -191,11 +133,60 @@
             </div>
           </button>
         }
+
+        <!-- Manual Input Option -->
+        @if (!q.questionnaire?.disableManualInput) {
+          <button class="q-panel-option q-manual-option" 
+                  [class.selected]="isManualInput()"
+                  (click)="activateManualInput()">
+            <div class="opt-text-content">
+              <span class="q-letter-badge q-letter-badge-manual" [class.checked]="isManualInput()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </span>
+              <span class="q-option-text q-manual-text">{{ i18n.currentLang() === 'ar' ? 'اكتب إجابتك...' : 'Type your own answer...' }}</span>
+            </div>
+          </button>
+        }
       </div>
+
+      <!-- Manual Input Field (shown when manual mode is active) -->
+      @if (isManualInput()) {
+        <div class="q-manual-input-area">
+          <input type="text" class="q-manual-input"
+                 [ngModel]="manualAnswerText()"
+                 (ngModelChange)="manualAnswerText.set($event)"
+                 [placeholder]="i18n.currentLang() === 'ar' ? 'اكتب إجابتك هنا...' : 'Write your answer here...'"
+                 (keydown.enter)="submitManualAnswer()" />
+          <button class="q-manual-next-btn" 
+                  [disabled]="!manualAnswerText().trim()"
+                  [class.active]="manualAnswerText().trim()"
+                  (click)="submitManualAnswer()">
+            {{ i18n.currentLang() === 'ar' ? 'التالي' : 'Next' }}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+        </div>
+      }
 
       <!-- Footer: Skip only (no Next button — auto-advance on select) -->
       <div class="q-panel-footer">
         <span class="q-panel-esc" (click)="skipQuestion()">{{ i18n.currentLang() === 'ar' ? 'تخطي (Esc)' : 'Esc to skip' }}</span>
+      </div>
+    }
+
+    <!-- ======================== -->
+    <!-- MODE: Answered (show selected answer) -->
+    <!-- ======================== -->
+    @else if (q.questionnaire!.answered && inline) {
+      <div class="q-answered-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        <span>{{ q.questionnaire!.selectedAnswer || (i18n.currentLang() === 'ar' ? 'تم التخطي' : 'Skipped') }}</span>
       </div>
     }
   </div>

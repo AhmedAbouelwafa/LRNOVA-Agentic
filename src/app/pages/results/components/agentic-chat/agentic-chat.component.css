@@ -273,6 +273,53 @@
   overflow: hidden;
 }
 
+::ng-deep .preferences-msg {
+  width: 100%;
+  text-align: left !important;
+  direction: ltr !important;
+  background: var(--surface-card, #ffffff);
+  border: 1px solid var(--border-light, #e5e7eb);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+::ng-deep .preferences-msg .pref-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #00C2FF;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border-light, #e5e7eb);
+  padding-bottom: 8px;
+}
+::ng-deep .preferences-msg .pref-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+::ng-deep .preferences-msg .pref-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+::ng-deep .preferences-msg .pref-q {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-heading, #1f2937);
+}
+::ng-deep .preferences-msg .pref-a {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-body, #4b5563);
+  padding-left: 20px;
+}
+::ng-deep .preferences-msg .pref-label {
+  font-weight: 800;
+  color: #8B5CF6;
+  margin-right: 4px;
+}
+
 /* ===== Role Badge ===== */
 .msg-header {
   display: none;
@@ -544,4 +591,33 @@
   .thread-message { padding: 12px 14px; }
   .msg-body { font-size: 0.82rem; }
   .chat-input-area { padding: 8px 10px; }
+}
+
+/* ===== Inline Questionnaire Messages ===== */
+.questionnaire-inline-msg {
+  padding: 12px 20px;
+  border-bottom: none !important;
+}
+.questionnaire-inline-msg app-questionnaire-panel {
+  display: block;
+  margin-top: 8px;
+}
+
+/* Canvas Review Hint */
+.canvas-review-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: #00C2FF !important;
+  font-weight: 500;
+  background: rgba(0, 194, 255, 0.06);
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 194, 255, 0.15);
+  line-height: 1.5;
+}
+.canvas-review-hint svg {
+  flex-shrink: 0;
+  color: #00C2FF;
 }

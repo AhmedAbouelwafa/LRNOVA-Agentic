@@ -8,6 +8,7 @@ interface AvatarOption {
   image: string;
   gender?: 'Male' | 'Female';
   isCustom?: boolean;
+  isPro?: boolean;
 }
 
 interface AudioOption {
@@ -15,6 +16,9 @@ interface AudioOption {
   label: string;
   audio: string;
   gender?: 'Male' | 'Female';
+  language?: string;
+  dialect?: string;
+  flag?: string;
   isCustom?: boolean;
 }
 
@@ -33,10 +37,10 @@ export class VideoAvatarDialogComponent {
     audio: AudioOption | null;
   }>();
 
+  /** Multi-step: 'avatars' → 'voice' */
   activeTab = signal<'avatars' | 'voice'>('avatars');
   avatarSubTab = signal<'my-avatar' | 'avatar-library'>('avatar-library');
   voiceSubTab = signal<'my-voice' | 'voice-library'>('voice-library');
-  videoMode = signal<'rapid' | 'pro'>('rapid');
 
   selectedAvatar = signal<AvatarOption | null>(null);
   selectedAudio = signal<AudioOption | null>(null);
@@ -48,32 +52,37 @@ export class VideoAvatarDialogComponent {
   customAudios = signal<AudioOption[]>([]);
 
   avatarFilter = signal<'All' | 'Male' | 'Female'>('All');
-  audioFilter = signal<'All' | 'Male' | 'Female'>('All');
+  
+  audioLangFilter = signal<'Arabic' | 'English'>('Arabic');
+  audioDialectFilter = signal<string>('All');
+  audioGenderFilter = signal<'All' | 'Male' | 'Female'>('Male');
+  showLangDropdown = signal(false);
+
+  /** Show PRO subscription popup */
+  showProPopup = signal(false);
 
   readonly defaultAvatars: AvatarOption[] = [
     { id: 1, label: 'Male Professional', gender: 'Male', image: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=300&q=80' },
     { id: 2, label: 'Female Professional', gender: 'Female', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80' },
-    { id: 3, label: 'Casual Male', gender: 'Male', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80' },
+    { id: 3, label: 'Casual Male', gender: 'Male', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80', isPro: true },
     { id: 4, label: 'Casual Female', gender: 'Female', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80' },
-    { id: 5, label: 'Creative Director', gender: 'Male', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80' },
+    { id: 5, label: 'Creative Director', gender: 'Male', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80', isPro: true },
     { id: 6, label: 'Tech Expert', gender: 'Female', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80' },
     { id: 7, label: 'Young Entrepreneur', gender: 'Male', image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&q=80' },
-    { id: 8, label: 'Modern Artist', gender: 'Female', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80' },
+    { id: 8, label: 'Modern Artist', gender: 'Female', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80', isPro: true },
     { id: 9, label: 'Senior Advisor', gender: 'Male', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80' },
-    { id: 10, label: 'News Anchor', gender: 'Female', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80' }
+    { id: 10, label: 'News Anchor', gender: 'Female', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80', isPro: true }
   ];
 
   readonly defaultAudios: AudioOption[] = [
-    { id: 1, label: 'English - Male (Deep)', gender: 'Male', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
-    { id: 2, label: 'English - Female (Clear)', gender: 'Female', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
-    { id: 3, label: 'Arabic - Male', gender: 'Male', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
-    { id: 4, label: 'Arabic - Female', gender: 'Female', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' },
-    { id: 5, label: 'Spanish - Male', gender: 'Male', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' },
-    { id: 6, label: 'French - Female', gender: 'Female', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3' },
-    { id: 7, label: 'German - Male (Strong)', gender: 'Male', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3' },
-    { id: 8, label: 'Italian - Female (Warm)', gender: 'Female', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3' },
-    { id: 9, label: 'Japanese - Male', gender: 'Male', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3' },
-    { id: 10, label: 'Portuguese - Female', gender: 'Female', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3' }
+    { id: 1, label: 'English - Male (Deep)', gender: 'Male', language: 'English', dialect: 'US', flag: 'https://flagcdn.com/w20/us.png', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
+    { id: 2, label: 'English - Female (Clear)', gender: 'Female', language: 'English', dialect: 'UK', flag: 'https://flagcdn.com/w20/gb.png', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
+    { id: 3, label: 'Khalid (Deep)', gender: 'Male', language: 'Arabic', dialect: 'Egyptian', flag: 'https://flagcdn.com/w20/eg.png', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
+    { id: 4, label: 'Fatima (Warm)', gender: 'Female', language: 'Arabic', dialect: 'Emirati', flag: 'https://flagcdn.com/w20/ae.png', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' },
+    { id: 5, label: 'Omar (Clear)', gender: 'Male', language: 'Arabic', dialect: 'Algerian', flag: 'https://flagcdn.com/w20/dz.png', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' },
+    { id: 6, label: 'Aisha (Bright)', gender: 'Female', language: 'Arabic', dialect: 'Bahraini', flag: 'https://flagcdn.com/w20/bh.png', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3' },
+    { id: 7, label: 'Tariq (News)', gender: 'Male', language: 'Arabic', dialect: 'Iraqi', flag: 'https://flagcdn.com/w20/iq.png', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3' },
+    { id: 8, label: 'Noor (Soft)', gender: 'Female', language: 'Arabic', dialect: 'Jordanian', flag: 'https://flagcdn.com/w20/jo.png', audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3' }
   ];
 
   filteredAvatars = computed(() => {
@@ -83,17 +92,45 @@ export class VideoAvatarDialogComponent {
   });
 
   filteredAudios = computed(() => {
-    const filter = this.audioFilter();
-    if (filter === 'All') return this.defaultAudios;
-    return this.defaultAudios.filter(a => a.gender === filter);
+    let audios = this.defaultAudios.filter(a => a.language === this.audioLangFilter());
+    if (this.audioDialectFilter() !== 'All') {
+      audios = audios.filter(a => a.dialect === this.audioDialectFilter());
+    }
+    if (this.audioGenderFilter() !== 'All') {
+      audios = audios.filter(a => a.gender === this.audioGenderFilter());
+    }
+    return audios;
   });
+  
+  dialectsForLanguage = computed(() => {
+    const lang = this.audioLangFilter();
+    const audiosInLang = this.defaultAudios.filter(a => a.language === lang && a.dialect);
+    
+    // Extract unique dialects with their flag
+    const uniqueDialects = new Map<string, string>();
+    audiosInLang.forEach(a => {
+      if (a.dialect && a.flag) uniqueDialects.set(a.dialect, a.flag);
+    });
+    
+    return Array.from(uniqueDialects.entries()).map(([dialect, flag]) => ({ dialect, flag }));
+  });
+
+  toggleLangDropdown() {
+    this.showLangDropdown.update(v => !v);
+  }
+  
+  selectLanguage(lang: 'Arabic' | 'English') {
+    this.audioLangFilter.set(lang);
+    this.audioDialectFilter.set('All');
+  }
+  
+  selectDialect(dialect: string) {
+    this.audioDialectFilter.set(dialect);
+    this.showLangDropdown.set(false);
+  }
 
   setTab(tab: 'avatars' | 'voice') {
     this.activeTab.set(tab);
-  }
-
-  toggleVideoMode() {
-    this.videoMode.update(m => m === 'rapid' ? 'pro' : 'rapid');
   }
 
   selectAvatar(avatar: AvatarOption) {
@@ -183,6 +220,42 @@ export class VideoAvatarDialogComponent {
     this.closed.emit();
   }
 
+  /** Step navigation: Avatar → Voice → Generate */
+  goToNextStep() {
+    if (this.activeTab() === 'avatars') {
+      if (!this.selectedAvatar()) return;
+
+      // Check if selected avatar is PRO
+      if (this.selectedAvatar()?.isPro) {
+        this.showProPopup.set(true);
+        return;
+      }
+
+      // If voice is hidden (user already uploaded audio), generate directly
+      if (this.state.hideVoiceInDialog()) {
+        this.generate();
+        return;
+      }
+
+      // Move to voice step
+      this.activeTab.set('voice');
+    } else if (this.activeTab() === 'voice') {
+      // Generate from voice tab
+      this.generate();
+    }
+  }
+
+  /** Go back to the previous step */
+  goToPrevStep() {
+    if (this.activeTab() === 'voice') {
+      this.activeTab.set('avatars');
+    }
+  }
+
+  dismissProPopup() {
+    this.showProPopup.set(false);
+  }
+
   generate() {
     if (this.canGenerate) {
       this.stopAudio();
@@ -201,10 +274,27 @@ export class VideoAvatarDialogComponent {
     }
   }
 
+  /** Whether the current step can proceed */
+  get canProceed(): boolean {
+    if (this.activeTab() === 'avatars') {
+      return this.selectedAvatar() !== null;
+    }
+    return false;
+  }
+
   get canGenerate(): boolean {
     if (this.state.hideVoiceInDialog()) {
       return this.selectedAvatar() !== null;
     }
     return this.selectedAvatar() !== null && this.selectedAudio() !== null;
+  }
+
+  /** Current step number (1 = avatar, 2 = voice) */
+  get currentStep(): number {
+    return this.activeTab() === 'avatars' ? 1 : 2;
+  }
+
+  get totalSteps(): number {
+    return this.state.hideVoiceInDialog() ? 1 : 2;
   }
 }

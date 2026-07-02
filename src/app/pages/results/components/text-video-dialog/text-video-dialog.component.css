@@ -133,7 +133,7 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #10B981;
+  background: #00C2FF;
   color: white;
   display: flex;
   align-items: center;
@@ -302,8 +302,8 @@
   border-radius: 4px;
 }
 .custom-badge {
-  background: rgba(16, 185, 129, 0.1);
-  color: #10B981;
+  background: rgba(0, 194, 255, 0.1);
+  color: #00C2FF;
 }
 .avatar-remove-btn {
   position: absolute;
@@ -450,8 +450,8 @@
   transition: all 0.3s;
 }
 .progress-dot.done {
-  background: #10B981;
-  box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+  background: #00C2FF;
+  box-shadow: 0 0 6px rgba(0, 194, 255, 0.4);
 }
 .vad-footer-actions {
   display: flex;
