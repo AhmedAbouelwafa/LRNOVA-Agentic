@@ -37,7 +37,7 @@ export class QuestionnairePanelComponent implements OnDestroy {
     effect(() => {
       const q = this.state.activeQuestion();
       if (q && q.questionnaire) {
-        // Populate editable script if in review mode
+        // Populate editable script if in review modee
         if (q.questionnaire.isScriptReview && q.questionnaire.scriptContent) {
           setTimeout(() => this.editableScript.set(q.questionnaire!.scriptContent!), 0);
         }
