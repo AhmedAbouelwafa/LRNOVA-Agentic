@@ -146,15 +146,16 @@
     }
 
     <!-- ======================== -->
-    <!-- MODE: Standard Radio Options -->
+    <!-- MODE: Standard Options (Card Pills) -->
     <!-- ======================== -->
     @else {
-      <!-- Options (radio select) -->
+      <!-- Options (card-pill select with auto-advance) -->
       <div class="q-panel-options" [class.has-images]="q.questionnaire!.options[0]?.image" [class.has-audio]="q.questionnaire!.options[0]?.audio">
-        @for (opt of q.questionnaire!.options; track opt.id) {
+        @for (opt of q.questionnaire!.options; track opt.id; let idx = $index) {
           <button class="q-panel-option" 
                   [class.selected]="selectedOption() === opt.label"
-                  (click)="selectOption(opt.label)">
+                  [class.locked]="isAutoAdvancing()"
+                  (click)="selectAndAdvance(opt.label)">
             
             @if (opt.image) {
               <div class="opt-image-wrapper">
@@ -178,24 +179,22 @@
             }
 
             <div class="opt-text-content">
-              <span class="q-radio" [class.checked]="selectedOption() === opt.label"></span>
+              <span class="q-letter-badge" [class.checked]="selectedOption() === opt.label">
+                {{ optionLetter(idx) }}
+              </span>
               <span class="q-option-text">{{ opt.label }}</span>
+              @if (selectedOption() === opt.label) {
+                <svg class="q-check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              }
             </div>
           </button>
         }
       </div>
 
-      <!-- Footer: Submit -->
+      <!-- Footer: Skip only (no Next button — auto-advance on select) -->
       <div class="q-panel-footer">
-        <button class="q-submit-btn" 
-                [class.active]="selectedOption()"
-                [disabled]="!selectedOption()"
-                (click)="submitAnswer()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
-          {{ i18n.currentLang() === 'ar' ? 'التالي' : 'Next' }}
-        </button>
         <span class="q-panel-esc" (click)="skipQuestion()">{{ i18n.currentLang() === 'ar' ? 'تخطي (Esc)' : 'Esc to skip' }}</span>
       </div>
     }

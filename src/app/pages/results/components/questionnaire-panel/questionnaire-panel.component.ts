@@ -17,7 +17,9 @@ export class QuestionnairePanelComponent implements OnDestroy {
   /** The currently selected option label (before submitting) */
   selectedOption = signal<string | null>(null);
   activeAudioUrl = signal<string | null>(null);
+  isAutoAdvancing = signal<boolean>(false);
   private audioPlayer: HTMLAudioElement | null = null;
+  private autoAdvanceTimer: any = null;
   
   displayedTitle = signal<string>('');
   private typeWriterInterval: any;
@@ -69,8 +71,31 @@ export class QuestionnairePanelComponent implements OnDestroy {
     }, 20);
   }
 
+  /** Map index to letter badge (A, B, C, D…) */
+  optionLetter(idx: number): string {
+    return String.fromCharCode(65 + idx);
+  }
+
   selectOption(label: string) {
     this.selectedOption.set(label);
+  }
+
+  /** Select an option and auto-advance to the next question after a brief delay */
+  selectAndAdvance(label: string) {
+    if (this.isAutoAdvancing()) return; // prevent double-click
+
+    this.selectedOption.set(label);
+    this.isAutoAdvancing.set(true);
+
+    // Clear any existing timer
+    if (this.autoAdvanceTimer) {
+      clearTimeout(this.autoAdvanceTimer);
+    }
+
+    this.autoAdvanceTimer = setTimeout(() => {
+      this.submitAnswer();
+      this.isAutoAdvancing.set(false);
+    }, 500);
   }
 
   playAudio(url: string, event: Event) {
@@ -173,6 +198,9 @@ export class QuestionnairePanelComponent implements OnDestroy {
   ngOnDestroy() {
     if (this.typeWriterInterval) {
       clearInterval(this.typeWriterInterval);
+    }
+    if (this.autoAdvanceTimer) {
+      clearTimeout(this.autoAdvanceTimer);
     }
     if (this.audioPlayer) {
       this.audioPlayer.pause();
